@@ -1,0 +1,26 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# Qualcomm AI Hub Cache
+.qaihm/
+.qai_hub/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Output reports & artifacts (generated dynamically)
+review_output/
+demo/review_output/
+*.log
+*.sarif

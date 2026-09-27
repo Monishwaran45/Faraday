@@ -1,0 +1,11 @@
+# Core CLI & Formatting
+click>=8.1.0
+rich>=13.7.0
+
+# On-Device Snapdragon NPU & AI Hub dependencies
+qai-hub>=0.55.0
+qai-hub-models>=0.63.0
+onnxruntime-genai>=0.9.2
+onnx>=1.18.0
+transformers>=4.40.0
+torch>=2.2.0

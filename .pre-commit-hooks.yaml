@@ -1,0 +1,17 @@
+- id: faraday
+  name: Faraday Air-Gapped Code Assurance
+  description: Offline, on-device AI code review & secret scanner for enterprise repositories
+  entry: faraday
+  language: python
+  types: [text]
+  args: ["--staged", "--fail-on", "HIGH"]
+  pass_filenames: false
+
+- id: codeguard
+  name: Faraday (CodeGuard Alias) Air-Gapped Code Assurance
+  description: Offline, on-device AI code review & secret scanner for enterprise repositories
+  entry: faraday
+  language: python
+  types: [text]
+  args: ["--staged", "--fail-on", "HIGH"]
+  pass_filenames: false
