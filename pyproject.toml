@@ -5,7 +5,7 @@ description = "Faraday: 100% Air-gapped on-device AI code review & assurance cop
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [
-    { name = "Faraday AI Team" }
+    { name = "Monishwaran K" }
 ]
 keywords = ["snapdragon", "npu", "qnn", "qualcomm", "code-review", "security", "offline-ai", "faraday"]
 dependencies = [

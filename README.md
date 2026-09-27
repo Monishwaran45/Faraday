@@ -22,7 +22,7 @@ A **Faraday cage** blocks external electromagnetic fields, creating an impenetra
 ## Key Enterprise Features
 
 - **Snapdragon® Hexagon NPU Acceleration:** Utilizes compiled QNN context binaries (`Qwen2-7B-Instruct` `w4a16`) running directly on the Qualcomm Snapdragon X Elite NPU.
-- **Interactive Multi-Project Terminal UI:** Claude Code-inspired Rich interface that reviews a project, presents reports, and interactively prompts for the next project location.
+- **Interactive Multi-Project Terminal UI:** Autonomous Rich interactive terminal interface that reviews a project, presents reports, and interactively prompts for the next project location.
 - **Git Staged & Diff Scanning:** Review only staged files (`faraday --staged`) or pull request branch diffs (`faraday --diff main`) in milliseconds on large repositories.
 - **OASIS SARIF v2.1.0 Export:** Generates industry-standard SARIF reports (`--sarif`) with MITRE CWE taxonomy mapping for native integration into GitHub Code Scanning, GitLab SAST, and VS Code.
 - **Pre-Commit Hook Integration:** Automated one-click hook installation (`faraday --install-hook`) and native support for the standard `pre-commit` framework via `.pre-commit-hooks.yaml`.
@@ -232,7 +232,7 @@ Qualcomm Snapdragon/
 │   │   └── report_builder.py   # Synthesis of security & review markdown reports
 │   ├── models/
 │   │   └── model_backend.py    # Snapdragon Hexagon NPU QNN backend & mock fallback
-│   └── cli.py                  # Rich terminal UI inspired by Claude Code
+│   └── cli.py                  # Autonomous Rich interactive terminal UI
 ├── demo/
 │   ├── sample_project/         # Multi-file test codebase
 │   │   ├── database.py
