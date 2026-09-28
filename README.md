@@ -49,7 +49,7 @@ llm_reviewer.py      ──► On-device Snapdragon Hexagon NPU neural review & 
 report_builder.py    ──► Synthesizes REVIEW_REPORT.md, GENERATED_DOCSTRINGS.md,
                          GENERATED_README.md, and OASIS SARIF v2.1.0
 
-
+```
 ##  System Architecture (graph TD)
 
 ```mermaid
