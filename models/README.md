@@ -4,7 +4,7 @@ This directory holds compiled Qualcomm Neural Network (QNN) context binaries opt
 
 ---
 
-## ⚡ How Model Loading Works
+##  How Model Loading Works
 
 Faraday is designed with **zero-friction portability**:
 
@@ -18,7 +18,7 @@ Faraday is designed with **zero-friction portability**:
 
 ---
 
-## 📥 How to Setup QNN Models on a Snapdragon X Elite Machine
+##  How to Setup QNN Models on a Snapdragon X Elite Machine
 
 If you are cloning this repository onto a Snapdragon X Elite laptop and want to run on the physical NPU:
 
