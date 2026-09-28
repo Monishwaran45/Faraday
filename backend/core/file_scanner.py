@@ -96,6 +96,13 @@ def _load_gitignore_patterns(root: Path) -> list:
 def _is_ignored(path: Path, root: Path, gitignore_patterns: list, custom_ignores: list = None) -> bool:
     """Check if file should be ignored based on default rules, gitignore, and custom flags."""
     fname = path.name
+    try:
+        rel_path = str(path.relative_to(root)).replace("\\", "/")
+    except ValueError:
+        rel_path = fname
+
+    norm_path = str(path).replace("\\", "/")
+
     # Check ignored patterns (minified, lockfiles, etc.)
     for pattern in IGNORED_PATTERNS:
         if fnmatch.fnmatch(fname, pattern):
@@ -104,17 +111,20 @@ def _is_ignored(path: Path, root: Path, gitignore_patterns: list, custom_ignores
     # Check custom ignore patterns
     if custom_ignores:
         for pattern in custom_ignores:
-            if fnmatch.fnmatch(fname, pattern) or fnmatch.fnmatch(str(path), pattern):
+            norm_pat = pattern.replace("\\", "/").rstrip("/")
+            if (
+                fnmatch.fnmatch(fname, norm_pat)
+                or fnmatch.fnmatch(rel_path, norm_pat)
+                or fnmatch.fnmatch(rel_path, f"{norm_pat}/*")
+                or fnmatch.fnmatch(rel_path, f"{norm_pat}/**")
+                or fnmatch.fnmatch(norm_path, norm_pat)
+                or any(fnmatch.fnmatch(part, norm_pat) for part in path.parts)
+            ):
                 return True
 
     # Check gitignore patterns
-    try:
-        rel_path = str(path.relative_to(root)).replace("\\", "/")
-    except ValueError:
-        rel_path = path.name
-
     for pat in gitignore_patterns:
-        cleaned_pat = pat.rstrip("/")
+        cleaned_pat = pat.rstrip("/").replace("\\", "/")
         if fnmatch.fnmatch(rel_path, cleaned_pat) or fnmatch.fnmatch(fname, cleaned_pat) or fnmatch.fnmatch(rel_path, f"*/{cleaned_pat}"):
             return True
 
@@ -155,6 +165,7 @@ def _iter_source_files(
             d for d in dirnames
             if d not in IGNORED_DIRS and not d.startswith(".")
             and not any(fnmatch.fnmatch(d, pat.rstrip("/")) for pat in gitignore_patterns)
+            and not (custom_ignores and any(fnmatch.fnmatch(d, pat.replace("\\", "/").rstrip("/")) for pat in custom_ignores))
         ]
         for fname in filenames:
             fpath = Path(dirpath) / fname

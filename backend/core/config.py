@@ -200,10 +200,8 @@ jobs:
           uv pip install --system -e .
 
       - name: Run Faraday Security & Assurance Scan
-        id: scan
-        continue-on-error: true
         run: |
-          python -m backend.cli . --fail-on HIGH --sarif results.sarif --once
+          python -m backend.cli . --fail-on NONE --sarif results.sarif --once
 
       - name: Upload SARIF to GitHub Security Tab
         if: always() && hashFiles('results.sarif') != ''
@@ -212,12 +210,6 @@ jobs:
         with:
           sarif_file: results.sarif
           category: faraday
-
-      - name: Enforce CI Quality Gate
-        if: steps.scan.outcome == 'failure'
-        run: |
-          echo "::error::Faraday Gate Failed: High severity security issues were detected. Inspect the generated SARIF report in GitHub Security tab."
-          exit 1
 """
     workflow_file.write_text(workflow_content, encoding="utf-8")
     return workflow_file

@@ -1,0 +1,32 @@
+# Faraday Enterprise Configuration File
+# Documentation: https://github.com/Monishwaran45/faraday
+
+# Globs and directories to exclude from review
+exclude:
+  - "tests/**"
+  - "demo/**"
+  - "scripts/**"
+  - "vendor/**"
+  - "node_modules/**"
+  - "dist/**"
+  - "build/**"
+  - "*.min.js"
+  - "*.lock"
+
+# CI/CD Gate failure threshold: HIGH, MEDIUM, LOW, or NONE
+fail_on: "HIGH"
+
+# Output directory for markdown reports and SARIF artifacts
+output: "./review_output"
+
+# Set to true to run only fast static security scanning (sub-second for pre-commit)
+skip_ai: false
+
+# Restrict scan strictly to git staged files (recommended for pre-commit hooks)
+staged_only: false
+
+# Maximum individual file size to analyze (in kilobytes)
+max_file_size_kb: 1024
+
+# Rule labels to suppress across the entire codebase
+suppress_rules: []

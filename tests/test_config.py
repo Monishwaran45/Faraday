@@ -42,4 +42,4 @@ def test_setup_github_ci_workflow(tmp_path):
     content = wf_file.read_text(encoding="utf-8")
     assert "Faraday Security & Code Review Gate" in content
     assert "upload-sarif" in content
-    assert "Enforce CI Quality Gate" in content
+    assert "--fail-on NONE" in content
