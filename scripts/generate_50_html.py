@@ -1,6 +1,7 @@
 """
 generate_50_html.py
 Generates exactly 50 dense pages of Faraday Architectural Documentary.
+Embeds working screenshots of the project and eliminates whitespace gaps.
 Author: Monishwaran K
 """
 
@@ -33,7 +34,7 @@ def build_full_document():
         </div>
         """)
 
-    # P01
+    # ---------------- PAGE 01 ----------------
     p(1, "COVER PAGE & EXECUTIVE SPECIFICATION", """
         <div style="text-align: center; margin-top: 14mm; margin-bottom: 10mm;">
             <div style="font-size: 11pt; font-weight: 800; letter-spacing: 2px; color: #0284c7; text-transform: uppercase; margin-bottom: 3mm;">
@@ -79,7 +80,7 @@ def build_full_document():
         </div>
     """)
 
-    # P02
+    # ---------------- PAGE 02 ----------------
     p(2, "TABLE OF CONTENTS & EXECUTIVE ABSTRACT", """
         <div class="pillar-tag">Executive Summary</div>
         <h1>Executive Abstract & Table of Contents</h1>
@@ -110,7 +111,7 @@ def build_full_document():
         </table>
     """)
 
-    # P03
+    # ---------------- PAGE 03 ----------------
     p(3, "ACT I: THE ENTERPRISE CRISIS & THE FARADAY GENESIS", """
         <div class="pillar-tag">Pillar II: Application Use Case & Innovation</div>
         <h1>Act I: The Enterprise Crisis & The Threat of Cloud AI Copilots</h1>
@@ -139,7 +140,7 @@ def build_full_document():
         </ul>
     """)
 
-    # P04
+    # ---------------- PAGE 04 ----------------
     p(4, "ACT I: THE ENTERPRISE CRISIS & REGULATORY BARRIERS", """
         <div class="pillar-tag">Pillar II: Application Use Case & Innovation</div>
         <h1>Act I: The Regulatory Wall — Defense, Finance & Compliance</h1>
@@ -174,7 +175,7 @@ def build_full_document():
         </ul>
     """)
 
-    # P05
+    # ---------------- PAGE 05 ----------------
     p(5, "ACT I: WHY REDACTION PROXIES FAIL", """
         <div class="pillar-tag">Pillar II: Application Use Case & Innovation</div>
         <h1>Act I: Why Redaction Proxies & Cloud Gateways Fail</h1>
@@ -206,7 +207,7 @@ def build_full_document():
         </ul>
     """)
 
-    # P06
+    # ---------------- PAGE 06 ----------------
     p(6, "ACT I: THE FARADAY ALLEGORY", """
         <div class="pillar-tag">Pillar II: Application Use Case & Innovation</div>
         <h1>Act I: The Faraday Allegory — 1836 Physics to Silicon</h1>
@@ -234,7 +235,7 @@ def build_full_document():
         </ul>
     """)
 
-    # P07
+    # ---------------- PAGE 07 ----------------
     p(7, "ACT II: SILICON ARCHITECTURE DEEP DIVE", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act II: Silicon Deep Dive — Snapdragon X Elite Topology</h1>
@@ -273,7 +274,7 @@ def build_full_document():
         </p>
     """)
 
-    # P08
+    # ---------------- PAGE 08 ----------------
     p(8, "ACT II: THE HEXAGON NPU & HTP ARCHITECTURE", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act II: The Hexagon NPU & v73 HTP Microarchitecture</h1>
@@ -295,7 +296,7 @@ def build_full_document():
         </p>
     """)
 
-    # P09
+    # ---------------- PAGE 09 (UPDATED WITH SCREENSHOT & FULL DENSITY) ----------------
     p(9, "ACT II: NATIVE INT4 / FP16 QUANTIZATION MECHANICS", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act II: Native INT4 / FP16 Quantization Mechanics</h1>
@@ -315,12 +316,15 @@ def build_full_document():
         </p>
         <pre><code>Quantization Formula:   W_int4 = clamp(round(W_fp16 / Scale) + ZeroPoint, -8, 7)
 Hardware Reconstruct:   W_eff = (W_int4 - ZeroPoint) * Scale</code></pre>
-        <p>
-            This architecture compresses the complete 7B model footprint down to just <strong>5.05 Gigabytes</strong>, fitting effortlessly into system memory while achieving lightning-fast token generation.
-        </p>
+
+        <!-- EMBED WORKING SCREENSHOT TO ELIMINATE WHITESPACE -->
+        <div style="margin-top: 2.5mm; text-align: center;">
+            <img src="images/screenshot_quantization_arch.png" style="width: 100%; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.18); border: 1px solid #cbd5e1;">
+            <div style="font-size: 7.2pt; color: #64748b; margin-top: 1mm; font-weight: 600;">Figure 2.1: Native w4a16 Quantization & Snapdragon Hexagon HTP Systolic Tensor Core Architecture</div>
+        </div>
     """)
 
-    # P10
+    # ---------------- PAGE 10 ----------------
     p(10, "ACT II: QUALCOMM NEURAL PROCESSING SDK (QNN)", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act II: Qualcomm Neural Processing SDK (QNN) vs CPU/GPU</h1>
@@ -345,7 +349,7 @@ Hardware Reconstruct:   W_eff = (W_int4 - ZeroPoint) * Scale</code></pre>
         </table>
     """)
 
-    # P11
+    # ---------------- PAGE 11 ----------------
     p(11, "ACT II: MEMORY SUBSYSTEM & SUSTAINED TOPS", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act II: Memory Subsystem, Thermal Envelope & Sustained TOPS</h1>
@@ -370,7 +374,7 @@ Hardware Reconstruct:   W_eff = (W_int4 - ZeroPoint) * Scale</code></pre>
         </ul>
     """)
 
-    # P12
+    # ---------------- PAGE 12 ----------------
     p(12, "ACT III: MATHEMATICAL INFORMATION THEORY", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act III: Mathematical Information Theory & Entropy Detection</h1>
@@ -401,7 +405,7 @@ Hardware Reconstruct:   W_eff = (W_int4 - ZeroPoint) * Scale</code></pre>
         </p>
     """)
 
-    # P13
+    # ---------------- PAGE 13 ----------------
     p(13, "ACT III: PROBABILITY MASS & ENTROPY DERIVATION", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act III: Probability Mass Calculations & Mathematical Derivation</h1>
@@ -441,7 +445,7 @@ Hardware Reconstruct:   W_eff = (W_int4 - ZeroPoint) * Scale</code></pre>
     return entropy</code></pre>
     """)
 
-    # P14
+    # ---------------- PAGE 14 ----------------
     p(14, "ACT III: THRESHOLD TUNING & BOUNDARY CONDITIONS", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act III: Empirical Threshold Tuning & Boundary Proofs</h1>
@@ -469,7 +473,7 @@ if len(candidate_str) >= 16 and _shannon_entropy(candidate_str) >= 4.5:
     report_vulnerability(HIGH_ENTROPY_CREDENTIAL)</code></pre>
     """)
 
-    # P15
+    # ---------------- PAGE 15 ----------------
     p(15, "ACT III: FALSE POSITIVE REJECTION HEURISTICS", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act III: False Positive Rejection & Noise Elimination</h1>
@@ -492,7 +496,7 @@ if len(candidate_str) >= 16 and _shannon_entropy(candidate_str) >= 4.5:
         </p>
     """)
 
-    # P16
+    # ---------------- PAGE 16 ----------------
     p(16, "ACT IV: THE DETERMINISTIC SECURITY ENGINE", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act IV: Deterministic Security Engine & Vulnerability Taxonomy</h1>
@@ -533,7 +537,7 @@ if len(candidate_str) >= 16 and _shannon_entropy(candidate_str) >= 4.5:
         </table>
     """)
 
-    # P17
+    # ---------------- PAGE 17 ----------------
     p(17, "ACT IV: CLOUD CREDENTIALS & API KEY SIGNATURES", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act IV: Cloud Credentials & API Key Signatures</h1>
@@ -564,7 +568,7 @@ Pattern: (?:ghp|gho|ghu|ghs|ghr)_[a-zA-Z0-9]{36,255}
 CWE: CWE-798 | CVSS: 9.8 (CRITICAL)</code></pre>
     """)
 
-    # P18
+    # ---------------- PAGE 18 ----------------
     p(18, "ACT IV: SUPPLY CHAIN TOKENS & PRIVATE KEYS", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act IV: Supply Chain Tokens & Private Cryptographic Keys</h1>
@@ -595,7 +599,7 @@ Pattern: -----BEGIN (?:RSA |DSA |EC |OPENSSH )?PRIVATE KEY-----
 CWE: CWE-312 (Cleartext Storage of Sensitive Information) | CVSS: 9.8 (CRITICAL)</code></pre>
     """)
 
-    # P19
+    # ---------------- PAGE 19 ----------------
     p(19, "ACT IV: INJECTION & MEMORY SAFETY FLAWS", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act IV: Injection & Execution Vulnerability Rules</h1>
@@ -626,7 +630,7 @@ Pattern: \b(?:innerHTML|dangerouslySetInnerHTML)\s*=\s*(?!["\'][\w\s]*["\'])
 CWE: CWE-79 (Cross-Site Scripting) | CVSS: 7.5 (HIGH)</code></pre>
     """)
 
-    # P20
+    # ---------------- PAGE 20 ----------------
     p(20, "ACT IV: CRYPTOGRAPHIC & TRANSPORT FLAWS", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act IV: Cryptographic & Transport Vulnerabilities</h1>
@@ -657,7 +661,7 @@ Pattern: (?:password|passwd|pwd|secret_key)\s*=\s*['"][^'"]{6,}['"]
 CWE: CWE-798 | CVSS: 8.8 (HIGH)</code></pre>
     """)
 
-    # P21
+    # ---------------- PAGE 21 ----------------
     p(21, "ACT IV: COMPREHENSIVE VULNERABILITY CATALOG", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act IV: The Complete 26+ Rule Vulnerability Catalog</h1>
@@ -685,7 +689,7 @@ CWE: CWE-798 | CVSS: 8.8 (HIGH)</code></pre>
         </table>
     """)
 
-    # P22
+    # ---------------- PAGE 22 ----------------
     p(22, "ACT V: MULTI-LANGUAGE RECURSIVE AST ENGINE", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act V: Multi-Language Recursive AST Parsing & Chunking</h1>
@@ -710,7 +714,7 @@ CWE: CWE-798 | CVSS: 8.8 (HIGH)</code></pre>
         </div>
     """)
 
-    # P23
+    # ---------------- PAGE 23 ----------------
     p(23, "ACT V: PYTHON AST VISITOR IMPLEMENTATION", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act V: Python AST Visitor Engine Architecture</h1>
@@ -746,7 +750,7 @@ CWE: CWE-798 | CVSS: 8.8 (HIGH)</code></pre>
         ))</code></pre>
     """)
 
-    # P24
+    # ---------------- PAGE 24 ----------------
     p(24, "ACT V: JAVASCRIPT & TYPESCRIPT STATE MACHINE", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act V: JavaScript & TypeScript Boundary State Machine</h1>
@@ -775,7 +779,7 @@ CWE: CWE-798 | CVSS: 8.8 (HIGH)</code></pre>
         </ul>
     """)
 
-    # P25
+    # ---------------- PAGE 25 ----------------
     p(25, "ACT V: CYCLOMATIC COMPLEXITY & TOKEN BUDGETS", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act V: Cyclomatic Complexity & Token Budget Management</h1>
@@ -808,7 +812,7 @@ CWE: CWE-798 | CVSS: 8.8 (HIGH)</code></pre>
 Total Window:                 2048 tokens (Zero KV Cache Truncation)</code></pre>
     """)
 
-    # P26
+    # ---------------- PAGE 26 ----------------
     p(26, "ACT VI: ON-DEVICE NEURAL CODE REVIEW", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act VI: On-Device Neural Code Review — Architecture & QNN</h1>
@@ -835,7 +839,7 @@ Total Window:                 2048 tokens (Zero KV Cache Truncation)</code></pre
         </ul>
     """)
 
-    # P27
+    # ---------------- PAGE 27 ----------------
     p(27, "ACT VI: PROMPT CONSTRUCTION & GUIDANCE", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act VI: Prompt Construction & On-Device Guidance</h1>
@@ -867,7 +871,7 @@ Analysis:'''</code></pre>
         </p>
     """)
 
-    # P28
+    # ---------------- PAGE 28 ----------------
     p(28, "ACT VI: SYNTHETIC DOCSTRING GENERATION", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act VI: Synthetic Docstring Generation Engine</h1>
@@ -903,7 +907,7 @@ Analysis:'''</code></pre>
         </p>
     """)
 
-    # P29
+    # ---------------- PAGE 29 ----------------
     p(29, "ACT VI: AUTONOMOUS README SYNTHESIS", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act VI: Autonomous Production README Synthesis</h1>
@@ -927,7 +931,7 @@ Analysis:'''</code></pre>
         </ul>
     """)
 
-    # P30
+    # ---------------- PAGE 30 ----------------
     p(30, "ACT VII: QUALCOMM AI HUB HARDWARE VERIFICATION", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act VII: Qualcomm AI Hub Hardware Verification — Setup</h1>
@@ -959,7 +963,7 @@ Analysis:'''</code></pre>
         return self.fc2(self.relu(self.fc1(x)))</code></pre>
     """)
 
-    # P31
+    # ---------------- PAGE 31 ----------------
     p(31, "ACT VII: CLOUD COMPILATION & PROFILING PIPELINES", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act VII: Cloud Compilation & Hardware Profiling Pipelines</h1>
@@ -987,7 +991,7 @@ Analysis:'''</code></pre>
         </div>
     """)
 
-    # P32
+    # ---------------- PAGE 32 (UPDATED WITH SCREENSHOT & FULL DENSITY) ----------------
     p(32, "ACT VII: LATENCY & CYCLE ANALYSIS", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act VII: Physical NPU Latency & Cycle Analysis</h1>
@@ -996,17 +1000,12 @@ Analysis:'''</code></pre>
             The performance metrics returned directly from the Snapdragon X Elite hardware laboratory demonstrate mind-boggling speed:
         </p>
 
-        <table style="font-size: 8pt;">
+        <table style="font-size: 7.8pt;">
             <tr><th>Hardware Benchmark Metric</th><th>Measured Value</th><th>Engineering Significance</th></tr>
             <tr>
                 <td><strong>Estimated Inference Time</strong></td>
                 <td><strong>32 &mu;s (0.032 milliseconds)</strong></td>
                 <td>Sub-millisecond latency enables real-time auditing during live developer typing.</td>
-            </tr>
-            <tr>
-                <td><strong>All Inference Times Range</strong></td>
-                <td><strong>32 &mu;s – 47 &mu;s</strong></td>
-                <td>Ultra-consistent execution times with virtually zero operating system jitter.</td>
             </tr>
             <tr>
                 <td><strong>Total NPU Hardware Cycles</strong></td>
@@ -1025,14 +1024,14 @@ Analysis:'''</code></pre>
             </tr>
         </table>
 
-        <h2>2. Distribution of 100 Inference Runs</h2>
-        <p>
-            Excluding the initial cold cache run (870 &mu;s), all subsequent runs settled into a rock-solid band between 32 and 37 &mu;s:
-            <br><code>[60, 47, 39, 35, 36, 35, 34, 36, 36, 33, 36, 34, 35, 33, 36, 35, 34, 35, 32, 34...]</code>
-        </p>
+        <!-- EMBED WORKING SCREENSHOT OF QUALCOMM AI HUB LIVE BENCHMARK -->
+        <div style="margin-top: 2mm; text-align: center;">
+            <img src="images/screenshot_aihub_npu.png" style="width: 100%; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.18); border: 1px solid #cbd5e1;">
+            <div style="font-size: 7.2pt; color: #64748b; margin-top: 1mm; font-weight: 600;">Figure 7.1: Live Hardware Benchmark on Qualcomm Snapdragon X Elite CRD via Qualcomm AI Hub</div>
+        </div>
     """)
 
-    # P33
+    # ---------------- PAGE 33 ----------------
     p(33, "ACT VII: LAYER-BY-LAYER COMPUTE OFFLOAD", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act VII: Layer-by-Layer Compute Offload (100% NPU)</h1>
@@ -1063,7 +1062,7 @@ Analysis:'''</code></pre>
         </div>
     """)
 
-    # P34
+    # ---------------- PAGE 34 ----------------
     p(34, "ACT VIII: REAL-WORLD PRODUCTION AUDITS", """
         <div class="pillar-tag">Pillar II: Application Use Case & Innovation</div>
         <h1>Act VIII: Real-World Audits — Benchmarking Production Code</h1>
@@ -1086,7 +1085,7 @@ Analysis:'''</code></pre>
         </div>
     """)
 
-    # P35
+    # ---------------- PAGE 35 ----------------
     p(35, "ACT VIII: TRIAGE OF 13 CAUGHT VULNERABILITIES", """
         <div class="pillar-tag">Pillar II: Application Use Case & Innovation</div>
         <h1>Act VIII: Triage of the 13 Caught Production Vulnerabilities</h1>
@@ -1109,7 +1108,7 @@ Analysis:'''</code></pre>
         </table>
     """)
 
-    # P36
+    # ---------------- PAGE 36 ----------------
     p(36, "ACT VIII: SPEED VERIFICATION & AIR-GAP PROOF", """
         <div class="pillar-tag">Pillar II: Application Use Case & Innovation</div>
         <h1>Act VIII: Execution Speed Verification & Air-Gap Proof</h1>
@@ -1139,7 +1138,7 @@ TOTAL DURATION:                                  0.120s  (Air-gapped on-device)<
         </div>
     """)
 
-    # P37
+    # ---------------- PAGE 37 ----------------
     p(37, "ACT VIII: COMPREHENSIVE COMPETITIVE MATRIX", """
         <div class="pillar-tag">Pillar II: Application Use Case & Innovation</div>
         <h1>Act VIII: Competitive Matrix — Faraday vs Industry Tools</h1>
@@ -1211,7 +1210,7 @@ TOTAL DURATION:                                  0.120s  (Air-gapped on-device)<
         </table>
     """)
 
-    # P38
+    # ---------------- PAGE 38 ----------------
     p(38, "ACT IX: OASIS SARIF V2.1.0 SPECIFICATION", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act IX: OASIS SARIF v2.1.0 Standard Architecture</h1>
@@ -1244,7 +1243,7 @@ TOTAL DURATION:                                  0.120s  (Air-gapped on-device)<
 }</code></pre>
     """)
 
-    # P39
+    # ---------------- PAGE 39 ----------------
     p(39, "ACT IX: MITRE CWE TAXONOMY MAPPING", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act IX: MITRE CWE Mapping & GitHub Code Scanning</h1>
@@ -1273,7 +1272,7 @@ TOTAL DURATION:                                  0.120s  (Air-gapped on-device)<
         </p>
     """)
 
-    # P40
+    # ---------------- PAGE 40 ----------------
     p(40, "ACT IX: GITLAB SAST & VS CODE INTEGRATION", """
         <div class="pillar-tag">Pillar III: Deployment & Accessibility</div>
         <h1>Act IX: GitLab SAST & VS Code Extension Workflows</h1>
@@ -1301,7 +1300,7 @@ TOTAL DURATION:                                  0.120s  (Air-gapped on-device)<
         </p>
     """)
 
-    # P41
+    # ---------------- PAGE 41 ----------------
     p(41, "ACT X: ENTERPRISE GIT INTEGRATION", """
         <div class="pillar-tag">Pillar III: Deployment & Accessibility</div>
         <h1>Act X: Sub-Second Git Staged Scanning (`--staged`)</h1>
@@ -1327,31 +1326,29 @@ TOTAL DURATION:                                  0.120s  (Air-gapped on-device)<
         </div>
     """)
 
-    # P42
+    # ---------------- PAGE 42 (UPDATED WITH PRE-COMMIT SCREENSHOT) ----------------
     p(42, "ACT X: PULL REQUEST BRANCH DIFF SCANNING", """
         <div class="pillar-tag">Pillar III: Deployment & Accessibility</div>
         <h1>Act X: Pull Request Branch Diff Scanning (`--diff`)</h1>
         <h2>1. Automated Branch Comparison against Target Ref</h2>
         <p>
-            When developers push feature branches or open Pull Requests, security reviewers only care about the new code being introduced, rather than existing legacy issues elsewhere in the repository.
-        </p>
-        <p>
-            Faraday provides the <code>--diff &lt;BRANCH&gt;</code> flag, which queries <code>git diff --name-only &lt;BRANCH&gt;...HEAD</code>:
+            When developers push feature branches or open Pull Requests, security reviewers only care about the new code being introduced, rather than existing legacy issues elsewhere in the repository. Faraday provides the <code>--diff &lt;BRANCH&gt;</code> flag:
         </p>
         <pre><code>uv run faraday --diff main --fail-on HIGH --sarif pr_findings.sarif</code></pre>
 
-        <h2>2. Continuous Integration Quality Gates</h2>
+        <h2>2. Continuous Integration Quality Gates in Action</h2>
         <p>
-            In GitHub Actions or GitLab CI, Faraday evaluates the severity of findings in the diff. If any vulnerability meets or exceeds the <code>--fail-on</code> threshold (e.g. <code>HIGH</code> or <code>CRITICAL</code>), Faraday prints the offending lines and exits with <strong>returncode 1</strong>:
+            If any vulnerability meets or exceeds the <code>--fail-on</code> threshold (e.g. <code>HIGH</code> or <code>CRITICAL</code>), Faraday intercepts the commit and blocks submission:
         </p>
-        <div class="alert-danger">
-            <strong>CI/CD Gate Triggered:</strong><br>
-            <code>[CI/CD GATE FAILED] Found 2 issue(s) at or above HIGH severity.</code><br>
-            <code>[Faraday] COMMIT BLOCKED: High-severity security issues found in staged code.</code>
+
+        <!-- EMBED WORKING SCREENSHOT OF PRE-COMMIT HOOK INTERCEPTION -->
+        <div style="margin-top: 2.5mm; text-align: center;">
+            <img src="images/screenshot_git_hook.png" style="width: 100%; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.18); border: 1px solid #cbd5e1;">
+            <div style="font-size: 7.2pt; color: #64748b; margin-top: 1mm; font-weight: 600;">Figure 10.1: Faraday Pre-Commit Hook Intercepting Insecure Code Before Commit Finalization</div>
         </div>
     """)
 
-    # P43
+    # ---------------- PAGE 43 ----------------
     p(43, "ACT X: 1-CLICK PRE-COMMIT HOOK INSTALLATION", """
         <div class="pillar-tag">Pillar III: Deployment & Accessibility</div>
         <h1>Act X: 1-Click Pre-Commit Hook Installation</h1>
@@ -1377,7 +1374,7 @@ TOTAL DURATION:                                  0.120s  (Air-gapped on-device)<
   args: ["--staged", "--fail-on", "HIGH"]</code></pre>
     """)
 
-    # P44
+    # ---------------- PAGE 44 (UPDATED WITH CLI WORKING SCREENSHOT) ----------------
     p(44, "ACT XI: AUTONOMOUS RICH TERMINAL CLI", """
         <div class="pillar-tag">Pillar III: Deployment & Accessibility</div>
         <h1>Act XI: Autonomous Rich Interactive Terminal Architecture</h1>
@@ -1386,23 +1383,14 @@ TOTAL DURATION:                                  0.120s  (Air-gapped on-device)<
             Unlike static command-line tools that execute once and dump unformatted text, Faraday features a modern, interactive terminal UI powered by the <strong>Rich</strong> library in <code>backend/cli.py</code>:
         </p>
 
-        <div class="highlight-box">
-            <strong>Interactive Terminal Capabilities:</strong><br>
-            • <strong>Multi-Project Switching:</strong> When a scan completes, the CLI interactively prompts for the next project path, switching targets in 0.05 seconds.<br>
-            • <strong>Instant Re-Scan (`r`):</strong> Pressing <code>r</code> instantly re-audits the current codebase, allowing developers to verify security fixes with immediate visual feedback.<br>
-            • <strong>Clean Exit (`q`):</strong> Exits cleanly leaving zero lingering background daemons or temporary files.<br>
-            • <strong>Animated Live Spinners:</strong> Real-time visual progress indicators for AST parsing, entropy scanning, and neural reasoning.
+        <!-- EMBED WORKING SCREENSHOT OF FARADAY TERMINAL EXECUTION -->
+        <div style="margin-top: 2.5mm; text-align: center;">
+            <img src="images/screenshot_cli_run.png" style="width: 100%; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.18); border: 1px solid #cbd5e1;">
+            <div style="font-size: 7.2pt; color: #64748b; margin-top: 1mm; font-weight: 600;">Figure 11.1: Live Faraday Interactive Review Session Running Against demo/sample_project</div>
         </div>
-
-        <h2>2. Terminal Layout Blueprint</h2>
-        <pre><code>╭─ [FARADAY] 100% Air-Gapped Code Review Copilot ──────────────────────╮
-│ Snapdragon Hexagon NPU Accelerated • Zero Data Egress                │
-╰──────────────────────────────────────────────────────────────────────╯
-Target: demo/sample_project • 3 files • 16 functions • 0.07s
-[!] Found 3 security issue(s) [1 CRITICAL, 2 HIGH]</code></pre>
     """)
 
-    # P45
+    # ---------------- PAGE 45 ----------------
     p(45, "ACT XII: CONFIGURATION ENGINE & GOVERNANCE", """
         <div class="pillar-tag">Pillar III: Deployment & Accessibility</div>
         <h1>Act XII: Configuration Engine & Enterprise Governance</h1>
@@ -1432,7 +1420,7 @@ exclude_dirs:
   - "dist"</code></pre>
     """)
 
-    # P46
+    # ---------------- PAGE 46 ----------------
     p(46, "ACT XIII: COMPREHENSIVE VERIFICATION RIG", """
         <div class="pillar-tag">Pillar IV: Presentation & Documentation</div>
         <h1>Act XIII: Comprehensive Verification Rig & 23/23 Test Suite</h1>
@@ -1459,7 +1447,7 @@ exclude_dirs:
         </table>
     """)
 
-    # P47
+    # ---------------- PAGE 47 ----------------
     p(47, "ACT XIV: ANNOTATED SOURCE CODE BLUEPRINT", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act XIV: Complete Annotated Source Code Blueprint</h1>
@@ -1486,7 +1474,7 @@ exclude_dirs:
 └── tests/                      # Full 23-test unit & integration test suite</code></pre>
     """)
 
-    # P48
+    # ---------------- PAGE 48 ----------------
     p(48, "ACT XV: DEVELOPER INSTALLATION & RUNBOOK", """
         <div class="pillar-tag">Pillar III: Deployment & Accessibility</div>
         <h1>Act XV: Developer Installation & Operational Runbook</h1>
@@ -1513,7 +1501,7 @@ uv run pytest
 uv run faraday demo/sample_project</code></pre>
     """)
 
-    # P49
+    # ---------------- PAGE 49 ----------------
     p(49, "ACT XVI: THREAT MODEL & AIR-GAP CERTIFICATION", """
         <div class="pillar-tag">Pillar II: Application Use Case & Innovation</div>
         <h1>Act XVI: Threat Modeling (STRIDE) & Air-Gap Certification</h1>
@@ -1534,7 +1522,7 @@ uv run faraday demo/sample_project</code></pre>
         </p>
     """)
 
-    # P50
+    # ---------------- PAGE 50 ----------------
     p(50, "ACT XVII & XVIII: ROADMAP & CONCLUSION", """
         <div class="pillar-tag">Pillar IV: Presentation & Documentation</div>
         <h1>Act XVII & XVIII: Strategic Roadmap & Conclusion</h1>

@@ -660,9 +660,12 @@ code {
         </p>
         <pre><code>Quantization Formula:   W_int4 = clamp(round(W_fp16 / Scale) + ZeroPoint, -8, 7)
 Hardware Reconstruct:   W_eff = (W_int4 - ZeroPoint) * Scale</code></pre>
-        <p>
-            This architecture compresses the complete 7B model footprint down to just <strong>5.05 Gigabytes</strong>, fitting effortlessly into system memory while achieving lightning-fast token generation.
-        </p>
+
+        <!-- EMBED WORKING SCREENSHOT TO ELIMINATE WHITESPACE -->
+        <div style="margin-top: 2.5mm; text-align: center;">
+            <img src="images/screenshot_quantization_arch.png" style="width: 100%; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.18); border: 1px solid #cbd5e1;">
+            <div style="font-size: 7.2pt; color: #64748b; margin-top: 1mm; font-weight: 600;">Figure 2.1: Native w4a16 Quantization & Snapdragon Hexagon HTP Systolic Tensor Core Architecture</div>
+        </div>
     
             </div>
             <div class="page-footer">
@@ -1640,17 +1643,12 @@ Analysis:'''</code></pre>
             The performance metrics returned directly from the Snapdragon X Elite hardware laboratory demonstrate mind-boggling speed:
         </p>
 
-        <table style="font-size: 8pt;">
+        <table style="font-size: 7.8pt;">
             <tr><th>Hardware Benchmark Metric</th><th>Measured Value</th><th>Engineering Significance</th></tr>
             <tr>
                 <td><strong>Estimated Inference Time</strong></td>
                 <td><strong>32 &mu;s (0.032 milliseconds)</strong></td>
                 <td>Sub-millisecond latency enables real-time auditing during live developer typing.</td>
-            </tr>
-            <tr>
-                <td><strong>All Inference Times Range</strong></td>
-                <td><strong>32 &mu;s – 47 &mu;s</strong></td>
-                <td>Ultra-consistent execution times with virtually zero operating system jitter.</td>
             </tr>
             <tr>
                 <td><strong>Total NPU Hardware Cycles</strong></td>
@@ -1669,11 +1667,11 @@ Analysis:'''</code></pre>
             </tr>
         </table>
 
-        <h2>2. Distribution of 100 Inference Runs</h2>
-        <p>
-            Excluding the initial cold cache run (870 &mu;s), all subsequent runs settled into a rock-solid band between 32 and 37 &mu;s:
-            <br><code>[60, 47, 39, 35, 36, 35, 34, 36, 36, 33, 36, 34, 35, 33, 36, 35, 34, 35, 32, 34...]</code>
-        </p>
+        <!-- EMBED WORKING SCREENSHOT OF QUALCOMM AI HUB LIVE BENCHMARK -->
+        <div style="margin-top: 2mm; text-align: center;">
+            <img src="images/screenshot_aihub_npu.png" style="width: 100%; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.18); border: 1px solid #cbd5e1;">
+            <div style="font-size: 7.2pt; color: #64748b; margin-top: 1mm; font-weight: 600;">Figure 7.1: Live Hardware Benchmark on Qualcomm Snapdragon X Elite CRD via Qualcomm AI Hub</div>
+        </div>
     
             </div>
             <div class="page-footer">
@@ -2107,21 +2105,19 @@ TOTAL DURATION:                                  0.120s  (Air-gapped on-device)<
         <h1>Act X: Pull Request Branch Diff Scanning (`--diff`)</h1>
         <h2>1. Automated Branch Comparison against Target Ref</h2>
         <p>
-            When developers push feature branches or open Pull Requests, security reviewers only care about the new code being introduced, rather than existing legacy issues elsewhere in the repository.
-        </p>
-        <p>
-            Faraday provides the <code>--diff &lt;BRANCH&gt;</code> flag, which queries <code>git diff --name-only &lt;BRANCH&gt;...HEAD</code>:
+            When developers push feature branches or open Pull Requests, security reviewers only care about the new code being introduced, rather than existing legacy issues elsewhere in the repository. Faraday provides the <code>--diff &lt;BRANCH&gt;</code> flag:
         </p>
         <pre><code>uv run faraday --diff main --fail-on HIGH --sarif pr_findings.sarif</code></pre>
 
-        <h2>2. Continuous Integration Quality Gates</h2>
+        <h2>2. Continuous Integration Quality Gates in Action</h2>
         <p>
-            In GitHub Actions or GitLab CI, Faraday evaluates the severity of findings in the diff. If any vulnerability meets or exceeds the <code>--fail-on</code> threshold (e.g. <code>HIGH</code> or <code>CRITICAL</code>), Faraday prints the offending lines and exits with <strong>returncode 1</strong>:
+            If any vulnerability meets or exceeds the <code>--fail-on</code> threshold (e.g. <code>HIGH</code> or <code>CRITICAL</code>), Faraday intercepts the commit and blocks submission:
         </p>
-        <div class="alert-danger">
-            <strong>CI/CD Gate Triggered:</strong><br>
-            <code>[CI/CD GATE FAILED] Found 2 issue(s) at or above HIGH severity.</code><br>
-            <code>[Faraday] COMMIT BLOCKED: High-severity security issues found in staged code.</code>
+
+        <!-- EMBED WORKING SCREENSHOT OF PRE-COMMIT HOOK INTERCEPTION -->
+        <div style="margin-top: 2.5mm; text-align: center;">
+            <img src="images/screenshot_git_hook.png" style="width: 100%; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.18); border: 1px solid #cbd5e1;">
+            <div style="font-size: 7.2pt; color: #64748b; margin-top: 1mm; font-weight: 600;">Figure 10.1: Faraday Pre-Commit Hook Intercepting Insecure Code Before Commit Finalization</div>
         </div>
     
             </div>
@@ -2186,20 +2182,11 @@ TOTAL DURATION:                                  0.120s  (Air-gapped on-device)<
             Unlike static command-line tools that execute once and dump unformatted text, Faraday features a modern, interactive terminal UI powered by the <strong>Rich</strong> library in <code>backend/cli.py</code>:
         </p>
 
-        <div class="highlight-box">
-            <strong>Interactive Terminal Capabilities:</strong><br>
-            • <strong>Multi-Project Switching:</strong> When a scan completes, the CLI interactively prompts for the next project path, switching targets in 0.05 seconds.<br>
-            • <strong>Instant Re-Scan (`r`):</strong> Pressing <code>r</code> instantly re-audits the current codebase, allowing developers to verify security fixes with immediate visual feedback.<br>
-            • <strong>Clean Exit (`q`):</strong> Exits cleanly leaving zero lingering background daemons or temporary files.<br>
-            • <strong>Animated Live Spinners:</strong> Real-time visual progress indicators for AST parsing, entropy scanning, and neural reasoning.
+        <!-- EMBED WORKING SCREENSHOT OF FARADAY TERMINAL EXECUTION -->
+        <div style="margin-top: 2.5mm; text-align: center;">
+            <img src="images/screenshot_cli_run.png" style="width: 100%; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.18); border: 1px solid #cbd5e1;">
+            <div style="font-size: 7.2pt; color: #64748b; margin-top: 1mm; font-weight: 600;">Figure 11.1: Live Faraday Interactive Review Session Running Against demo/sample_project</div>
         </div>
-
-        <h2>2. Terminal Layout Blueprint</h2>
-        <pre><code>╭─ [FARADAY] 100% Air-Gapped Code Review Copilot ──────────────────────╮
-│ Snapdragon Hexagon NPU Accelerated • Zero Data Egress                │
-╰──────────────────────────────────────────────────────────────────────╯
-Target: demo/sample_project • 3 files • 16 functions • 0.07s
-[!] Found 3 security issue(s) [1 CRITICAL, 2 HIGH]</code></pre>
     
             </div>
             <div class="page-footer">
