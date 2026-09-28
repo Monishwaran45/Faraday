@@ -148,6 +148,39 @@ To inspect the active NPU execution provider and measure single-inference latenc
 uv run python backend/models/model_backend.py
 ```
 
+### 10. Qualcomm AI Hub Cloud Hardware Verification (Snapdragon X Elite NPU)
+
+Faraday's neural model has been verified and benchmarked on physical **Qualcomm Snapdragon X Elite CRD (Compute Reference Device)** hardware via the [Qualcomm AI Hub](https://aihub.qualcomm.com) cloud infrastructure:
+
+- **Compile Job (QNN / ONNX for NPU):** [workbench.aihub.qualcomm.com/jobs/jgol7nj4g](https://workbench.aihub.qualcomm.com/jobs/jgol7nj4g/) — **Status: `SUCCESS`**
+- **Hardware Profile Job (Snapdragon X Elite CRD):** [workbench.aihub.qualcomm.com/jobs/jpvlyrj75](https://workbench.aihub.qualcomm.com/jobs/jpvlyrj75/) — **Status: `SUCCESS`**
+
+#### Physical NPU Hardware Benchmark Results
+
+| Metric | Measured Result | Specification / Notes |
+| :--- | :--- | :--- |
+| **Target Hardware** | **Snapdragon X Elite CRD** | Qualcomm `sc8380xp` (Hexagon v73 NPU) |
+| **Compute Acceleration Unit** | **100% NPU** | All layers executed exclusively on the Hexagon NPU |
+| **Average Inference Latency** | **32 μs (0.032 ms)** | Sub-millisecond neural classification |
+| **Total NPU Cycles** | **4,866 cycles** | High-efficiency hardware execution |
+| **Warm Load Time** | **507 ms (0.507 s)** | Rapid in-memory activation |
+| **Inference Peak Memory** | **~28 MB** | Extremely lightweight on-device footprint |
+| **Fallback Rate** | **0% (Zero CPU/GPU fallback)** | Native Hexagon NPU operator mapping |
+
+#### NPU Layer-by-Layer Compute Offload
+
+```text
+Layer                  Type    Compute Unit   NPU Execution Cycles
+──────────────────────────────────────────────────────────────────
+Input               -> Input   | Unit: NPU    | Cycles: 512
+/fc1/Gemm           -> Gemm    | Unit: NPU    | Cycles: 1527
+/relu/Relu          -> Relu    | Unit: NPU    | Cycles: 1327
+/fc2/Gemm           -> Gemm    | Unit: NPU    | Cycles: 596
+Output              -> Output  | Unit: NPU    | Cycles: 904
+──────────────────────────────────────────────────────────────────
+Total NPU Cycles: 4,866 cycles (100% NPU Hardware Accelerated)
+```
+
 ---
 
 ## 📂 Where to Find Output Reports
@@ -280,3 +313,11 @@ uv run pytest
 3. Show the **Static Security Findings** catching credentials, high-entropy secrets, and SQL concatenation immediately.
 4. Show the **On-Device Neural Review** analyzing logic on the **Snapdragon Hexagon NPU**.
 5. Inspect the generated **OASIS SARIF report** (`demo_sarif.sarif`), docstrings, and synthesized README in `review_output/`.
+
+---
+
+## 👤 Author & Project Metadata
+
+- **Author:** Monishwaran K
+- **Project:** Faraday — Air-Gapped Code Review Copilot for Qualcomm Snapdragon Hexagon NPU
+- **Competition Category:** Qualcomm Snapdragon On-Device AI Innovation
