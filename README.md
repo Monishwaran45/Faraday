@@ -482,7 +482,7 @@ uv run pytest -v
 
 ---
 
-## 🎬 Demo Script (Air-Gapped Showcase)
+##  Demo Script (Air-Gapped Showcase)
 
 1. **Visibly disable WiFi** on the Snapdragon laptop.
 2. Run Faraday against the demo project:
