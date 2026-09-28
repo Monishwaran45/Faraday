@@ -251,7 +251,7 @@ Output              -> Output  | Unit: NPU    | Cycles: 904
 Total NPU Cycles: 4,866 cycles (100% NPU Hardware Accelerated)
 ```
 
-### 11. On-Device LoRA Fine-Tuning (Hexagon HTP Matrix Units)
+### 12. On-Device LoRA Fine-Tuning (Hexagon HTP Matrix Units)
 
 Enterprise organizations often enforce proprietary coding standards, internal naming conventions, and custom API wrappers that cloud LLMs have never seen. Faraday solves this by fine-tuning compact Low-Rank Adapters (LoRA) directly on-device using the Hexagon NPU's HTP matrix acceleration units:
 
@@ -271,7 +271,114 @@ uv run faraday demo/sample_project --adapter adapters/enterprise_lora
 
 ---
 
-##  Where to Find Output Reports
+## 🛠️ Complete CLI Command Reference & Real-World Scenarios
+
+Faraday offers a unified command-line interface designed to seamlessly integrate into every stage of the developer lifecycle—from local coding and git hooks to CI/CD pipelines and visual dashboards.
+
+| Command / Flag | Primary Purpose | Real-World Scenario |
+| :--- | :--- | :--- |
+| `faraday [path]` | Scan directory or file interactively | Developer reviews a repository with interactive terminal prompts to inspect findings or switch folders. |
+| `faraday --ui` (or `--web`, `--dashboard`) | Air-gapped visual web dashboard | Lead architects conduct code reviews and generate docstrings/README via an interactive browser interface at `http://localhost:8000`. |
+| `faraday --setup-all` | 1-Click enterprise onboarding | Team leads set up `.faraday.yml`, local pre-commit hook, and GitHub Actions CI workflow with one command. |
+| `faraday --setup-ci` | Automated GitHub Actions workflow | DevOps engineers generate `.github/workflows/faraday.yml` with SARIF upload to GitHub Security tab. |
+| `faraday --install-hook` | Sub-second git pre-commit hook | Developers install `.git/hooks/pre-commit` to prevent accidental credential or security leak commits. |
+| `faraday --init` | Scaffolds `.faraday.yml` policy | Security teams customize rule thresholds, secret entropy tolerances, and exclusions. |
+| `faraday --staged` | Scans only git staged files | Pre-commit hook or developer runs sub-second check on newly staged files before typing `git commit`. |
+| `faraday --diff <branch>` | Pull request branch diff audit | CI/CD pipeline or developer inspects only lines modified against `main` or `develop`. |
+| `faraday --sarif [path]` | Exports OASIS SARIF v2.1.0 report | CI pipeline uploads SARIF findings directly to GitHub Code Scanning or SonarQube. |
+| `faraday --json` | Machine-readable JSON summary | Automated enterprise tooling or SIEM parses scan results and metrics programmatically. |
+| `faraday --fail-on <LEVEL>` | Quality gate failure threshold | Enforces strict CI gates (`HIGH`, `MEDIUM`, `LOW`, or `NONE` for audit mode). |
+| `faraday --skip-ai` | Fast static-only security audit | Ultra-fast regex & entropy scanning across massive multi-gigabyte repositories without neural review. |
+| `faraday --once` | Non-interactive single scan | Automated headless scripts run a scan and exit cleanly with exit code 0 or 1. |
+| `faraday --tune` | On-device LoRA fine-tuning | Enterprise teams train custom low-rank adapters on local proprietary coding patterns. |
+| `faraday --adapter <path>` | Loads fine-tuned LoRA adapter | Reviews code using custom corporate coding style and naming conventions. |
+
+---
+
+### In-Depth Real-World Scenario Walkthroughs
+
+#### Scenario A: First-Time Project Onboarding (1-Click Governance)
+**Context:** A developer checks out a new microservice repository and wants complete security governance without manually writing YAML files or configuring hooks.
+```bash
+uv run faraday --setup-all
+```
+**What Happens Under the Hood:**
+1. Generates `.faraday.yml` containing enterprise rule definitions, Shannon entropy thresholds (4.3), and exclusion defaults.
+2. Writes an executable `.git/hooks/pre-commit` script that triggers `faraday --staged --fail-on HIGH` prior to any git commit.
+3. Creates `.github/workflows/faraday.yml` configured to run on every push and pull request, scanning the codebase in audit mode and uploading SARIF results directly to the GitHub Security tab.
+
+---
+
+#### Scenario B: Interactive Visual Code Review & Documentation (`faraday --ui`)
+**Context:** A team lead or auditor wants a visual overview of repository health, clickable file inspection, and one-click documentation synthesis.
+```bash
+uv run faraday --ui
+```
+**What Happens Under the Hood:**
+1. Starts a zero-dependency, 100% air-gapped HTTP server at `http://localhost:8000` using standard library `http.server`.
+2. Automatically opens the default web browser.
+3. Displays SVG donut charts of security findings (High, Medium, Low), a file explorer with line-by-line issue badges, on-device PEP-257 docstring synthesis with one-click clipboard copying, and architecture README generation.
+
+---
+
+#### Scenario C: Pre-Commit Security Interception (Sub-Second Git Hook)
+**Context:** A developer accidentally pastes an AWS access key or hardcoded password into a test or configuration file and types `git commit`.
+```bash
+git add tests/test_leaks1.py
+git commit -m "add test case"
+```
+**What Happens Under the Hood:**
+1. The `.git/hooks/pre-commit` hook triggers `faraday --staged --fail-on HIGH`.
+2. Faraday queries `git diff --cached --name-only` to isolate only staged files.
+3. The static scanner scans the file in `0.01s`, identifies the AWS access key (Rule `AWS_KEY`), and exits with code `1`.
+4. Git aborts the commit, completely preventing secret leakage into the git history.
+
+---
+
+#### Scenario D: Pull Request Branch Diff Scan (`--diff main`)
+**Context:** In a CI/CD pull request check or local feature branch, you only want to review changes introduced relative to the `main` branch.
+```bash
+uv run faraday --diff main --fail-on HIGH --sarif pr_results.sarif
+```
+**What Happens Under the Hood:**
+1. Faraday resolves `git diff --name-only main...HEAD`.
+2. Only the modified files are parsed into AST chunks and reviewed.
+3. If any `HIGH` severity vulnerabilities exist in the new changes, Faraday exits with code `1`, blocking merge.
+4. Generates `pr_results.sarif` for pull request annotation.
+
+---
+
+#### Scenario E: CI/CD Quality Gate with GitHub Security Tab Integration
+**Context:** GitHub Actions runs automated code scanning on every commit and displays security alerts in the repository's **Security -> Code scanning** tab.
+```bash
+uv run faraday . --fail-on NONE --sarif results.sarif --once
+```
+**What Happens Under the Hood:**
+1. Runs a comprehensive scan across all repository files.
+2. `--fail-on NONE` ensures the workflow finishes with exit code `0` (green checkmark), preventing unnecessary pipeline breakage during audit scans.
+3. Writes `results.sarif` compliant with the OASIS SARIF v2.1.0 specification with MITRE CWE mappings.
+4. GitHub's `github/codeql-action/upload-sarif@v3` action ingests the SARIF file and surfaces findings directly in the GitHub UI.
+
+---
+
+#### Scenario F: On-Device LoRA Fine-Tuning on Hexagon HTP Units (`--tune`)
+**Context:** A financial institution has proprietary internal helper functions and strict variable naming guidelines that cloud models fail to enforce.
+```bash
+# Step 1: Train low-rank adapter on local codebase
+uv run faraday . --tune --epochs 3 --lora-rank 8 --adapter-out adapters/internal_style
+
+# Step 2: Perform code reviews using the custom adapter
+uv run faraday . --adapter adapters/internal_style
+```
+**What Happens Under the Hood:**
+1. Extracts AST function chunks from local repository files.
+2. Injects trainable Low-Rank Adapter matrices ($A$ and $B$, rank $r=8$) into attention linear projections while freezing base model weights $W_0$.
+3. Runs backpropagation on the Snapdragon Hexagon HTP matrix units without sending any training tokens off the device.
+4. Saves `adapter_weights.pt` and `adapter_config.json` (<120 KB total).
+
+---
+
+## 📁 Where to Find Output Reports
 
 All artifacts are generated in the `--output` directory (default: `./review_output`):
 
@@ -282,69 +389,22 @@ All artifacts are generated in the `--output` directory (default: `./review_outp
 
 ---
 
-##  Automated 1-Click Setup & Enterprise Governance
-
-Configuring security policies, SARIF reporting, and CI/CD pipelines manually is tedious and error-prone. Faraday automates the entire onboarding workflow with single-command setup flags:
-
-### 1. Complete 1-Click Setup (`--setup-all`)
-Run this single command in any repository root to configure the complete enterprise stack:
-```bash
-uv run faraday --setup-all
-```
-This automatically executes:
--  **[1/3] Policy Configuration:** Scaffolds `.faraday.yml` with rule thresholds and exclusion defaults.
--  **[2/3] Local Git Pre-Commit Hook:** Injects `.git/hooks/pre-commit` to prevent committing secrets or high-severity flaws.
--  **[3/3] GitHub Actions CI/CD Pipeline:** Creates `.github/workflows/faraday.yml` with cross-platform automated SARIF upload to the GitHub Security tab and pull request quality gate enforcement.
-
----
-
-### 2. Modular Automated Setup Commands
-
-If you prefer to configure components individually:
-
-- **Automated GitHub Actions Setup:**
-  ```bash
-  uv run faraday --setup-ci
-  ```
-  Generates `.github/workflows/faraday.yml` with cross-platform Linux/Windows CI support, automated SARIF security reporting, and gate enforcement.
-
-- **Automated Pre-Commit Hook Installation:**
-  ```bash
-  uv run faraday --install-hook
-  ```
-  Installs a sub-second pre-commit security check (`faraday --staged --fail-on HIGH`) that intercepts local commits without external network dependencies.
-
-- **Automated Policy Scaffolding:**
-  ```bash
-  uv run faraday --init
-  ```
-  Creates a starter `.faraday.yml` in your project root with customizable rule thresholds.
-
----
-
-### 3. Pull Request Branch Diff Scan
-In CI pipelines or local feature branches, review only files modified against `main`:
-```bash
-uv run faraday --diff main --fail-on HIGH --sarif results.sarif
-```
-
----
-
-## Production Project Layout
+## 🏗️ Production Project Layout
 
 ```
 Qualcomm Snapdragon/
 ├── backend/
 │   ├── core/
-│   │   ├── config.py           # .faraday.yml, JSON, & pyproject.toml loader
+│   │   ├── config.py           # .faraday.yml, JSON, & pyproject.toml loader & CI workflow generator
 │   │   ├── git_utils.py        # Git staged/diff file detection & hook installer
 │   │   ├── sarif_builder.py    # OASIS SARIF v2.1.0 generator for CI/CD & CWE mapping
 │   │   ├── file_scanner.py     # AST-based Python parser & JS/TS function chunker
-│   │   ├── secret_scanner.py   # Shannon entropy & static vulnerability scanner
+│   │   ├── secret_scanner.py   # Shannon entropy & static vulnerability scanner (26+ rules)
 │   │   ├── llm_reviewer.py     # Neural review & documentation generation
 │   │   └── report_builder.py   # Synthesis of security & review markdown reports
 │   ├── models/
-│   │   └── model_backend.py    # Snapdragon Hexagon NPU QNN backend & mock fallback
+│   │   ├── model_backend.py    # Snapdragon Hexagon NPU QNN backend & mock fallback
+│   │   └── lora_trainer.py     # On-device LoRA fine-tuning engine (Hexagon HTP units)
 │   ├── web_server.py           # Air-gapped interactive visual dashboard (http://localhost:8000)
 │   └── cli.py                  # Autonomous Rich interactive terminal UI
 ├── demo/
@@ -356,15 +416,18 @@ Qualcomm Snapdragon/
 ├── models/
 │   └── qwen2-7b-qnn/           # Compiled Snapdragon X Elite QNN context binaries
 ├── tests/
-│   ├── test_config.py          # Configuration loading & init tests
-│   ├── test_git_utils.py       # Git integration tests
-│   ├── test_sarif_builder.py   # SARIF v2.1.0 output & CWE mapping tests
-│   ├── test_file_scanner.py    # Python & JS/TS function chunking tests
-│   ├── test_secret_scanner.py  # Static vulnerability & Shannon entropy tests
-│   ├── test_model_backend.py   # Backend contract & heuristic precision tests
-│   └── test_report_builder.py  # Markdown synthesis & compliance tests
+│   ├── test_config.py          # Configuration loading, init, & GitHub Actions generator tests
+│   ├── test_file_scanner.py    # Python AST & JS/TS function chunking tests
+│   ├── test_git_utils.py       # Git root discovery & pre-commit hook installer tests
+│   ├── test_leaks1.py          # Simulated credentials fixture for live pre-commit interception
+│   ├── test_lora_trainer.py    # LoRA parameter efficiency & on-device training tests
+│   ├── test_model_backend.py   # Backend hierarchy, QNN heuristics, & vulnerability tests
+│   ├── test_report_builder.py  # Markdown synthesis & compliance tests
+│   ├── test_sarif_builder.py   # OASIS SARIF v2.1.0 output & CWE mapping tests
+│   └── test_secret_scanner.py  # Static vulnerability & Shannon entropy tests
 ├── .github/workflows/
-│   └── codeguard.yml           # CI/CD GitHub Actions workflow template
+│   ├── codeguard.yml           # CI/CD GitHub Actions workflow template
+│   └── faraday.yml             # Automated Faraday security scanning & SARIF upload workflow
 ├── .pre-commit-hooks.yaml      # Standard pre-commit framework manifest
 ├── pyproject.toml              # Build config, dependencies, faraday & codeguard CLI scripts
 ├── requirements.txt            # Pinned requirements
@@ -374,17 +437,52 @@ Qualcomm Snapdragon/
 
 ---
 
-## Running Automated Tests
+## 🧪 Comprehensive Automated Test Suite (29 Tests — 100% Passing)
 
-Run the full 28-test suite covering AST parsing, static secrets, QNN NPU backend, SARIF, and LoRA on-device training:
+Faraday includes an exhaustive test suite verifying every component from AST parsing and Shannon entropy secret detection to on-device LoRA fine-tuning and SARIF schema compliance.
 
 ```bash
+# Run the complete test suite with verbose output:
 uv run pytest -v
 ```
 
+### Test Suite Catalog & Verification Breakdown
+
+| Test File | Test Function | Target Component | Verification Logic & Simulated Scenario |
+| :--- | :--- | :--- | :--- |
+| **`test_config.py`** | `test_load_default_config` | `config.py` | Verifies default configuration fallbacks, file extensions, entropy thresholds (4.3), and severity gates. |
+| | `test_init_project_config` | `config.py` | Verifies programmatic generation of `.faraday.yml` in a target folder with valid YAML syntax. |
+| | `test_load_json_config` | `config.py` | Verifies parsing and priority resolution for `.faraday.json` configuration files. |
+| | `test_setup_github_ci_workflow` | `config.py` | Verifies generation of `.github/workflows/faraday.yml` with audit mode (`--fail-on NONE`) and SARIF upload. |
+| **`test_file_scanner.py`** | `test_chunk_python_file_captures_functions_and_classes` | `file_scanner.py` | Tests Python AST chunking, confirming functions, methods, and classes are isolated with line ranges and docstrings. |
+| | `test_chunk_javascript_file_captures_functions_and_classes` | `file_scanner.py` | Tests JavaScript/TypeScript regex chunking, isolating arrow functions, traditional functions, and classes. |
+| | `test_scan_project_config_files` | `file_scanner.py` | Tests directory traversal and pattern matching, ensuring `.git`, `node_modules`, and excluded folders are ignored. |
+| | `test_chunk_by_lines_fallback` | `file_scanner.py` | Verifies sliding window chunking fallback for unsupported languages and general text files. |
+| **`test_git_utils.py`** | `test_find_git_root` | `git_utils.py` | Confirms recursive discovery of `.git` root from arbitrary subdirectories. |
+| | `test_install_pre_commit_hook` | `git_utils.py` | Verifies automated writing of `.git/hooks/pre-commit` with correct execution permissions and CLI arguments. |
+| **`test_lora_trainer.py`** | `test_lora_config_defaults` | `lora_trainer.py` | Verifies LoRA configuration defaults: rank $r=8$, $\alpha=16$, learning rate, and target projection layers. |
+| | `test_lora_linear_parameter_freezing` | `lora_trainer.py` | Asserts base model weights $W_0$ have `requires_grad=False` while low-rank matrices $A$ and $B$ are trainable. |
+| | `test_lora_model_parameter_efficiency` | `lora_trainer.py` | Validates parameter efficiency, proving trainable parameters are constrained to ~15% of total model weights. |
+| | `test_on_device_training_loop` | `lora_trainer.py` | Simulates an on-device training epoch using local AST code samples, verifying loss decreases and gradients update. |
+| | `test_save_and_load_adapter_roundtrip` | `lora_trainer.py` | Confirms saving adapter weights to disk and reloading them produces identical tensor outputs. |
+| **`test_model_backend.py`** | `test_model_backend_hierarchy` | `model_backend.py` | Validates fallback priority: Snapdragon QNN NPU -> DirectML -> Mock Fallback. |
+| | `test_mock_backend_generation` | `model_backend.py` | Tests inference execution on mock backend for CI environments lacking Qualcomm physical silicon. |
+| | `test_qnn_backend_heuristic_review` | `model_backend.py` | Verifies deterministic heuristic rules detect code quality issues without false positives. |
+| | `test_qnn_backend_detects_mutable_default` | `model_backend.py` | Asserts detection of dangerous Python mutable default arguments (e.g., `def append_to(item, target=[])`). |
+| | `test_qnn_backend_detects_bare_except` | `model_backend.py` | Asserts detection of dangerous error-suppressing anti-patterns (e.g., `except: pass`). |
+| | `test_qnn_backend_detects_blocking_call_in_async` | `model_backend.py` | Asserts detection of blocking synchronous calls (e.g., `time.sleep()`) inside `async def` event loops. |
+| | `test_qnn_backend_detects_dom_xss` | `model_backend.py` | Asserts detection of insecure DOM manipulation (e.g., assigning unsanitized input to `innerHTML`). |
+| | `test_qnn_backend_detects_insecure_random_token` | `model_backend.py` | Asserts detection of `Math.random()` or `random.random()` used for security-sensitive token generation. |
+| | `test_qnn_backend_detects_unhandled_promise` | `model_backend.py` | Asserts detection of floating async calls and unhandled Promises lacking `.catch()` or `await`. |
+| **`test_report_builder.py`** | `test_build_report_generates_files` | `report_builder.py` | Verifies synthesis of `REVIEW_REPORT.md`, `GENERATED_DOCSTRINGS.md`, and `GENERATED_README.md`. |
+| **`test_sarif_builder.py`** | `test_generate_sarif_report` | `sarif_builder.py` | Asserts full compliance with OASIS SARIF v2.1.0 JSON schema, rule IDs, CWE taxonomy, and line URI mappings. |
+| **`test_secret_scanner.py`** | `test_secret_scanner_detects_aws_key` | `secret_scanner.py` | Asserts regex and entropy detection of AWS access key IDs (`AKIA...`). |
+| | `test_secret_scanner_detects_sql_injection` | `secret_scanner.py` | Asserts detection of dangerous raw string formatting in SQL statements (e.g., `f"SELECT * FROM users WHERE id={uid}"`). |
+| | `test_secret_scanner_detects_eval` | `secret_scanner.py` | Asserts detection of arbitrary code execution vectors (`eval()` and `exec()`). |
+
 ---
 
-## Demo Script (Air-Gapped Showcase)
+## 🎬 Demo Script (Air-Gapped Showcase)
 
 1. **Visibly disable WiFi** on the Snapdragon laptop.
 2. Run Faraday against the demo project:
@@ -393,12 +491,17 @@ uv run pytest -v
    ```
 3. Show the **Static Security Findings** catching credentials, high-entropy secrets, and SQL concatenation immediately.
 4. Show the **On-Device Neural Review** analyzing logic on the **Snapdragon Hexagon NPU**.
-5. Inspect the generated **OASIS SARIF report** (`demo_sarif.sarif`), docstrings, and synthesized README in `review_output/`.
+5. Launch the **Interactive Visual Web Dashboard**:
+   ```bash
+   uv run faraday --ui
+   ```
+6. Inspect the generated **OASIS SARIF report** (`demo_sarif.sarif`), docstrings, and synthesized README in `review_output/`.
 
 ---
 
-##  Author & Project Metadata
+## 👤 Author & Project Metadata
 
 - **Author:** Monishwaran K
 - **Project:** Faraday — Air-Gapped Code Review Copilot for Qualcomm Snapdragon Hexagon NPU
 - **Competition Category:** Qualcomm Snapdragon On-Device AI Innovation
+
