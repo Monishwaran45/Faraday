@@ -103,7 +103,7 @@ graph TD
 
 ---
 
-## ⚡ How to Execute the Project
+##  How to Execute the Project
 
 ### 1. Prerequisites & Environment Setup
 
@@ -262,7 +262,7 @@ All artifacts are generated in the `--output` directory (default: `./review_outp
 
 ---
 
-## 🚀 Automated 1-Click Setup & Enterprise Governance
+##  Automated 1-Click Setup & Enterprise Governance
 
 Configuring security policies, SARIF reporting, and CI/CD pipelines manually is tedious and error-prone. Faraday automates the entire onboarding workflow with single-command setup flags:
 
@@ -272,9 +272,9 @@ Run this single command in any repository root to configure the complete enterpr
 uv run faraday --setup-all
 ```
 This automatically executes:
-- ✅ **[1/3] Policy Configuration:** Scaffolds `.faraday.yml` with rule thresholds and exclusion defaults.
-- ✅ **[2/3] Local Git Pre-Commit Hook:** Injects `.git/hooks/pre-commit` to prevent committing secrets or high-severity flaws.
-- ✅ **[3/3] GitHub Actions CI/CD Pipeline:** Creates `.github/workflows/faraday.yml` with cross-platform automated SARIF upload to the GitHub Security tab and pull request quality gate enforcement.
+-  **[1/3] Policy Configuration:** Scaffolds `.faraday.yml` with rule thresholds and exclusion defaults.
+-  **[2/3] Local Git Pre-Commit Hook:** Injects `.git/hooks/pre-commit` to prevent committing secrets or high-severity flaws.
+-  **[3/3] GitHub Actions CI/CD Pipeline:** Creates `.github/workflows/faraday.yml` with cross-platform automated SARIF upload to the GitHub Security tab and pull request quality gate enforcement.
 
 ---
 
