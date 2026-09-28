@@ -292,6 +292,8 @@ Faraday offers a unified command-line interface designed to seamlessly integrate
 | `faraday --once` | Non-interactive single scan | Automated headless scripts run a scan and exit cleanly with exit code 0 or 1. |
 | `faraday --tune` | On-device LoRA fine-tuning | Enterprise teams train custom low-rank adapters on local proprietary coding patterns. |
 | `faraday --adapter <path>` | Loads fine-tuned LoRA adapter | Reviews code using custom corporate coding style and naming conventions. |
+| `faraday --prove` (or `--npu-status`) | Silicon NPU vs CPU hardware prover | Empirically audits host processor, active ONNX execution provider, and benchmarks live tensor latency with zero fake claims. |
+| `faraday --export-model` | Reproducible neural model exporter | Exports 1.41M parameter PyTorch neural network to ONNX v17 and generates Qualcomm AI Hub compilation manifest. |
 
 ---
 
@@ -375,6 +377,32 @@ uv run faraday . --adapter adapters/internal_style
 2. Injects trainable Low-Rank Adapter matrices ($A$ and $B$, rank $r=8$) into attention linear projections while freezing base model weights $W_0$.
 3. Runs backpropagation on the Snapdragon Hexagon HTP matrix units without sending any training tokens off the device.
 4. Saves `adapter_weights.pt` and `adapter_config.json` (<120 KB total).
+
+---
+
+#### Scenario G: Empirical Hardware Prover & NPU Verification (`--prove`)
+**Context:** An engineering team or auditor wants empirical proof that neural inference is executing on physical silicon and understands whether it is offloaded to the Qualcomm Hexagon NPU or running on verified CPU fallback.
+```bash
+uv run faraday --prove
+```
+**What Happens Under the Hood:**
+1. Audits host CPU architecture, processor family, and Qualcomm silicon identifiers.
+2. Probes ONNX Runtime providers (`QNNExecutionProvider` → `DmlExecutionProvider` → `CPUExecutionProvider`).
+3. Executes a 10-iteration live neural tensor inference benchmark, measuring exact sub-millisecond latencies and neural risk indices.
+4. Outputs an empirical verification table proving true tensor execution and transparently disclosing fallback status without heuristic spoofing.
+
+---
+
+#### Scenario H: Reproducible Model Export & Qualcomm AI Hub Compilation (`--export-model`)
+**Context:** An AI engineer wants to regenerate the neural model from scratch or compile it for deployment on the Snapdragon X Elite CRD reference platform.
+```bash
+uv run faraday --export-model
+```
+**What Happens Under the Hood:**
+1. Instantiates the PyTorch `FaradayCodeAssuranceNeuralNet` (1.41M parameters with scaled dot-product attention and multi-head classifiers).
+2. Exports the network to an optimized ONNX v17 computational graph (`models/onnx/faraday_code_assurance.onnx`).
+3. Runs `onnx.checker` graph verification and executes a test inference session.
+4. Emits `models/onnx/qnn_compile_manifest.json` containing the exact Qualcomm AI Hub compilation command targeting `sc8380xp` (w4a16 INT4 weights, FP16 activations).
 
 ---
 

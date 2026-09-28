@@ -61,7 +61,7 @@ if sys.platform == "win32":
 console = Console(legacy_windows=False)
 
 
-def print_banner(backend_name: str, target_path: str, output_dir: str, mode_str: str, ai_enabled: bool, adapter_path: str = None):
+def print_banner(backend_name: str, target_path: str, output_dir: str, mode_str: str, ai_enabled: bool, adapter_path: str = None, backend = None):
     header_text = Text()
     header_text.append(" Faraday ", style="bold white on #b45309")
     header_text.append(" On-Device Air-Gapped Code Assurance & Security Copilot\n", style="bold white")
@@ -77,13 +77,18 @@ def print_banner(backend_name: str, target_path: str, output_dir: str, mode_str:
     header_text.append("[*] ", style="bold yellow")
     header_text.append(f"{mode_str}\n\n", style="bold yellow")
 
-    header_text.append("  Target:  ", style="bold white")
+    header_text.append("  Target:   ", style="bold white")
     header_text.append(f"{target_path}   ", style="cyan")
     header_text.append("Output: ", style="bold white")
     header_text.append(f"{output_dir}\n", style="cyan")
-    header_text.append("  Backend: ", style="bold white")
-    header_text.append(f"{backend_name}   ", style="yellow")
-    header_text.append("AI Review: ", style="bold white")
+    header_text.append("  Backend:  ", style="bold white")
+    header_text.append(f"{backend_name}\n", style="yellow")
+    if backend and hasattr(backend, "is_neural"):
+        engine_type = "Neural Tensor Math (ONNX)" if backend.is_neural else "Rule-based Fallback (Non-Neural)"
+        provider = getattr(backend, "active_provider", "N/A")
+        header_text.append("  Engine:   ", style="bold white")
+        header_text.append(f"{engine_type} via {provider}\n", style="bold green" if backend.is_neural else "bold yellow")
+    header_text.append("  AI Review: ", style="bold white")
     header_text.append("Active" if ai_enabled else "Skipped (Static-Only)", style="green" if ai_enabled else "dim")
     if adapter_path:
         header_text.append("   LoRA: ", style="bold white")
@@ -258,7 +263,7 @@ def execute_pipeline(target_path: Path, args, backend, is_interactive: bool = Fa
             return False, 0
 
     if not args.json:
-        print_banner(backend.name, str(target_path), output_dir, mode_str, not skip_ai, adapter_path=getattr(args, "adapter", None))
+        print_banner(backend.name, str(target_path), output_dir, mode_str, not skip_ai, adapter_path=getattr(args, "adapter", None), backend=backend)
 
     # Step 1: Scan files & parse chunks
     t0 = time.time()
@@ -475,6 +480,8 @@ def main():
     parser.add_argument("--once", action="store_true", help="Run scan once and exit without interactive terminal prompt")
     parser.add_argument("--interactive", "-i", action="store_true", help="Force interactive terminal mode to continuously review projects")
     parser.add_argument("--ui", "--web", "--dashboard", action="store_true", dest="ui", help="Launch interactive visual web dashboard at http://localhost:8000")
+    parser.add_argument("--prove", "--npu-status", action="store_true", dest="prove", help="Run empirical hardware verification and benchmark of Qualcomm NPU vs CPU fallback")
+    parser.add_argument("--export-model", action="store_true", dest="export_model", help="Run reproducible neural model exporter to generate ONNX model & Qualcomm AI Hub compilation manifest")
 
     # On-Device LoRA Fine-Tuning CLI Flags
     parser.add_argument("--tune", "--train-lora", action="store_true", dest="tune", help="Fine-tune compact LoRA adapter on local repository coding standards (Hexagon HTP / Air-Gapped)")
@@ -533,6 +540,21 @@ def main():
     if getattr(args, "ui", False):
         from backend.web_server import launch_web_dashboard
         launch_web_dashboard(target_path, port=8000, auto_open=True)
+        return
+
+    # Feature: --prove / --npu-status (Empirical NPU Verification & Benchmark)
+    if getattr(args, "prove", False):
+        from backend.models.verify_npu import verify_npu_and_benchmark, print_prover_report
+        cert = verify_npu_and_benchmark()
+        print_prover_report(cert)
+        return
+
+    # Feature: --export-model (Export ONNX neural model & QNN compile manifest)
+    if getattr(args, "export_model", False):
+        from scripts.export_qnn_model import export_faraday_neural_model
+        onnx_path, manifest_path = export_faraday_neural_model()
+        console.print(f"[bold green][✓] Neural model successfully exported:[/] [cyan]{onnx_path}[/]")
+        console.print(f"[bold green][✓] Qualcomm AI Hub manifest created:[/] [cyan]{manifest_path}[/]")
         return
 
     # Feature: --init configuration

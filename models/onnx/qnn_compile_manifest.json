@@ -1,0 +1,11 @@
+{
+  "model_name": "faraday_code_assurance",
+  "onnx_file": "faraday_code_assurance.onnx",
+  "onnx_opset": 17,
+  "parameters": 1413901,
+  "target_hardware": "Qualcomm Snapdragon X Elite (sc8380xp)",
+  "npu_accelerator": "Hexagon v73 HTP NPU",
+  "quantization_profile": "w4a16 / INT4 weights, FP16 activations",
+  "aihub_compile_command": "qai-hub compile --model models/onnx/faraday_code_assurance.onnx --device 'Snapdragon X Elite CRD' --options '--target_runtime qnn_context_binary --quantize_io w4a16'",
+  "status": "READY_FOR_QUALCOMM_AI_HUB_COMPILATION"
+}
