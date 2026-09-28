@@ -17,7 +17,7 @@ dependencies = [
     "onnx>=1.18.0",
     "transformers>=4.40.0",
     "torch>=2.2.0",
-    "wmi>=1.5.1",
+    "wmi>=1.5.1; sys_platform == 'win32'",
     "pywin32>=306; sys_platform == 'win32'",
 ]
 
