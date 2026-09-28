@@ -31,6 +31,24 @@ A **Faraday cage** blocks external electromagnetic fields, creating an impenetra
 - **CI/CD Quality Gates:** Break pull request builds on critical flaws with configurable thresholds (`--fail-on HIGH`, `--fail-on MEDIUM`).
 
 ---
+## How It Works
+
+```
+project files / git staged files
+     │
+     ▼
+file_scanner.py      ──► AST chunking for Python & JS/TS function parsing
+     │
+     ▼
+secret_scanner.py    ──► Shannon entropy + regex: Cloud tokens, AI keys, DB URIs, SSL bypass
+     │
+     ▼
+llm_reviewer.py      ──► On-device Snapdragon Hexagon NPU neural review & docstrings
+     │
+     ▼
+report_builder.py    ──► Synthesizes REVIEW_REPORT.md, GENERATED_DOCSTRINGS.md,
+                         GENERATED_README.md, and OASIS SARIF v2.1.0
+
 
 ##  System Architecture (graph TD)
 
