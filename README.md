@@ -1,6 +1,5 @@
 # Faraday — Air-Gapped AI Code Assurance & Security Copilot
 
-**Built for the Snapdragon® AI Lab Build & Present Challenge 2026**
 
 *Named after the Faraday cage—symbolizing 100% physical and data isolation—Faraday provides enterprise teams with complete code privacy, offline neural intelligence, and zero data egress.*
 
@@ -10,7 +9,7 @@ Engineered for enterprise developers in defense, banking, healthcare, and high-c
 
 ---
 
-## 🛡️ Why "Faraday"?
+##  Why "Faraday"?
 
 A **Faraday cage** blocks external electromagnetic fields, creating an impenetrable barrier. Similarly, **Faraday** creates an impenetrable security boundary around your codebase:
 - **100% Air-Gapped & Offline:** Operates with WiFi physically disabled. Zero outbound telemetry, zero cloud dependencies.
@@ -33,7 +32,7 @@ A **Faraday cage** blocks external electromagnetic fields, creating an impenetra
 
 ---
 
-## 📐 System Architecture (graph TD)
+##  System Architecture (graph TD)
 
 ```mermaid
 graph TD
@@ -234,7 +233,7 @@ uv run faraday demo/sample_project --adapter adapters/enterprise_lora
 
 ---
 
-## 📂 Where to Find Output Reports
+##  Where to Find Output Reports
 
 All artifacts are generated in the `--output` directory (default: `./review_output`):
 
@@ -367,7 +366,7 @@ uv run pytest -v
 
 ---
 
-## 👤 Author & Project Metadata
+##  Author & Project Metadata
 
 - **Author:** Monishwaran K
 - **Project:** Faraday — Air-Gapped Code Review Copilot for Qualcomm Snapdragon Hexagon NPU
