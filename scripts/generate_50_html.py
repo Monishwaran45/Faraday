@@ -1,281 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Faraday: Complete 50-Page Architectural Dossier & Technical Documentary</title>
-    <style>
-        
-@page {
-    size: A4 portrait;
-    margin: 12mm 14mm 12mm 14mm;
-}
+"""
+generate_50_html.py
+Generates exactly 50 dense pages of Faraday Architectural Documentary.
+Author: Monishwaran K
+"""
 
-* {
-    box-sizing: border-box;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-}
+import sys
+from pathlib import Path
 
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: #1e293b;
-    background: #ffffff;
-    line-height: 1.38;
-    font-size: 8.8pt;
-    margin: 0;
-    padding: 0;
-}
+BASE_DIR = Path(__file__).resolve().parent.parent
+DOCS_DIR = BASE_DIR / "submission_docs"
+HTML_PATH = DOCS_DIR / "Faraday_Documentary.html"
 
-.page-container {
-    width: 100%;
-    min-height: 268mm;
-    max-height: 271mm;
-    page-break-after: always;
-    page-break-inside: avoid;
-    position: relative;
-    padding-bottom: 8mm;
-    overflow: hidden;
-}
+def build_full_document():
+    pages = []
 
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1.5px solid #0284c7;
-    padding-bottom: 2.5mm;
-    margin-bottom: 3.5mm;
-    font-size: 7.5pt;
-    color: #64748b;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.page-header .brand {
-    color: #0369a1;
-    font-weight: 800;
-}
-
-.page-footer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid #cbd5e1;
-    padding-top: 2mm;
-    font-size: 7.5pt;
-    color: #94a3b8;
-}
-
-.page-footer .author {
-    color: #475569;
-    font-weight: 600;
-}
-
-h1 {
-    font-size: 15pt;
-    color: #0f172a;
-    margin: 0 0 3mm 0;
-    font-weight: 800;
-    letter-spacing: -0.3px;
-    line-height: 1.2;
-}
-
-h2 {
-    font-size: 11pt;
-    color: #0369a1;
-    margin: 3mm 0 2mm 0;
-    font-weight: 700;
-    letter-spacing: -0.2px;
-    line-height: 1.2;
-}
-
-h3 {
-    font-size: 9.5pt;
-    color: #0f172a;
-    margin: 2mm 0 1.5mm 0;
-    font-weight: 700;
-}
-
-p {
-    margin: 0 0 2.2mm 0;
-    text-align: justify;
-}
-
-ul, ol {
-    margin: 0 0 2.2mm 0;
-    padding-left: 5mm;
-}
-
-li {
-    margin-bottom: 1mm;
-}
-
-.pillar-tag {
-    display: inline-block;
-    background: #e0f2fe;
-    color: #0369a1;
-    font-weight: 700;
-    font-size: 7.2pt;
-    padding: 1px 6px;
-    border-radius: 3px;
-    border: 1px solid #bae6fd;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-    margin-bottom: 2mm;
-}
-
-.highlight-box {
-    background: #f8fafc;
-    border-left: 3.5px solid #0284c7;
-    padding: 2.5mm 3.5mm;
-    margin: 2mm 0 2.5mm 0;
-    border-radius: 0 4px 4px 0;
-    border-top: 1px solid #e2e8f0;
-    border-right: 1px solid #e2e8f0;
-    border-bottom: 1px solid #e2e8f0;
-    font-size: 8.5pt;
-}
-
-.highlight-box strong {
-    color: #0f172a;
-}
-
-.alert-danger {
-    background: #fef2f2;
-    border-left: 3.5px solid #ef4444;
-    padding: 2.5mm 3.5mm;
-    margin: 2mm 0 2.5mm 0;
-    border-radius: 0 4px 4px 0;
-    border-top: 1px solid #fee2e2;
-    border-right: 1px solid #fee2e2;
-    border-bottom: 1px solid #fee2e2;
-    font-size: 8.5pt;
-}
-
-.alert-success {
-    background: #f0fdf4;
-    border-left: 3.5px solid #22c55e;
-    padding: 2.5mm 3.5mm;
-    margin: 2mm 0 2.5mm 0;
-    border-radius: 0 4px 4px 0;
-    border-top: 1px solid #dcfce7;
-    border-right: 1px solid #dcfce7;
-    border-bottom: 1px solid #dcfce7;
-    font-size: 8.5pt;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 2mm 0 2.5mm 0;
-    font-size: 8pt;
-}
-
-th {
-    background: #0f172a;
-    color: #ffffff;
-    padding: 2mm 2.5mm;
-    text-align: left;
-    font-weight: 700;
-    border: 1px solid #334155;
-}
-
-td {
-    padding: 1.8mm 2.5mm;
-    border: 1px solid #cbd5e1;
-    vertical-align: top;
-}
-
-tr:nth-child(even) td {
-    background: #f8fafc;
-}
-
-pre {
-    background: #0f172a;
-    color: #f8fafc;
-    padding: 2.5mm 3mm;
-    border-radius: 4px;
-    font-family: "Consolas", "Courier New", monospace;
-    font-size: 7.6pt;
-    line-height: 1.32;
-    margin: 2mm 0 2.5mm 0;
-    border: 1px solid #1e293b;
-    overflow: hidden;
-    white-space: pre-wrap;
-    word-break: break-all;
-}
-
-code {
-    font-family: "Consolas", "Courier New", monospace;
-    font-size: 8pt;
-    background: #f1f5f9;
-    color: #0f172a;
-    padding: 1px 3px;
-    border-radius: 2px;
-    border: 1px solid #e2e8f0;
-}
-
-.cover-title {
-    font-size: 28pt;
-    font-weight: 900;
-    color: #0f172a;
-    letter-spacing: -0.5px;
-    margin-bottom: 2mm;
-    line-height: 1.1;
-}
-
-.cover-subtitle {
-    font-size: 13pt;
-    font-weight: 600;
-    color: #0284c7;
-    margin-bottom: 6mm;
-    line-height: 1.3;
-}
-
-.meta-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3mm;
-    margin: 4mm 0;
-}
-
-.meta-card {
-    background: #f8fafc;
-    border: 1px solid #cbd5e1;
-    border-radius: 4px;
-    padding: 3mm;
-}
-
-.meta-card .label {
-    font-size: 7pt;
-    color: #64748b;
-    text-transform: uppercase;
-    font-weight: 700;
-}
-
-.meta-card .value {
-    font-size: 9pt;
-    color: #0f172a;
-    font-weight: 700;
-    margin-top: 1mm;
-}
-
-    </style>
-</head>
-<body>
-    
+    def p(num, title, body):
+        pages.append(f"""
         <div class="page-container">
             <div class="page-header">
                 <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>COVER PAGE & EXECUTIVE SPECIFICATION</span>
-                <span>PAGE 01 / 50</span>
+                <span>{title}</span>
+                <span>PAGE {num:02d} / 50</span>
             </div>
             <div class="page-body">
-                
+                {body}
+            </div>
+            <div class="page-footer">
+                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
+                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
+                <span>Page {num}</span>
+            </div>
+        </div>
+        """)
+
+    # P01
+    p(1, "COVER PAGE & EXECUTIVE SPECIFICATION", """
         <div style="text-align: center; margin-top: 14mm; margin-bottom: 10mm;">
             <div style="font-size: 11pt; font-weight: 800; letter-spacing: 2px; color: #0284c7; text-transform: uppercase; margin-bottom: 3mm;">
                 Qualcomm Snapdragon Innovation Challenge 2026
@@ -318,23 +77,10 @@ code {
             • <strong>Pillar III: Deployment & Accessibility:</strong> Autonomous Rich interactive terminal UI, 1-click pre-commit hook installer, universal configuration engine (.faraday.yml), zero daemon footprint.<br>
             • <strong>Pillar IV: Presentation & Documentation:</strong> Comprehensive 50-page technical treatise, 23/23 unit test verification, real-world external codebase audit, and live physical hardware benchmarks.
         </div>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 1</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>TABLE OF CONTENTS & EXECUTIVE ABSTRACT</span>
-                <span>PAGE 02 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P02
+    p(2, "TABLE OF CONTENTS & EXECUTIVE ABSTRACT", """
         <div class="pillar-tag">Executive Summary</div>
         <h1>Executive Abstract & Table of Contents</h1>
         <p>
@@ -362,23 +108,10 @@ code {
             <tr><td><strong>Act XVI: Threat Model & Air-Gap</strong></td><td>STRIDE Analysis, Zero Egress Proof, Wi-Fi Disabled Validation Protocol</td><td>49</td></tr>
             <tr><td><strong>Act XVII & XVIII: Roadmap & Conclusion</strong></td><td>Edge LoRA Fine-Tuning, Multi-Modal Vision, Final Competition Summary</td><td>50</td></tr>
         </table>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 2</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT I: THE ENTERPRISE CRISIS & THE FARADAY GENESIS</span>
-                <span>PAGE 03 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P03
+    p(3, "ACT I: THE ENTERPRISE CRISIS & THE FARADAY GENESIS", """
         <div class="pillar-tag">Pillar II: Application Use Case & Innovation</div>
         <h1>Act I: The Enterprise Crisis & The Threat of Cloud AI Copilots</h1>
         <h2>1. The Fatal Dilemma of Modern Software Development</h2>
@@ -404,23 +137,10 @@ code {
             <li><strong>Man-in-the-Middle & Interception:</strong> Transport Layer Security (TLS) terminates at the cloud provider's edge gateways, exposing raw code to potential nation-state eavesdropping, insider threats, and proxy caching attacks.</li>
             <li><strong>Vendor Multi-Tenancy Leaks:</strong> Virtual machine breakout vulnerabilities and shared memory pooling on multi-tenant GPU cloud clusters expose raw user prompt memories to co-located tenants.</li>
         </ul>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 3</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT I: THE ENTERPRISE CRISIS & REGULATORY BARRIERS</span>
-                <span>PAGE 04 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P04
+    p(4, "ACT I: THE ENTERPRISE CRISIS & REGULATORY BARRIERS", """
         <div class="pillar-tag">Pillar II: Application Use Case & Innovation</div>
         <h1>Act I: The Regulatory Wall — Defense, Finance & Compliance</h1>
         <h2>1. International Traffic in Arms Regulations (ITAR)</h2>
@@ -452,23 +172,10 @@ code {
             <li><strong>Severe Documentation Debt:</strong> Complex mission-critical systems operate with obsolete docstrings and unmaintained README files, increasing onboarding overhead by over 300%.</li>
             <li><strong>Shadow AI Infiltration:</strong> Frustrated developers covertly paste snippets into unauthorized web chat models on personal smartphones, inadvertently triggering severe data leaks.</li>
         </ul>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 4</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT I: WHY REDACTION PROXIES FAIL</span>
-                <span>PAGE 05 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P05
+    p(5, "ACT I: WHY REDACTION PROXIES FAIL", """
         <div class="pillar-tag">Pillar II: Application Use Case & Innovation</div>
         <h1>Act I: Why Redaction Proxies & Cloud Gateways Fail</h1>
         <h2>1. The Illusion of Cloud Redaction Gateways</h2>
@@ -497,23 +204,10 @@ code {
             <li><strong>Local Silicon Inference:</strong> Neural code reasoning must execute entirely within the local hardware silicon boundaries of the developer's laptop or workstation.</li>
             <li><strong>Instant Sub-Second Execution:</strong> Deterministic security algorithms must run in milliseconds, preventing pipeline latency and developer frustration.</li>
         </ul>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 5</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT I: THE FARADAY ALLEGORY</span>
-                <span>PAGE 06 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P06
+    p(6, "ACT I: THE FARADAY ALLEGORY", """
         <div class="pillar-tag">Pillar II: Application Use Case & Innovation</div>
         <h1>Act I: The Faraday Allegory — 1836 Physics to Silicon</h1>
         <h2>1. Michael Faraday's Foundational Discovery</h2>
@@ -538,23 +232,10 @@ code {
             <li><strong>Tenet II: Hybrid Mathematical & Neural Defense:</strong> Rather than relying solely on stochastic LLM predictions, Faraday unites rigorous mathematical Information Theory (Shannon entropy) with deterministic static AST analysis and on-device neural reasoning.</li>
             <li><strong>Tenet III: Native Snapdragon Hardware Optimization:</strong> Faraday is engineered specifically for the Qualcomm Snapdragon X Elite platform, utilizing compiled QNN context binaries and INT4/FP16 tensor execution for sub-second developer velocity.</li>
         </ul>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 6</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT II: SILICON ARCHITECTURE DEEP DIVE</span>
-                <span>PAGE 07 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P07
+    p(7, "ACT II: SILICON ARCHITECTURE DEEP DIVE", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act II: Silicon Deep Dive — Snapdragon X Elite Topology</h1>
         <h2>1. Architectural Overview of the Snapdragon X Elite SoC</h2>
@@ -590,23 +271,10 @@ code {
         <p>
             Traditional x86 architectures with discrete GPUs suffer from severe PCIe bus transfer bottlenecks: data must be copied across PCIe Gen 4 lanes from system RAM to dedicated VRAM before inference can begin. The Snapdragon X Elite eliminates this bottleneck entirely through a <strong>Unified Memory Architecture (UMA)</strong>. The Oryon CPU, Adreno GPU, and Hexagon NPU share direct, coherent access to the entire 135 GB/s LPDDR5x memory pool, enabling instantaneous model loading and zero-copy tensor sharing.
         </p>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 7</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT II: THE HEXAGON NPU & HTP ARCHITECTURE</span>
-                <span>PAGE 08 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P08
+    p(8, "ACT II: THE HEXAGON NPU & HTP ARCHITECTURE", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act II: The Hexagon NPU & v73 HTP Microarchitecture</h1>
         <h2>1. The Hexagon Tensor Processor (HTP) Evolution</h2>
@@ -617,7 +285,7 @@ code {
         <div class="highlight-box">
             <strong>Key Microarchitectural Pillars of the Hexagon HTP v73:</strong><br>
             • <strong>Vector Execution Units (HVX):</strong> 1024-bit wide vector registers capable of massive parallel element-wise arithmetic, non-linear activations (GELU, SwiGLU, ReLU), and layer normalizations.<br>
-            • <strong>Matrix Multiply Accelerators (HMX):</strong> Hardware systolic arrays dedicated to 2D matrix-matrix multiplications ($A 	imes B + C$), executing INT4, INT8, and FP16 dot products at extreme clock efficiency.<br>
+            • <strong>Matrix Multiply Accelerators (HMX):</strong> Hardware systolic arrays dedicated to 2D matrix-matrix multiplications ($A \times B + C$), executing INT4, INT8, and FP16 dot products at extreme clock efficiency.<br>
             • <strong>Tightly Coupled Memory (TCM):</strong> Multi-megabyte on-chip SRAM caches that buffer intermediate activations, completely preventing off-chip DRAM memory accesses during attention head calculations.
         </div>
 
@@ -625,23 +293,10 @@ code {
         <p>
             In continuous developer workflows—such as background file watching and pre-commit hook execution—running continuous neural code reviews on a 150-watt discrete desktop GPU quickly leads to thermal throttling, fan noise, and rapid battery depletion. The Hexagon NPU operates within a frugal <strong>sub-10-watt thermal envelope</strong>, delivering peak 45 TOPS throughput while allowing Snapdragon laptops to maintain silent, fanless operation and all-day battery life.
         </p>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 8</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT II: NATIVE INT4 / FP16 QUANTIZATION MECHANICS</span>
-                <span>PAGE 09 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P09
+    p(9, "ACT II: NATIVE INT4 / FP16 QUANTIZATION MECHANICS", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act II: Native INT4 / FP16 Quantization Mechanics</h1>
         <h2>1. The Mathematics of Weight Quantization (w4a16)</h2>
@@ -663,23 +318,10 @@ Hardware Reconstruct:   W_eff = (W_int4 - ZeroPoint) * Scale</code></pre>
         <p>
             This architecture compresses the complete 7B model footprint down to just <strong>5.05 Gigabytes</strong>, fitting effortlessly into system memory while achieving lightning-fast token generation.
         </p>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 9</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT II: QUALCOMM NEURAL PROCESSING SDK (QNN)</span>
-                <span>PAGE 10 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P10
+    p(10, "ACT II: QUALCOMM NEURAL PROCESSING SDK (QNN)", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act II: Qualcomm Neural Processing SDK (QNN) vs CPU/GPU</h1>
         <h2>1. The QNN Execution Architecture</h2>
@@ -701,23 +343,10 @@ Hardware Reconstruct:   W_eff = (W_int4 - ZeroPoint) * Scale</code></pre>
             <tr><td>Discrete Laptop GPU</td><td>80 – 160 ms</td><td>80 – 140 Watts</td><td>Very High (Throttling)</td><td>No (PCIe transfer)</td></tr>
             <tr><td><strong>Snapdragon X Elite NPU (QNN)</strong></td><td><strong>15 – 35 ms</strong></td><td><strong>&lt; 8 Watts</strong></td><td><strong>Cool (Silent / Fanless)</strong></td><td><strong>Yes (Direct UMA)</strong></td></tr>
         </table>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 10</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT II: MEMORY SUBSYSTEM & SUSTAINED TOPS</span>
-                <span>PAGE 11 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P11
+    p(11, "ACT II: MEMORY SUBSYSTEM & SUSTAINED TOPS", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act II: Memory Subsystem, Thermal Envelope & Sustained TOPS</h1>
         <h2>1. Memory Bandwidth as the Ultimate LLM Bottleneck</h2>
@@ -739,23 +368,10 @@ Hardware Reconstruct:   W_eff = (W_int4 - ZeroPoint) * Scale</code></pre>
             <li><strong>Thermal Throttling Resistance:</strong> Operating at sub-10W power dissipation, the NPU maintains its maximum 45 TOPS rating across hours of continuous codebase auditing without thermal throttling.</li>
             <li><strong>Zero Operating System Jitter:</strong> Because NPU operations run in dedicated FastRPC hardware threads separate from the Windows OS scheduler, user interface responsiveness remains 100% fluid even during massive repo scans.</li>
         </ul>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 11</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT III: MATHEMATICAL INFORMATION THEORY</span>
-                <span>PAGE 12 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P12
+    p(12, "ACT III: MATHEMATICAL INFORMATION THEORY", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act III: Mathematical Information Theory & Entropy Detection</h1>
         <h2>1. The Vulnerability of Regular Expressions Alone</h2>
@@ -783,23 +399,10 @@ Hardware Reconstruct:   W_eff = (W_int4 - ZeroPoint) * Scale</code></pre>
             <br>• <strong>k</strong> is the count of distinct unique characters in the alphabet present in string $X$.
             <br>• <strong>P(x<sub>i</sub>)</strong> is the empirical probability mass (frequency count) of character $x_i$ divided by total length $N$.
         </p>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 12</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT III: PROBABILITY MASS & ENTROPY DERIVATION</span>
-                <span>PAGE 13 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P13
+    p(13, "ACT III: PROBABILITY MASS & ENTROPY DERIVATION", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act III: Probability Mass Calculations & Mathematical Derivation</h1>
         <h2>1. Step-by-Step Entropy Calculation Example</h2>
@@ -821,7 +424,7 @@ Hardware Reconstruct:   W_eff = (W_int4 - ZeroPoint) * Scale</code></pre>
             <strong>Calculation for String B:</strong><br>
             Unique characters: 20 unique characters across digits, lowercase, uppercase, and special symbols.<br>
             Uniform probability distribution: $P(x_i) = 1/20 = 0.05$ for all $i$.<br>
-            $H(X) = - \sum_{i=1}^{20} 0.05 \cdot \log_2(0.05) = - \log_2(1/20) = \log_2(20) \approx$ <strong>4.32 bits/character</strong>.
+            $H(X) = - \\sum_{i=1}^{20} 0.05 \\cdot \\log_2(0.05) = - \\log_2(1/20) = \\log_2(20) \\approx$ <strong>4.32 bits/character</strong>.
             For longer 32-character tokens (e.g. <code>256-bit Hex / Base64</code>), entropy reaches <strong>4.8 – 5.4 bits/character</strong>.
         </div>
 
@@ -836,32 +439,19 @@ Hardware Reconstruct:   W_eff = (W_int4 - ZeroPoint) * Scale</code></pre>
         if p_x > 0:
             entropy += - p_x * math.log2(p_x)
     return entropy</code></pre>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 13</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT III: THRESHOLD TUNING & BOUNDARY CONDITIONS</span>
-                <span>PAGE 14 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P14
+    p(14, "ACT III: THRESHOLD TUNING & BOUNDARY CONDITIONS", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act III: Empirical Threshold Tuning & Boundary Proofs</h1>
-        <h2>1. Selecting the Critical Threshold ($H(X) \ge 4.5$)</h2>
+        <h2>1. Selecting the Critical Threshold ($H(X) \\ge 4.5$)</h2>
         <p>
             A common failure mode of basic entropy detectors is excessive false positives: developer variable names, long URL query parameters, and descriptive UUIDs can trigger alerts if the entropy threshold is set too low. Through empirical benchmarking across millions of lines of open-source and proprietary enterprise repositories, Faraday calibrated the optimal threshold to <strong>4.5 bits/character</strong>:
         </p>
 
         <table style="font-size: 8pt;">
-            <tr><th>String Category</th><th>Typical Length</th><th>Typical Entropy</th><th>Faraday Action ($H \ge 4.5$)</th></tr>
+            <tr><th>String Category</th><th>Typical Length</th><th>Typical Entropy</th><th>Faraday Action ($H \\ge 4.5$)</th></tr>
             <tr><td>English text / comments</td><td>20 – 100 chars</td><td>2.8 – 3.4 bits</td><td>Passed (Ignored)</td></tr>
             <tr><td>CamelCase / snake_case code</td><td>15 – 45 chars</td><td>3.1 – 3.8 bits</td><td>Passed (Ignored)</td></tr>
             <tr><td>Standard UUID v4</td><td>36 chars</td><td>3.2 – 3.7 bits</td><td>Passed (Standard structure)</td></tr>
@@ -870,30 +460,17 @@ Hardware Reconstruct:   W_eff = (W_int4 - ZeroPoint) * Scale</code></pre>
             <tr><td><strong>Base64 Cryptographic Token</strong></td><td>32 – 88 chars</td><td><strong>4.7 – 5.8 bits</strong></td><td><strong>FLAGGED AS CRITICAL SECRET</strong></td></tr>
         </table>
 
-        <h2>2. Minimum String Length Heuristic ($N \ge 16$)</h2>
+        <h2>2. Minimum String Length Heuristic ($N \\ge 16$)</h2>
         <p>
             Shannon entropy can produce misleadingly high values for extremely short strings (e.g. <code>"aB3!"</code> has maximal entropy for its length, but is too short to be a production API key). Faraday enforces a strict minimum length guard:
         </p>
         <pre><code># SecretScanner boundary validation
 if len(candidate_str) >= 16 and _shannon_entropy(candidate_str) >= 4.5:
     report_vulnerability(HIGH_ENTROPY_CREDENTIAL)</code></pre>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 14</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT III: FALSE POSITIVE REJECTION HEURISTICS</span>
-                <span>PAGE 15 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P15
+    p(15, "ACT III: FALSE POSITIVE REJECTION HEURISTICS", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act III: False Positive Rejection & Noise Elimination</h1>
         <h2>1. The Multi-Stage Filtering Pipeline</h2>
@@ -913,23 +490,10 @@ if len(candidate_str) >= 16 and _shannon_entropy(candidate_str) >= 4.5:
         <p>
             In unit tests executed in <code>tests/test_secret_scanner.py</code>, the Shannon entropy engine correctly identified 100% of injected cryptographic tokens while producing <strong>zero false positives</strong> across standard Python dictionary keys, variable names, and SQL statements.
         </p>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 15</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT IV: THE DETERMINISTIC SECURITY ENGINE</span>
-                <span>PAGE 16 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P16
+    p(16, "ACT IV: THE DETERMINISTIC SECURITY ENGINE", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act IV: Deterministic Security Engine & Vulnerability Taxonomy</h1>
         <h2>1. Dual-Core Detection Philosophy</h2>
@@ -967,23 +531,10 @@ if len(candidate_str) >= 16 and _shannon_entropy(candidate_str) >= 4.5:
                 <td>verify=False, MD5/SHA1, CORS Wildcard '*'</td>
             </tr>
         </table>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 16</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT IV: CLOUD CREDENTIALS & API KEY SIGNATURES</span>
-                <span>PAGE 17 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P17
+    p(17, "ACT IV: CLOUD CREDENTIALS & API KEY SIGNATURES", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act IV: Cloud Credentials & API Key Signatures</h1>
         <h2>1. AWS Access Keys & Secret Patterns</h2>
@@ -1011,23 +562,10 @@ CWE: CWE-798 | CVSS: 9.8 (CRITICAL)</code></pre>
         <pre><code>Rule: GitHub Token
 Pattern: (?:ghp|gho|ghu|ghs|ghr)_[a-zA-Z0-9]{36,255}
 CWE: CWE-798 | CVSS: 9.8 (CRITICAL)</code></pre>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 17</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT IV: SUPPLY CHAIN TOKENS & PRIVATE KEYS</span>
-                <span>PAGE 18 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P18
+    p(18, "ACT IV: SUPPLY CHAIN TOKENS & PRIVATE KEYS", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act IV: Supply Chain Tokens & Private Cryptographic Keys</h1>
         <h2>1. PyPI Publishing API Tokens</h2>
@@ -1055,23 +593,10 @@ CWE: CWE-798 | CVSS: 8.6 (HIGH)</code></pre>
         <pre><code>Rule: Private Cryptographic Key
 Pattern: -----BEGIN (?:RSA |DSA |EC |OPENSSH )?PRIVATE KEY-----
 CWE: CWE-312 (Cleartext Storage of Sensitive Information) | CVSS: 9.8 (CRITICAL)</code></pre>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 18</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT IV: INJECTION & MEMORY SAFETY FLAWS</span>
-                <span>PAGE 19 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P19
+    p(19, "ACT IV: INJECTION & MEMORY SAFETY FLAWS", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act IV: Injection & Execution Vulnerability Rules</h1>
         <h2>1. SQL Injection via Dynamic String Interpolation</h2>
@@ -1079,7 +604,7 @@ CWE: CWE-312 (Cleartext Storage of Sensitive Information) | CVSS: 9.8 (CRITICAL)
             Concatenating untrusted user input directly into SQL queries bypasses parameterization:
         </p>
         <pre><code>Rule: SQL Injection (String Formatting)
-Pattern: (?:SELECT|INSERT|UPDATE|DELETE).*?(?:FROM|INTO|SET|WHERE).*?(?:%s|\.format\(|f["']|\+\s*[a-zA-Z_])
+Pattern: (?:SELECT|INSERT|UPDATE|DELETE).*?\b(?:FROM|INTO|SET|WHERE)\b.*?(?:%s|\.format\(|f["\']|\+\s*[a-zA-Z_])
 CWE: CWE-89 (SQL Injection) | CVSS: 9.8 (CRITICAL)</code></pre>
 
         <h2>2. Command Injection via Unsafe Shell Execution</h2>
@@ -1087,35 +612,22 @@ CWE: CWE-89 (SQL Injection) | CVSS: 9.8 (CRITICAL)</code></pre>
             Spawning shell processes with unsanitized user arguments allows arbitrary OS commands:
         </p>
         <pre><code>Rule: Shell Command Execution
-Pattern: (?:os\.system|subprocess\.Popen|subprocess\.call)\s*\(\s*(?:f["']|["'].*?%s|\w+\s*\+)
+Pattern: \b(?:os\.system|subprocess\.Popen|subprocess\.call)\s*\(\s*(?:f["\']|["\'].*?%s|\w+\s*\+)
 CWE: CWE-78 (OS Command Injection) | CVSS: 9.8 (CRITICAL)</code></pre>
 
         <h2>3. Insecure Deserialization via Python Pickle</h2>
         <pre><code>Rule: Python Pickle Insecure Deserialization
-Pattern: pickle\.(?:loads|load)\s*\(
+Pattern: \bpickle\.(?:loads|load)\s*\(
 CWE: CWE-502 (Deserialization of Untrusted Data) | CVSS: 9.8 (CRITICAL)</code></pre>
 
         <h2>4. Client-Side Cross-Site Scripting (DOM XSS)</h2>
         <pre><code>Rule: DOM XSS via innerHTML / dangerouslySetInnerHTML
-Pattern: (?:innerHTML|dangerouslySetInnerHTML)\s*=\s*(?!["'][\w\s]*["'])
+Pattern: \b(?:innerHTML|dangerouslySetInnerHTML)\s*=\s*(?!["\'][\w\s]*["\'])
 CWE: CWE-79 (Cross-Site Scripting) | CVSS: 7.5 (HIGH)</code></pre>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 19</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT IV: CRYPTOGRAPHIC & TRANSPORT FLAWS</span>
-                <span>PAGE 20 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P20
+    p(20, "ACT IV: CRYPTOGRAPHIC & TRANSPORT FLAWS", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act IV: Cryptographic & Transport Vulnerabilities</h1>
         <h2>1. Disabled SSL/TLS Certificate Verification</h2>
@@ -1123,7 +635,7 @@ CWE: CWE-79 (Cross-Site Scripting) | CVSS: 7.5 (HIGH)</code></pre>
             Developers frequently disable SSL verification during testing (<code>verify=False</code>), forgetting that this leaves production systems wide open to Man-in-the-Middle (MitM) traffic hijacking:
         </p>
         <pre><code>Rule: Disabled SSL/TLS Verification
-Pattern: verify\s*=\s*False
+Pattern: \bverify\s*=\s*False\b
 CWE: CWE-295 (Improper Certificate Validation) | CVSS: 7.5 (HIGH)</code></pre>
 
         <h2>2. Weak Cryptographic Hash Algorithms (MD5 / SHA-1)</h2>
@@ -1131,7 +643,7 @@ CWE: CWE-295 (Improper Certificate Validation) | CVSS: 7.5 (HIGH)</code></pre>
             Utilizing collision-vulnerable hash algorithms for security signatures or password hashing:
         </p>
         <pre><code>Rule: Insecure Cryptographic Hash
-Pattern: hashlib\.(?:md5|sha1)\s*\(
+Pattern: \bhashlib\.(?:md5|sha1)\s*\(
 CWE: CWE-328 (Use of Weak Hash) | CVSS: 5.3 (MEDIUM)</code></pre>
 
         <h2>3. Insecure CORS Wildcard Origin</h2>
@@ -1143,23 +655,10 @@ CWE: CWE-942 (Permissive CORS Policy) | CVSS: 6.5 (MEDIUM)</code></pre>
         <pre><code>Rule: Hardcoded Password in Source
 Pattern: (?:password|passwd|pwd|secret_key)\s*=\s*['"][^'"]{6,}['"]
 CWE: CWE-798 | CVSS: 8.8 (HIGH)</code></pre>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 20</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT IV: COMPREHENSIVE VULNERABILITY CATALOG</span>
-                <span>PAGE 21 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P21
+    p(21, "ACT IV: COMPREHENSIVE VULNERABILITY CATALOG", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act IV: The Complete 26+ Rule Vulnerability Catalog</h1>
         <table style="font-size: 7.2pt;">
@@ -1182,25 +681,12 @@ CWE: CWE-798 | CVSS: 8.8 (HIGH)</code></pre>
             <tr><td><code>WEAK_HASH_SHA1</code></td><td>hashlib.sha1 usage in security context</td><td>CWE-328</td><td>MEDIUM</td><td>WARN</td></tr>
             <tr><td><code>CORS_WILDCARD</code></td><td>Access-Control-Allow-Origin set to '*' wildcard</td><td>CWE-942</td><td>MEDIUM</td><td>WARN</td></tr>
             <tr><td><code>HARDCODED_PASSWORD</code></td><td>Static password assignment in variable literals</td><td>CWE-798</td><td>HIGH</td><td>BLOCK</td></tr>
-            <tr><td><code>SHANNON_ENTROPY</code></td><td>Information entropy $H(X) \ge 4.5$ on strings $\ge 16$</td><td>CWE-798</td><td>HIGH</td><td>BLOCK</td></tr>
+            <tr><td><code>SHANNON_ENTROPY</code></td><td>Information entropy $H(X) \\ge 4.5$ on strings $\\ge 16$</td><td>CWE-798</td><td>HIGH</td><td>BLOCK</td></tr>
         </table>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 21</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT V: MULTI-LANGUAGE RECURSIVE AST ENGINE</span>
-                <span>PAGE 22 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P22
+    p(22, "ACT V: MULTI-LANGUAGE RECURSIVE AST ENGINE", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act V: Multi-Language Recursive AST Parsing & Chunking</h1>
         <h2>1. The Fatal Failure of Naive File Truncation</h2>
@@ -1222,23 +708,10 @@ CWE: CWE-798 | CVSS: 8.8 (HIGH)</code></pre>
             • Function decorators, parameter signatures, and docstrings are strictly bundled with their execution bodies.<br>
             • Zero tokens are wasted on empty files or redundant boilerplate.
         </div>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 22</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT V: PYTHON AST VISITOR IMPLEMENTATION</span>
-                <span>PAGE 23 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P23
+    p(23, "ACT V: PYTHON AST VISITOR IMPLEMENTATION", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act V: Python AST Visitor Engine Architecture</h1>
         <h2>1. The NodeVisitor Traversal Pattern</h2>
@@ -1262,7 +735,7 @@ CWE: CWE-798 | CVSS: 8.8 (HIGH)</code></pre>
     def visit_FunctionDef(self, node: ast.FunctionDef | ast.AsyncFunctionDef):
         start_line = node.lineno
         end_line = getattr(node, "end_lineno", start_line + len(node.body))
-        code_body = "\n".join(self.source_lines[start_line - 1 : end_line])
+        code_body = "\\n".join(self.source_lines[start_line - 1 : end_line])
         self.chunks.append(CodeChunk(
             file_path=self.rel_path,
             name=f"{self.current_class}::{node.name}" if self.current_class else node.name,
@@ -1271,23 +744,10 @@ CWE: CWE-798 | CVSS: 8.8 (HIGH)</code></pre>
             end_line=end_line,
             language="python"
         ))</code></pre>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 23</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT V: JAVASCRIPT & TYPESCRIPT STATE MACHINE</span>
-                <span>PAGE 24 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P24
+    p(24, "ACT V: JAVASCRIPT & TYPESCRIPT STATE MACHINE", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act V: JavaScript & TypeScript Boundary State Machine</h1>
         <h2>1. High-Performance Lexical State Tracking</h2>
@@ -1313,23 +773,10 @@ CWE: CWE-798 | CVSS: 8.8 (HIGH)</code></pre>
             <li><strong>C / C++ (.c, .cpp, .h):</strong> Function signature boundary detection.</li>
             <li><strong>Shell Scripting (.sh, .bash):</strong> Function block extraction.</li>
         </ul>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 24</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT V: CYCLOMATIC COMPLEXITY & TOKEN BUDGETS</span>
-                <span>PAGE 25 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P25
+    p(25, "ACT V: CYCLOMATIC COMPLEXITY & TOKEN BUDGETS", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act V: Cyclomatic Complexity & Token Budget Management</h1>
         <h2>1. Thomas J. McCabe's Cyclomatic Complexity Metric</h2>
@@ -1359,23 +806,10 @@ CWE: CWE-798 | CVSS: 8.8 (HIGH)</code></pre>
 • Function Code & Dependencies: 1200 tokens
 • Response Output Buffer:       598 tokens
 Total Window:                 2048 tokens (Zero KV Cache Truncation)</code></pre>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 25</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT VI: ON-DEVICE NEURAL CODE REVIEW</span>
-                <span>PAGE 26 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P26
+    p(26, "ACT VI: ON-DEVICE NEURAL CODE REVIEW", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act VI: On-Device Neural Code Review — Architecture & QNN</h1>
         <h2>1. The Neural LLM Engine (`backend/models/model_backend.py`)</h2>
@@ -1399,23 +833,10 @@ Total Window:                 2048 tokens (Zero KV Cache Truncation)</code></pre
             <li><strong>Primary Mode (Qualcomm Snapdragon):</strong> Direct QNN / ONNX Runtime GenAI execution using the <code>QNNExecutionProvider</code>.</li>
             <li><strong>Secondary Mode (x86 CPU Fallback):</strong> Intelligent rule-based semantic heuristic synthesizer that produces valid security notes and docstrings in 0.01 seconds.</li>
         </ul>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 26</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT VI: PROMPT CONSTRUCTION & GUIDANCE</span>
-                <span>PAGE 27 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P27
+    p(27, "ACT VI: PROMPT CONSTRUCTION & GUIDANCE", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act VI: Prompt Construction & On-Device Guidance</h1>
         <h2>1. Zero-Hallucination System Directives</h2>
@@ -1444,23 +865,10 @@ Analysis:'''</code></pre>
         <p>
             The response is deterministically parsed by <code>backend/core/llm_reviewer.py</code>, stripping extraneous markdown fences and structuring the findings into machine-readable JSON and OASIS SARIF formats.
         </p>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 27</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT VI: SYNTHETIC DOCSTRING GENERATION</span>
-                <span>PAGE 28 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P28
+    p(28, "ACT VI: SYNTHETIC DOCSTRING GENERATION", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act VI: Synthetic Docstring Generation Engine</h1>
         <h2>1. Eliminating Enterprise Documentation Debt</h2>
@@ -1493,23 +901,10 @@ Analysis:'''</code></pre>
         <p>
             All generated docstrings are saved to <code>review_output/GENERATED_DOCSTRINGS.md</code> for immediate copy-paste or automated application.
         </p>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 28</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT VI: AUTONOMOUS README SYNTHESIS</span>
-                <span>PAGE 29 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P29
+    p(29, "ACT VI: AUTONOMOUS README SYNTHESIS", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act VI: Autonomous Production README Synthesis</h1>
         <h2>1. Global Codebase Architecture Recovery</h2>
@@ -1530,23 +925,10 @@ Analysis:'''</code></pre>
             <li><strong>Installation & Setup Guide:</strong> Dependency specifications extracted from <code>pyproject.toml</code> or <code>package.json</code>.</li>
             <li><strong>Security Assessment Summary:</strong> Deterministic audit scores and air-gap certification badges.</li>
         </ul>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 29</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT VII: QUALCOMM AI HUB HARDWARE VERIFICATION</span>
-                <span>PAGE 30 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P30
+    p(30, "ACT VII: QUALCOMM AI HUB HARDWARE VERIFICATION", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act VII: Qualcomm AI Hub Hardware Verification — Setup</h1>
         <h2>1. The Qualcomm AI Hub Cloud Architecture</h2>
@@ -1575,23 +957,10 @@ Analysis:'''</code></pre>
         self.fc2 = nn.Linear(64, 4)
     def forward(self, x):
         return self.fc2(self.relu(self.fc1(x)))</code></pre>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 30</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT VII: CLOUD COMPILATION & PROFILING PIPELINES</span>
-                <span>PAGE 31 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P31
+    p(31, "ACT VII: CLOUD COMPILATION & PROFILING PIPELINES", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act VII: Cloud Compilation & Hardware Profiling Pipelines</h1>
         <h2>1. Compilation Pipeline (Job ID: `jgol7nj4g`)</h2>
@@ -1616,23 +985,10 @@ Analysis:'''</code></pre>
             • <strong>Workbench URL:</strong> <a href="https://workbench.aihub.qualcomm.com/jobs/jpvlyrj75/">https://workbench.aihub.qualcomm.com/jobs/jpvlyrj75/</a><br>
             • <strong>Execution Cycles:</strong> 100 consecutive hardware inference runs measured.
         </div>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 31</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT VII: LATENCY & CYCLE ANALYSIS</span>
-                <span>PAGE 32 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P32
+    p(32, "ACT VII: LATENCY & CYCLE ANALYSIS", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act VII: Physical NPU Latency & Cycle Analysis</h1>
         <h2>1. Microsecond-Level Neural Execution</h2>
@@ -1674,23 +1030,10 @@ Analysis:'''</code></pre>
             Excluding the initial cold cache run (870 &mu;s), all subsequent runs settled into a rock-solid band between 32 and 37 &mu;s:
             <br><code>[60, 47, 39, 35, 36, 35, 34, 36, 36, 33, 36, 34, 35, 33, 36, 35, 34, 35, 32, 34...]</code>
         </p>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 32</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT VII: LAYER-BY-LAYER COMPUTE OFFLOAD</span>
-                <span>PAGE 33 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P33
+    p(33, "ACT VII: LAYER-BY-LAYER COMPUTE OFFLOAD", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act VII: Layer-by-Layer Compute Offload (100% NPU)</h1>
         <h2>1. Complete Operator Placement Table</h2>
@@ -1718,32 +1061,19 @@ Analysis:'''</code></pre>
             <strong>Hardware Verification Conclusion:</strong><br>
             Zero operators fell back to the CPU or GPU. The entire computational graph executed natively on the Qualcomm Hexagon NPU, proving that Faraday achieves pure on-device silicon acceleration.
         </div>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 33</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT VIII: REAL-WORLD PRODUCTION AUDITS</span>
-                <span>PAGE 34 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P34
+    p(34, "ACT VIII: REAL-WORLD PRODUCTION AUDITS", """
         <div class="pillar-tag">Pillar II: Application Use Case & Innovation</div>
         <h1>Act VIII: Real-World Audits — Benchmarking Production Code</h1>
         <h2>1. The Test Protocol: Auditing the External ETA Codebase</h2>
         <p>
-            To evaluate Faraday against a messy, complex real-world repository, we pointed Faraday at an external production codebase located at <code>C:\Users\Asus-2025\Downloads\ETA</code>. This real-world application comprises 35+ files, legacy database interfaces, payment endpoints, and frontend user components.
+            To evaluate Faraday against a messy, complex real-world repository, we pointed Faraday at an external production codebase located at <code>C:\\Users\\Asus-2025\\Downloads\\ETA</code>. This real-world application comprises 35+ files, legacy database interfaces, payment endpoints, and frontend user components.
         </p>
 
         <h2>2. Benchmark Execution Command</h2>
-        <pre><code>uv run faraday "C:\Users\Asus-2025\Downloads\ETA" --sarif review_output/eta_audit.sarif</code></pre>
+        <pre><code>uv run faraday "C:\\Users\\Asus-2025\\Downloads\\ETA" --sarif review_output/eta_audit.sarif</code></pre>
 
         <h2>3. Overall Execution Performance</h2>
         <div class="highlight-box">
@@ -1754,23 +1084,10 @@ Analysis:'''</code></pre>
             • <strong>Vulnerabilities Caught:</strong> <strong>13 Critical / High Security Flaws</strong><br>
             • <strong>Network Bytes Transmitted:</strong> <strong>0.000 Bytes (100% Air-Gapped)</strong>
         </div>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 34</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT VIII: TRIAGE OF 13 CAUGHT VULNERABILITIES</span>
-                <span>PAGE 35 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P35
+    p(35, "ACT VIII: TRIAGE OF 13 CAUGHT VULNERABILITIES", """
         <div class="pillar-tag">Pillar II: Application Use Case & Innovation</div>
         <h1>Act VIII: Triage of the 13 Caught Production Vulnerabilities</h1>
         <h2>1. Breakdown of Caught Vulnerabilities in ETA</h2>
@@ -1790,23 +1107,10 @@ Analysis:'''</code></pre>
             <tr><td><code>config.env:L4</code></td><td>Leaked AWS Secret Access Key</td><td>CWE-798</td><td>CRITICAL</td><td>Shannon Entropy (H=4.91)</td></tr>
             <tr><td><code>deploy.sh:L15</code></td><td>Unprotected SSH Private Key Literal</td><td>CWE-312</td><td>CRITICAL</td><td>PEM Header Matcher</td></tr>
         </table>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 35</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT VIII: SPEED VERIFICATION & AIR-GAP PROOF</span>
-                <span>PAGE 36 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P36
+    p(36, "ACT VIII: SPEED VERIFICATION & AIR-GAP PROOF", """
         <div class="pillar-tag">Pillar II: Application Use Case & Innovation</div>
         <h1>Act VIII: Execution Speed Verification & Air-Gap Proof</h1>
         <h2>1. Sub-Second Pipeline Breakdown (0.12s Total)</h2>
@@ -1833,23 +1137,10 @@ TOTAL DURATION:                                  0.120s  (Air-gapped on-device)<
             • DNS Lookups Performed: <strong>0</strong><br>
             • Total External Network Egress: <strong>0 Bytes</strong>
         </div>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 36</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT VIII: COMPREHENSIVE COMPETITIVE MATRIX</span>
-                <span>PAGE 37 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P37
+    p(37, "ACT VIII: COMPREHENSIVE COMPETITIVE MATRIX", """
         <div class="pillar-tag">Pillar II: Application Use Case & Innovation</div>
         <h1>Act VIII: Competitive Matrix — Faraday vs Industry Tools</h1>
         <table style="font-size: 7.2pt;">
@@ -1877,7 +1168,7 @@ TOTAL DURATION:                                  0.120s  (Air-gapped on-device)<
             </tr>
             <tr>
                 <td><strong>Information Entropy</strong></td>
-                <td><strong>Shannon Entropy ($H \ge 4.5$)</strong></td>
+                <td><strong>Shannon Entropy ($H \\ge 4.5$)</strong></td>
                 <td>Basic Regex</td>
                 <td>Heuristic</td>
                 <td>Stochastic LLM</td>
@@ -1918,23 +1209,10 @@ TOTAL DURATION:                                  0.120s  (Air-gapped on-device)<
                 <td>Mandatory logging</td>
             </tr>
         </table>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 37</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT IX: OASIS SARIF V2.1.0 SPECIFICATION</span>
-                <span>PAGE 38 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P38
+    p(38, "ACT IX: OASIS SARIF V2.1.0 SPECIFICATION", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act IX: OASIS SARIF v2.1.0 Standard Architecture</h1>
         <h2>1. The Static Analysis Results Interchange Format (SARIF)</h2>
@@ -1964,23 +1242,10 @@ TOTAL DURATION:                                  0.120s  (Air-gapped on-device)<
     }
   ]
 }</code></pre>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 38</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT IX: MITRE CWE TAXONOMY MAPPING</span>
-                <span>PAGE 39 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P39
+    p(39, "ACT IX: MITRE CWE TAXONOMY MAPPING", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act IX: MITRE CWE Mapping & GitHub Code Scanning</h1>
         <h2>1. Automated Taxonomical Alignment</h2>
@@ -2006,23 +1271,10 @@ TOTAL DURATION:                                  0.120s  (Air-gapped on-device)<
         <p>
             When Faraday runs in GitHub Actions, the exported <code>.sarif</code> file is uploaded via <code>github/codeql-action/upload-sarif@v3</code>. GitHub instantly parses the file, displaying rich security alerts with precise file links, line spans, and remediation advice directly in the repository's <strong>Security > Code Scanning</strong> dashboard.
         </p>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 39</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT IX: GITLAB SAST & VS CODE INTEGRATION</span>
-                <span>PAGE 40 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P40
+    p(40, "ACT IX: GITLAB SAST & VS CODE INTEGRATION", """
         <div class="pillar-tag">Pillar III: Deployment & Accessibility</div>
         <h1>Act IX: GitLab SAST & VS Code Extension Workflows</h1>
         <h2>1. In-Editor Visualization with VS Code SARIF Viewer</h2>
@@ -2047,23 +1299,10 @@ TOTAL DURATION:                                  0.120s  (Air-gapped on-device)<
         <p>
             GitLab automatically ingests the findings into the Pull Request Security Widget, allowing reviewers to block merges until vulnerabilities are resolved.
         </p>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 40</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT X: ENTERPRISE GIT INTEGRATION</span>
-                <span>PAGE 41 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P41
+    p(41, "ACT X: ENTERPRISE GIT INTEGRATION", """
         <div class="pillar-tag">Pillar III: Deployment & Accessibility</div>
         <h1>Act X: Sub-Second Git Staged Scanning (`--staged`)</h1>
         <h2>1. The Problem with Full Repository Scans</h2>
@@ -2086,23 +1325,10 @@ TOTAL DURATION:                                  0.120s  (Air-gapped on-device)<
             <strong>Sub-Second Staged Benchmark:</strong><br>
             Running <code>faraday --staged</code> across modified files completes in just <strong>0.02 seconds (20 milliseconds)</strong>! This imperceptible latency allows Faraday to run seamlessly as an automated pre-commit hook.
         </div>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 41</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT X: PULL REQUEST BRANCH DIFF SCANNING</span>
-                <span>PAGE 42 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P42
+    p(42, "ACT X: PULL REQUEST BRANCH DIFF SCANNING", """
         <div class="pillar-tag">Pillar III: Deployment & Accessibility</div>
         <h1>Act X: Pull Request Branch Diff Scanning (`--diff`)</h1>
         <h2>1. Automated Branch Comparison against Target Ref</h2>
@@ -2123,23 +1349,10 @@ TOTAL DURATION:                                  0.120s  (Air-gapped on-device)<
             <code>[CI/CD GATE FAILED] Found 2 issue(s) at or above HIGH severity.</code><br>
             <code>[Faraday] COMMIT BLOCKED: High-severity security issues found in staged code.</code>
         </div>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 42</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT X: 1-CLICK PRE-COMMIT HOOK INSTALLATION</span>
-                <span>PAGE 43 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P43
+    p(43, "ACT X: 1-CLICK PRE-COMMIT HOOK INSTALLATION", """
         <div class="pillar-tag">Pillar III: Deployment & Accessibility</div>
         <h1>Act X: 1-Click Pre-Commit Hook Installation</h1>
         <h2>1. Zero-Friction Hook Setup (`faraday --install-hook`)</h2>
@@ -2162,23 +1375,10 @@ TOTAL DURATION:                                  0.120s  (Air-gapped on-device)<
   language: python
   stages: [pre-commit]
   args: ["--staged", "--fail-on", "HIGH"]</code></pre>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 43</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT XI: AUTONOMOUS RICH TERMINAL CLI</span>
-                <span>PAGE 44 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P44
+    p(44, "ACT XI: AUTONOMOUS RICH TERMINAL CLI", """
         <div class="pillar-tag">Pillar III: Deployment & Accessibility</div>
         <h1>Act XI: Autonomous Rich Interactive Terminal Architecture</h1>
         <h2>1. The Continuous Interactive Review Loop</h2>
@@ -2200,23 +1400,10 @@ TOTAL DURATION:                                  0.120s  (Air-gapped on-device)<
 ╰──────────────────────────────────────────────────────────────────────╯
 Target: demo/sample_project • 3 files • 16 functions • 0.07s
 [!] Found 3 security issue(s) [1 CRITICAL, 2 HIGH]</code></pre>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 44</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT XII: CONFIGURATION ENGINE & GOVERNANCE</span>
-                <span>PAGE 45 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P45
+    p(45, "ACT XII: CONFIGURATION ENGINE & GOVERNANCE", """
         <div class="pillar-tag">Pillar III: Deployment & Accessibility</div>
         <h1>Act XII: Configuration Engine & Enterprise Governance</h1>
         <h2>1. Hierarchical Configuration Resolution</h2>
@@ -2243,23 +1430,10 @@ exclude_dirs:
   - "node_modules"
   - ".venv"
   - "dist"</code></pre>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 45</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT XIII: COMPREHENSIVE VERIFICATION RIG</span>
-                <span>PAGE 46 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P46
+    p(46, "ACT XIII: COMPREHENSIVE VERIFICATION RIG", """
         <div class="pillar-tag">Pillar IV: Presentation & Documentation</div>
         <h1>Act XIII: Comprehensive Verification Rig & 23/23 Test Suite</h1>
         <h2>1. Pytest Unit & Integration Test Architecture</h2>
@@ -2283,23 +1457,10 @@ exclude_dirs:
                 <td><strong>23/23 PASSED</strong></td>
             </tr>
         </table>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 46</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT XIV: ANNOTATED SOURCE CODE BLUEPRINT</span>
-                <span>PAGE 47 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P47
+    p(47, "ACT XIV: ANNOTATED SOURCE CODE BLUEPRINT", """
         <div class="pillar-tag">Pillar I: Technical Implementation</div>
         <h1>Act XIV: Complete Annotated Source Code Blueprint</h1>
         <h2>1. High-Level Repository Architecture</h2>
@@ -2323,23 +1484,10 @@ exclude_dirs:
 ├── demo/                       # Sample enterprise codebase for auditing
 ├── models/qwen2-7b-qnn/        # Compiled Snapdragon X Elite QNN context binaries (5.05 GB)
 └── tests/                      # Full 23-test unit & integration test suite</code></pre>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 47</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT XV: DEVELOPER INSTALLATION & RUNBOOK</span>
-                <span>PAGE 48 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P48
+    p(48, "ACT XV: DEVELOPER INSTALLATION & RUNBOOK", """
         <div class="pillar-tag">Pillar III: Deployment & Accessibility</div>
         <h1>Act XV: Developer Installation & Operational Runbook</h1>
         <h2>1. Hardware & System Prerequisites</h2>
@@ -2363,23 +1511,10 @@ uv run pytest
 
 # 4. Execute audit on demo project
 uv run faraday demo/sample_project</code></pre>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 48</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT XVI: THREAT MODEL & AIR-GAP CERTIFICATION</span>
-                <span>PAGE 49 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P49
+    p(49, "ACT XVI: THREAT MODEL & AIR-GAP CERTIFICATION", """
         <div class="pillar-tag">Pillar II: Application Use Case & Innovation</div>
         <h1>Act XVI: Threat Modeling (STRIDE) & Air-Gap Certification</h1>
         <h2>1. STRIDE Threat Model Assessment</h2>
@@ -2397,23 +1532,10 @@ uv run faraday demo/sample_project</code></pre>
         <p>
             To verify air-gap compliance: Disconnect all Wi-Fi, Ethernet, and Bluetooth interfaces. Run <code>faraday demo/sample_project</code>. Faraday completes full AST parsing, Shannon entropy detection, and neural review in milliseconds without errors.
         </p>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 49</span>
-            </div>
-        </div>
-        
-        <div class="page-container">
-            <div class="page-header">
-                <span class="brand">FARADAY // ON-DEVICE AI COPILOT</span>
-                <span>ACT XVII & XVIII: ROADMAP & CONCLUSION</span>
-                <span>PAGE 50 / 50</span>
-            </div>
-            <div class="page-body">
-                
+    """)
+
+    # P50
+    p(50, "ACT XVII & XVIII: ROADMAP & CONCLUSION", """
         <div class="pillar-tag">Pillar IV: Presentation & Documentation</div>
         <h1>Act XVII & XVIII: Strategic Roadmap & Conclusion</h1>
         <h2>1. Future Engineering Roadmap</h2>
@@ -2431,14 +1553,25 @@ uv run faraday demo/sample_project</code></pre>
             • <strong>Competition Category:</strong> Qualcomm Snapdragon Innovation Challenge 2026<br>
             • <strong>Core Contribution:</strong> Built the world's first 100% air-gapped, zero-data-egress on-device AI code review copilot accelerated natively by the Qualcomm Snapdragon Hexagon NPU, solving the enterprise dilemma for defense, finance, and critical infrastructure.
         </div>
-    
-            </div>
-            <div class="page-footer">
-                <span class="author">Author: Monishwaran K | Qualcomm Snapdragon Innovation Challenge 2026</span>
-                <span>100% Air-Gapped Zero Data Egress | Qualcomm Hexagon NPU</span>
-                <span>Page 50</span>
-            </div>
-        </div>
-        
+    """)
+
+    from scripts.build_50page_dossier import CSS_STYLES
+    full_html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Faraday: Complete 50-Page Architectural Dossier & Technical Documentary</title>
+    <style>
+        {CSS_STYLES}
+    </style>
+</head>
+<body>
+    {''.join(pages)}
 </body>
 </html>
+"""
+    HTML_PATH.write_text(full_html, encoding="utf-8")
+    print(f"Successfully generated 50-page HTML at {HTML_PATH} ({len(full_html)} bytes)")
+
+if __name__ == "__main__":
+    build_full_document()
