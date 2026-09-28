@@ -1,0 +1,23 @@
+{
+  "r": 8,
+  "lora_alpha": 16,
+  "lora_dropout": 0.05,
+  "learning_rate": 0.0003,
+  "batch_size": 4,
+  "epochs": 3,
+  "target_modules": [
+    "q_proj",
+    "v_proj",
+    "fc1",
+    "fc2"
+  ],
+  "adapter_name": "enterprise_style",
+  "in_features": 128,
+  "out_features": 128,
+  "output_adapter_dir": "adapters/demo_adapter",
+  "train_losses": [
+    1.399537742137909,
+    1.3990962505340576,
+    1.398621141910553
+  ]
+}
