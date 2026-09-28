@@ -24,3 +24,8 @@ review_output/
 demo/review_output/
 *.log
 *.sarif
+
+# Qualcomm QNN 5GB Large Context Binaries (Keep repo <10MB for fast git clone/pip install)
+models/qwen2-7b-qnn/**/*.bin
+models/qwen2-7b-qnn/**/*.serialized.bin
+*.serialized.bin
