@@ -33,23 +33,55 @@ A **Faraday cage** blocks external electromagnetic fields, creating an impenetra
 
 ---
 
-## How It Works
+## 📐 System Architecture (graph TD)
 
-```
-project files / git staged files
-     │
-     ▼
-file_scanner.py      ──► AST chunking for Python & JS/TS function parsing
-     │
-     ▼
-secret_scanner.py    ──► Shannon entropy + regex: Cloud tokens, AI keys, DB URIs, SSL bypass
-     │
-     ▼
-llm_reviewer.py      ──► On-device Snapdragon Hexagon NPU neural review & docstrings
-     │
-     ▼
-report_builder.py    ──► Synthesizes REVIEW_REPORT.md, GENERATED_DOCSTRINGS.md,
-                         GENERATED_README.md, and OASIS SARIF v2.1.0
+```mermaid
+graph TD
+    subgraph Inputs["1. Input Sources & Policies"]
+        A["Source Codebase / Repository"] --> D["file_scanner.py<br/>(AST Parser & Chunker)"]
+        B["Git Staged Files / Branch Diff<br/>(--staged, --diff)"] --> D
+        C[".faraday.yml / Policy Config<br/>(Rules, Exclusions, Thresholds)"] -.-> D
+    end
+
+    subgraph StaticSec["2. Deterministic Static Security Engine"]
+        D --> E["Code Chunks & AST Hierarchy"]
+        E --> F["secret_scanner.py<br/>(Shannon Entropy & 26+ Rules)"]
+        F --> G["Static Security Findings<br/>(Cloud Keys, SQLi, XSS, Entropy Alerts)"]
+    end
+
+    subgraph SiliconEngine["3. Qualcomm Snapdragon Hexagon NPU Layer (100% Air-Gapped)"]
+        E --> H["llm_reviewer.py<br/>(Contextual Code Prompt Construction)"]
+        H --> I["Qualcomm Neural Network (QNN) SDK<br/>(QNNExecutionProvider / DirectML)"]
+        I --> J["Snapdragon X Elite Hexagon NPU<br/>(HTP Matrix Units & FP16/INT4 Offload)"]
+        
+        subgraph LoRAEngine["On-Device LoRA Fine-Tuning (--tune)"]
+            K["Local AST Training Samples"] --> L["lora_trainer.py<br/>(W = W₀ + α/r · BA)"]
+            L --> M["adapters/*.pt<br/>(Enterprise Coding Standards)"]
+            M -.->|--adapter| J
+        end
+        
+        J --> N["Neural AI Code Review & Synthesis"]
+    end
+
+    subgraph Deliverables["4. Reports, SARIF & Governance Outputs"]
+        G --> O["CI/CD Quality Gate<br/>(--fail-on HIGH / MEDIUM)"]
+        N --> O
+        G --> P["report_builder.py"]
+        N --> P
+        P --> Q["REVIEW_REPORT.md<br/>(Comprehensive Audit)"]
+        P --> R["GENERATED_DOCSTRINGS.md<br/>(Automated Code Docs)"]
+        P --> S["GENERATED_README.md<br/>(Architecture Spec)"]
+        G --> T["sarif_builder.py<br/>(OASIS SARIF v2.1.0)"]
+        N --> T
+        T --> U["GitHub / GitLab Security Tab<br/>(MITRE CWE Taxonomy Mappings)"]
+        O --> V["Autonomous Rich Terminal UI<br/>(Interactive Continuous Review)"]
+    end
+
+    style SiliconEngine fill:#fbf5ff,stroke:#7c3aed,stroke-width:2px
+    style Inputs fill:#f0f9ff,stroke:#0284c7,stroke-width:2px
+    style StaticSec fill:#fefce8,stroke:#eab308,stroke-width:2px
+    style Deliverables fill:#f0fdf4,stroke:#22c55e,stroke-width:2px
+    style LoRAEngine fill:#fdf2f8,stroke:#ec4899,stroke-width:1.5px
 ```
 
 ---
