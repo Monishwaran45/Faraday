@@ -48,7 +48,7 @@ DEFAULT_CONFIG: Dict[str, Any] = {
 
 
 SAMPLE_CONFIG_YAML = """# Faraday Enterprise Configuration File
-# Documentation: https://github.com/faraday-ai/faraday
+# Documentation: https://github.com/Monishwaran45/Faraday
 
 # Globs and directories to exclude from review
 exclude:

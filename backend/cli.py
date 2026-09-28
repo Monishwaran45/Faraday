@@ -482,6 +482,9 @@ def main():
     parser.add_argument("--ui", "--web", "--dashboard", action="store_true", dest="ui", help="Launch interactive visual web dashboard at http://localhost:8000")
     parser.add_argument("--prove", "--npu-status", action="store_true", dest="prove", help="Run empirical hardware verification and benchmark of Qualcomm NPU vs CPU fallback")
     parser.add_argument("--export-model", action="store_true", dest="export_model", help="Run reproducible neural model exporter to generate ONNX model & Qualcomm AI Hub compilation manifest")
+    parser.add_argument("--doctor", action="store_true", help="Run Faraday health check & environment doctor")
+    parser.add_argument("--npu", action="store_true", help="Perform deep Qualcomm Hexagon NPU diagnostics in doctor mode")
+    parser.add_argument("--benchmark", action="store_true", help="Run statistical latency and throughput benchmark on Qualcomm NPU / active provider")
 
     # On-Device LoRA Fine-Tuning CLI Flags
     parser.add_argument("--tune", "--train-lora", action="store_true", dest="tune", help="Fine-tune compact LoRA adapter on local repository coding standards (Hexagon HTP / Air-Gapped)")
@@ -555,6 +558,21 @@ def main():
         onnx_path, manifest_path = export_faraday_neural_model()
         console.print(f"[bold green][✓] Neural model successfully exported:[/] [cyan]{onnx_path}[/]")
         console.print(f"[bold green][✓] Qualcomm AI Hub manifest created:[/] [cyan]{manifest_path}[/]")
+        return
+
+    # Feature: faraday doctor [--npu] or faraday --doctor [--npu]
+    is_doctor_cmd = args.project_path in ("doctor", "--doctor") or getattr(args, "doctor", False)
+    if is_doctor_cmd:
+        from backend.core.doctor import run_doctor
+        is_npu = getattr(args, "npu", False) or ("--npu" in sys.argv)
+        code = run_doctor(npu_focus=is_npu, console=console)
+        sys.exit(code)
+
+    # Feature: faraday benchmark or faraday --benchmark
+    is_bench_cmd = args.project_path in ("benchmark", "--benchmark") or getattr(args, "benchmark", False)
+    if is_bench_cmd:
+        from scripts.benchmark_npu import run_benchmark
+        run_benchmark(iterations=50, output_json=Path("review_output/benchmark_results.json"), console=console)
         return
 
     # Feature: --init configuration

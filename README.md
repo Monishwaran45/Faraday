@@ -294,6 +294,8 @@ Faraday offers a unified command-line interface designed to seamlessly integrate
 | `faraday --adapter <path>` | Loads fine-tuned LoRA adapter | Reviews code using custom corporate coding style and naming conventions. |
 | `faraday --prove` (or `--npu-status`) | Silicon NPU vs CPU hardware prover | Empirically audits host processor, active ONNX execution provider, and benchmarks live tensor latency with zero fake claims. |
 | `faraday --export-model` | Reproducible neural model exporter | Exports 1.41M parameter PyTorch neural network to ONNX v17 and generates Qualcomm AI Hub compilation manifest. |
+| `faraday doctor --npu` | System & Silicon NPU Doctor | Audits Python runtime, dependencies, git hooks, ONNX providers, QNN dynamic libraries, and live tensor latency. |
+| `faraday benchmark` | Statistical latency & throughput benchmark | Evaluates NPU/CPU tensor performance across sequence lengths (16-128) with percentiles (P50-P99) and token throughput. |
 
 ---
 
@@ -406,6 +408,35 @@ uv run faraday --export-model
 
 ---
 
+#### Scenario I: System Environment & Silicon Doctor (`faraday doctor --npu`)
+**Context:** A developer or IT administrator is deploying Faraday on a new workstation or Snapdragon X Elite laptop and wants to verify complete environment health.
+```bash
+uv run faraday doctor --npu
+```
+**What Happens Under the Hood:**
+1. Audits Python runtime (version >= 3.10, 64-bit address space, active virtualenv).
+2. Verifies core dependencies (`onnxruntime`, `torch`, `rich`, `yaml`).
+3. Checks git governance: repository root, executable pre-commit hook, and `.faraday.yml` policy.
+4. Deep-audits Qualcomm silicon: scans system PATH for QNN dynamic libraries (`QnnHtp.dll` / `libQnnHtp.so`), tests ONNX execution provider registration (`QNNExecutionProvider` / `CPUExecutionProvider`), verifies model weights integrity, and runs a live tensor latency test.
+
+---
+
+#### Scenario J: Statistical Latency & Throughput Benchmark (`faraday benchmark`)
+**Context:** A performance engineer wants to evaluate real-time inference latency percentiles (P50, P90, P95, P99), latency jitter, and token throughput on physical silicon.
+```bash
+uv run faraday benchmark
+# Or with custom iteration counts:
+uv run python scripts/benchmark_npu.py --iterations 100 --output review_output/benchmark_results.json
+```
+**What Happens Under the Hood:**
+1. Loads the neural model graph onto the active silicon execution provider.
+2. Runs warmup passes to eliminate initial cold-start caches.
+3. Evaluates inference over variable token sequence lengths (16, 32, 64, 128 tokens) across 50 timed iterations each.
+4. Computes Mean, Median (P50), P90, P95, P99, Min/Max latency, and token throughput (tok/s).
+5. Exports a standardized machine-readable JSON artifact to `review_output/benchmark_results.json`.
+
+---
+
 ##  Where to Find Output Reports
 
 All artifacts are generated in the `--output` directory (default: `./review_output`):
@@ -424,6 +455,7 @@ Qualcomm Snapdragon/
 ├── backend/
 │   ├── core/
 │   │   ├── config.py           # .faraday.yml, JSON, & pyproject.toml loader & CI workflow generator
+│   │   ├── doctor.py           # System & Qualcomm Hexagon NPU silicon environment doctor
 │   │   ├── git_utils.py        # Git staged/diff file detection & hook installer
 │   │   ├── sarif_builder.py    # OASIS SARIF v2.1.0 generator for CI/CD & CWE mapping
 │   │   ├── file_scanner.py     # AST-based Python parser & JS/TS function chunker
@@ -432,9 +464,13 @@ Qualcomm Snapdragon/
 │   │   └── report_builder.py   # Synthesis of security & review markdown reports
 │   ├── models/
 │   │   ├── model_backend.py    # Snapdragon Hexagon NPU QNN backend & mock fallback
+│   │   ├── verify_npu.py       # Silicon hardware prover & empirical fallback verifier
 │   │   └── lora_trainer.py     # On-device LoRA fine-tuning engine (Hexagon HTP units)
 │   ├── web_server.py           # Air-gapped interactive visual dashboard (http://localhost:8000)
 │   └── cli.py                  # Autonomous Rich interactive terminal UI
+├── scripts/
+│   ├── benchmark_npu.py        # Statistical latency & throughput benchmarking script
+│   └── export_qnn_model.py     # PyTorch-to-ONNX neural exporter & QAI Hub manifest generator
 ├── demo/
 │   ├── sample_project/         # Multi-file test codebase
 │   │   ├── database.py
@@ -442,6 +478,7 @@ Qualcomm Snapdragon/
 │   │   └── utils.py
 │   └── review_output/          # Generated markdown reports
 ├── models/
+│   ├── onnx/                   # Validated ONNX model & Qualcomm AI Hub compilation manifest
 │   └── qwen2-7b-qnn/           # Compiled Snapdragon X Elite QNN context binaries
 ├── tests/
 │   ├── test_config.py          # Configuration loading, init, & GitHub Actions generator tests
@@ -450,6 +487,7 @@ Qualcomm Snapdragon/
 │   ├── test_leaks1.py          # Simulated credentials fixture for live pre-commit interception
 │   ├── test_lora_trainer.py    # LoRA parameter efficiency & on-device training tests
 │   ├── test_model_backend.py   # Backend hierarchy, QNN heuristics, & vulnerability tests
+│   ├── test_npu_inference.py   # Qualcomm Snapdragon NPU tensor execution & prover tests
 │   ├── test_report_builder.py  # Markdown synthesis & compliance tests
 │   ├── test_sarif_builder.py   # OASIS SARIF v2.1.0 output & CWE mapping tests
 │   └── test_secret_scanner.py  # Static vulnerability & Shannon entropy tests
@@ -465,7 +503,7 @@ Qualcomm Snapdragon/
 
 ---
 
-##  Comprehensive Automated Test Suite (29 Tests — 100% Passing)
+##  Comprehensive Automated Test Suite (36 Tests — 100% Passing)
 
 Faraday includes an exhaustive test suite verifying every component from AST parsing and Shannon entropy secret detection to on-device LoRA fine-tuning and SARIF schema compliance.
 
@@ -502,6 +540,13 @@ uv run pytest -v
 | | `test_qnn_backend_detects_dom_xss` | `model_backend.py` | Asserts detection of insecure DOM manipulation (e.g., assigning unsanitized input to `innerHTML`). |
 | | `test_qnn_backend_detects_insecure_random_token` | `model_backend.py` | Asserts detection of `Math.random()` or `random.random()` used for security-sensitive token generation. |
 | | `test_qnn_backend_detects_unhandled_promise` | `model_backend.py` | Asserts detection of floating async calls and unhandled Promises lacking `.catch()` or `await`. |
+| **`test_npu_inference.py`** | `test_onnx_model_file_and_schema_validity` | `export_qnn_model.py` | Verifies ONNX v17 model integrity, tensor dimensions, and multi-head outputs (`risk_score`, `severity_logits`, `category_logits`). |
+| | `test_qnn_compile_manifest_validity` | `export_qnn_model.py` | Asserts Qualcomm AI Hub manifest specifies Snapdragon X Elite CRD (`sc8380xp`), Hexagon v73 HTP NPU, and w4a16 quantization. |
+| | `test_hardware_prover_and_diagnostic_certificate` | `verify_npu.py` | Validates live empirical hardware probe, active execution provider detection, and benchmark latency measurements. |
+| | `test_qnn_backend_real_tensor_execution` | `model_backend.py` | Verifies genuine ONNX tensor inference execution and structured review generation on active silicon provider. |
+| | `test_heuristic_backend_explicit_label_and_non_neural` | `model_backend.py` | Proves rule-based heuristic engine is strictly labeled as non-neural and never falsely masquerades as NPU offload. |
+| | `test_faraday_doctor_npu_audit` | `doctor.py` | Verifies `faraday doctor --npu` audits Python runtime, ONNX providers, QNN dynamic libraries, and model readiness. |
+| | `test_reproducible_benchmark_execution` | `benchmark_npu.py` | Verifies benchmark execution across token sequence lengths, percentile latency calculations, and JSON export. |
 | **`test_report_builder.py`** | `test_build_report_generates_files` | `report_builder.py` | Verifies synthesis of `REVIEW_REPORT.md`, `GENERATED_DOCSTRINGS.md`, and `GENERATED_README.md`. |
 | **`test_sarif_builder.py`** | `test_generate_sarif_report` | `sarif_builder.py` | Asserts full compliance with OASIS SARIF v2.1.0 JSON schema, rule IDs, CWE taxonomy, and line URI mappings. |
 | **`test_secret_scanner.py`** | `test_secret_scanner_detects_aws_key` | `secret_scanner.py` | Asserts regex and entropy detection of AWS access key IDs (`AKIA...`). |

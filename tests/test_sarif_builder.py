@@ -31,6 +31,7 @@ def test_generate_sarif_report(tmp_path):
     assert len(sarif["runs"]) == 1
     run = sarif["runs"][0]
     assert run["tool"]["driver"]["name"] == "Faraday"
+    assert run["tool"]["driver"]["informationUri"] == "https://github.com/Monishwaran45/Faraday"
     assert len(run["results"]) == 2
 
     # Check high severity mapped to error

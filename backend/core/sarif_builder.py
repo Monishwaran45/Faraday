@@ -174,7 +174,7 @@ def generate_sarif_report(
                     "driver": {
                         "name": "Faraday",
                         "version": "1.0.0",
-                        "informationUri": "https://github.com/faraday-ai/faraday",
+                        "informationUri": "https://github.com/Monishwaran45/Faraday",
                         "rules": list(rules_dict.values()),
                     }
                 },
