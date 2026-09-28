@@ -4,7 +4,7 @@ This directory contains the neural architecture, ONNX execution models, and Qual
 
 ---
 
-## ⚡ Execution Architecture & Transparency Hierarchy
+##  Execution Architecture & Transparency Hierarchy
 
 Faraday provides 100% architectural transparency. The engine probes hardware in a strict priority chain:
 
@@ -50,7 +50,7 @@ Faraday provides 100% architectural transparency. The engine probes hardware in 
 
 ---
 
-## 🚀 Reproducible Model-Export Workflow
+##  Reproducible Model-Export Workflow
 
 Faraday includes an automated, self-contained model generation script:
 
@@ -72,7 +72,7 @@ uv run python scripts/export_qnn_model.py
 
 ---
 
-## 🔍 Hardware Prover & Empirical NPU Diagnostic
+##  Hardware Prover & Empirical NPU Diagnostic
 
 To prove whether your execution is running on the Hexagon NPU or verified CPU fallback:
 
@@ -90,7 +90,7 @@ The diagnostic performs:
 
 ---
 
-## 📦 Compiling for Qualcomm AI Hub (Snapdragon X Elite)
+##  Compiling for Qualcomm AI Hub (Snapdragon X Elite)
 
 To compile the ONNX graph into serialized QNN context binaries on Qualcomm AI Hub:
 
