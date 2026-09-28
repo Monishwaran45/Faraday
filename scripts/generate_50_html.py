@@ -1374,50 +1374,66 @@ TOTAL DURATION:                                  0.120s  (Air-gapped on-device)<
   args: ["--staged", "--fail-on", "HIGH"]</code></pre>
     """)
 
-    # ---------------- PAGE 44 (UPDATED WITH CLI WORKING SCREENSHOT) ----------------
-    p(44, "ACT XI: AUTONOMOUS RICH TERMINAL CLI", """
+    # ---------------- PAGE 44 (UPDATED WITH CLI & WEB DASHBOARD) ----------------
+    p(44, "ACT XI: AUTONOMOUS TERMINAL & VISUAL WEB DASHBOARD", """
         <div class="pillar-tag">Pillar III: Deployment & Accessibility</div>
-        <h1>Act XI: Autonomous Rich Interactive Terminal Architecture</h1>
+        <h1>Act XI: Terminal UI & Air-Gapped Visual Web Dashboard</h1>
         <h2>1. The Continuous Interactive Review Loop</h2>
         <p>
-            Unlike static command-line tools that execute once and dump unformatted text, Faraday features a modern, interactive terminal UI powered by the <strong>Rich</strong> library in <code>backend/cli.py</code>:
+            Faraday features a modern, interactive terminal UI powered by the <strong>Rich</strong> library in <code>backend/cli.py</code>:
         </p>
 
         <!-- EMBED WORKING SCREENSHOT OF FARADAY TERMINAL EXECUTION -->
-        <div style="margin-top: 2.5mm; text-align: center;">
-            <img src="images/screenshot_cli_run.png" style="width: 100%; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.18); border: 1px solid #cbd5e1;">
-            <div style="font-size: 7.2pt; color: #64748b; margin-top: 1mm; font-weight: 600;">Figure 11.1: Live Faraday Interactive Review Session Running Against demo/sample_project</div>
+        <div style="margin-top: 1.5mm; margin-bottom: 2mm; text-align: center;">
+            <img src="images/screenshot_cli_run.png" style="width: 98%; border-radius: 5px; box-shadow: 0 3px 8px rgba(0,0,0,0.15); border: 1px solid #cbd5e1;">
+            <div style="font-size: 7pt; color: #64748b; margin-top: 0.8mm; font-weight: 600;">Figure 11.1: Live Faraday Interactive Review Session Running Against demo/sample_project</div>
         </div>
+
+        <h2>2. Air-Gapped Interactive Visual Web Dashboard (`faraday --ui`)</h2>
+        <p>
+            For lead architects, Faraday provides an interactive web dashboard running at <code>http://localhost:8000</code> via a zero-dependency, air-gapped Python HTTP server in <code>backend/web_server.py</code>:
+        </p>
+        <table style="font-size: 7.4pt; margin-top: 1.5mm;">
+            <tr><th>Feature</th><th>Technical Mechanism</th><th>Developer Capability</th></tr>
+            <tr><td><strong>Health Donut Gauge</strong></td><td>Dynamic SVG vector calculation</td><td>Visual proportion of High, Medium, and Low vulnerabilities.</td></tr>
+            <tr><td><strong>Interactive File Tree</strong></td><td>REST API <code>/api/scan</code> & <code>/api/file</code></td><td>Line-by-line code view with clickable issue badges.</td></tr>
+            <tr><td><strong>PEP-257 Docstrings</strong></td><td>On-device Snapdragon NPU generation</td><td>1-click clipboard copy for synthesized docstrings.</td></tr>
+            <tr><td><strong>README Synthesis</strong></td><td>Contextual AST architectural synthesis</td><td>1-click Markdown export of repository architecture specs.</td></tr>
+        </table>
     """)
 
     # ---------------- PAGE 45 ----------------
-    p(45, "ACT XII: CONFIGURATION ENGINE & GOVERNANCE", """
+    p(45, "ACT XII: CONFIGURATION ENGINE & 1-CLICK GOVERNANCE", """
         <div class="pillar-tag">Pillar III: Deployment & Accessibility</div>
-        <h1>Act XII: Configuration Engine & Enterprise Governance</h1>
+        <h1>Act XII: Configuration Engine & Automated Governance</h1>
         <h2>1. Hierarchical Configuration Resolution</h2>
         <p>
-            Faraday implements a hierarchical policy resolution engine in <code>backend/core/config.py</code>, searching for configurations in the following order:
+            Faraday implements a hierarchical policy resolution engine in <code>backend/core/config.py</code>, searching in order:
             <br>1. Explicit CLI arguments (e.g. <code>--fail-on</code>, <code>--output</code>)
-            <br>2. <code>.faraday.yml</code> / <code>.faraday.yaml</code> in the repository root
+            <br>2. <code>.faraday.yml</code> / <code>.faraday.yaml</code> policy configuration
             <br>3. <code>.faraday.json</code> in the repository root
             <br>4. <code>[tool.faraday]</code> table in <code>pyproject.toml</code>
-            <br>5. Built-in enterprise security defaults
+            <br>5. Built-in enterprise security defaults (Shannon threshold 4.3)
         </p>
 
-        <h2>2. Instant Scaffolding (`faraday --init`)</h2>
+        <h2>2. Automated 1-Click Complete Enterprise Setup (`faraday --setup-all`)</h2>
         <p>
-            Running <code>faraday --init</code> generates a production <code>.faraday.yml</code> configuration file:
+            Setting up policies, hooks, and CI workflows manually is error-prone. Faraday automates this with single-command setup flags:
         </p>
-        <pre><code># .faraday.yml - Faraday Security Policy
-fail_on: "HIGH"
-sarif_output: "review_output/results.sarif"
-entropy_threshold: 4.5
-min_secret_length: 16
-exclude_dirs:
-  - ".git"
-  - "node_modules"
-  - ".venv"
-  - "dist"</code></pre>
+        <pre><code># 1-Click complete enterprise onboarding:
+uv run faraday --setup-all
+
+# Or modular individual setup commands:
+uv run faraday --setup-ci      # Generates .github/workflows/faraday.yml
+uv run faraday --install-hook  # Injects .git/hooks/pre-commit
+uv run faraday --init          # Scaffolds .faraday.yml policy file</code></pre>
+
+        <div class="highlight-box" style="font-size: 7.4pt;">
+            <strong>Automated Governance Triad:</strong><br>
+            • <strong>[1/3] Policy Scaffolding:</strong> Creates <code>.faraday.yml</code> with entropy tolerances and rule thresholds.<br>
+            • <strong>[2/3] Local Git Hook:</strong> Intercepts <code>git commit</code> in 0.02s before secrets reach git history.<br>
+            • <strong>[3/3] GitHub Actions:</strong> Configures <code>faraday.yml</code> in audit mode (<code>--fail-on NONE</code>) with automatic SARIF upload to GitHub Security tab.
+        </div>
     """)
 
     # ---------------- PAGE 46 ----------------
@@ -1429,23 +1445,27 @@ exclude_dirs:
             Faraday is safeguarded by an exhaustive test suite covering all core and enterprise modules. In automated testing via <code>pytest</code>, Faraday achieves <strong>29/29 passing tests (100% pass rate)</strong> across all subsystems:
         </p>
 
-        <table style="font-size: 7.6pt;">
-            <tr><th>Test Module</th><th>Tests</th><th>Verified Subsystems</th><th>Result</th></tr>
+        <table style="font-size: 7.5pt;">
+            <tr><th>Test Module</th><th>Tests</th><th>Verified Subsystems & Scenarios</th><th>Result</th></tr>
             <tr><td><code>tests/test_config.py</code></td><td>4</td><td>YAML, JSON, pyproject.toml, and GitHub CI workflow scaffolding</td><td><strong style="color:#22c55e;">PASSED</strong></td></tr>
-            <tr><td><code>tests/test_file_scanner.py</code></td><td>4</td><td>Python AST parsing, JS/TS brace matching, cyclomatic complexity</td><td><strong style="color:#22c55e;">PASSED</strong></td></tr>
-            <tr><td><code>tests/test_git_utils.py</code></td><td>2</td><td>Git staged detection, branch diffs, pre-commit hook installer</td><td><strong style="color:#22c55e;">PASSED</strong></td></tr>
-            <tr><td><code>tests/test_lora_trainer.py</code></td><td>5</td><td>LoRA config defaults, parameter freezing, AdamW loop, serialization</td><td><strong style="color:#22c55e;">PASSED</strong></td></tr>
-            <tr><td><code>tests/test_model_backend.py</code></td><td>7</td><td>QNN provider, w4a16 weights, heuristic fallback, code vulnerability patterns</td><td><strong style="color:#22c55e;">PASSED</strong></td></tr>
+            <tr><td><code>tests/test_file_scanner.py</code></td><td>4</td><td>Python AST parsing, JS/TS brace matching, exclusion patterns</td><td><strong style="color:#22c55e;">PASSED</strong></td></tr>
+            <tr><td><code>tests/test_git_utils.py</code></td><td>2</td><td>Git root discovery, staged file detection, pre-commit hook installer</td><td><strong style="color:#22c55e;">PASSED</strong></td></tr>
+            <tr><td><code>tests/test_lora_trainer.py</code></td><td>5</td><td>LoRA config defaults, parameter freezing, parameter efficiency, serialization</td><td><strong style="color:#22c55e;">PASSED</strong></td></tr>
+            <tr><td><code>tests/test_model_backend.py</code></td><td>9</td><td>QNN provider, mock backend, mutable defaults, bare except, async blocking, DOM XSS, tokens</td><td><strong style="color:#22c55e;">PASSED</strong></td></tr>
             <tr><td><code>tests/test_report_builder.py</code></td><td>1</td><td>Markdown report synthesis, docstrings, and README synthesis</td><td><strong style="color:#22c55e;">PASSED</strong></td></tr>
             <tr><td><code>tests/test_sarif_builder.py</code></td><td>1</td><td>OASIS SARIF v2.1.0 JSON schema validity, CWE tags, region spans</td><td><strong style="color:#22c55e;">PASSED</strong></td></tr>
-            <tr><td><code>tests/test_secret_scanner.py</code></td><td>5</td><td>Shannon entropy calculation, AWS/OpenAI keys, SQLi, DOM XSS, eval()</td><td><strong style="color:#22c55e;">PASSED</strong></td></tr>
+            <tr><td><code>tests/test_secret_scanner.py</code></td><td>3</td><td>Shannon entropy calculation, AWS keys, SQL injection, eval() execution</td><td><strong style="color:#22c55e;">PASSED</strong></td></tr>
             <tr style="background:#e0f2fe; font-weight:700;">
                 <td><strong>TOTAL VERIFICATION</strong></td>
                 <td><strong>29</strong></td>
-                <td><strong>100% Unit & Integration Test Pass Rate</strong></td>
+                <td><strong>100% Unit & Integration Test Pass Rate (20.37s)</strong></td>
                 <td><strong>29/29 PASSED</strong></td>
             </tr>
         </table>
+
+        <div class="highlight-box" style="font-size: 7.3pt; margin-top: 2mm;">
+            <strong>Live Interception Test Fixture:</strong> <code>tests/test_leaks1.py</code> contains seeded test credentials actively intercepted by the pre-commit hook, verifying sub-second blocking in 0.01 seconds.
+        </div>
     """)
 
     # ---------------- PAGE 47 ----------------
@@ -1454,53 +1474,58 @@ exclude_dirs:
         <h1>Act XIV: Complete Annotated Source Code Blueprint</h1>
         <h2>1. High-Level Repository Architecture</h2>
         <p>
-            Faraday is structured cleanly according to separation of concerns:
+            Faraday is structured cleanly according to strict separation of concerns:
         </p>
 
-        <pre><code>Qualcomm Snapdragon/
+        <pre style="font-size: 7.2pt; line-height: 1.25;"><code>Qualcomm Snapdragon/
 ├── backend/
 │   ├── cli.py                  # Autonomous Rich interactive terminal UI & LoRA CLI
+│   ├── web_server.py           # Air-gapped interactive visual dashboard (http://localhost:8000)
 │   ├── core/
-│   │   ├── config.py           # .faraday.yml, JSON, & pyproject.toml policy engine
+│   │   ├── config.py           # .faraday.yml, JSON, & GitHub Actions workflow generator
 │   │   ├── file_scanner.py     # Multi-language AST parser & function chunker
 │   │   ├── git_utils.py        # Sub-second Git staged / diff scanner & hook installer
 │   │   ├── llm_reviewer.py     # Neural review coordinator & prompt constructor
-│   │   ├── lora_trainer.py     # On-Device LoRA Fine-Tuning Engine (Hexagon NPU HTP)
 │   │   ├── report_builder.py   # Synthesis of security & compliance reports
 │   │   ├── sarif_builder.py    # OASIS SARIF v2.1.0 engine with MITRE CWE taxonomy
 │   │   └── secret_scanner.py   # Shannon entropy + 26 deterministic security rules
 │   └── models/
-│       └── model_backend.py    # Snapdragon Hexagon NPU QNN backend & mock fallback
-├── demo/                       # Sample enterprise codebase for auditing
-├── models/qwen2-7b-qnn/        # Compiled Snapdragon X Elite QNN context binaries (5.05 GB)
-└── tests/                      # Full 29-test unit & integration test suite</code></pre>
+│       ├── model_backend.py    # Snapdragon Hexagon NPU QNN backend & mock fallback
+│       └── lora_trainer.py     # On-Device LoRA Fine-Tuning Engine (Hexagon NPU HTP)
+├── demo/sample_project/        # Multi-file test codebase
+├── models/qwen2-7b-qnn/        # Compiled Snapdragon X Elite QNN context binaries
+├── tests/                      # Full 29-test unit & integration test suite
+│   └── test_leaks1.py          # Simulated secret fixture for pre-commit interception
+└── .github/workflows/faraday.yml # Cross-platform CI/CD security audit workflow</code></pre>
     """)
 
     # ---------------- PAGE 48 ----------------
     p(48, "ACT XV: DEVELOPER INSTALLATION & RUNBOOK", """
         <div class="pillar-tag">Pillar III: Deployment & Accessibility</div>
-        <h1>Act XV: Developer Installation & Operational Runbook</h1>
-        <h2>1. Hardware & System Prerequisites</h2>
-        <ul>
-            <li><strong>Hardware:</strong> Qualcomm Snapdragon X Elite, Snapdragon X Plus, or Snapdragon 8 Elite device.</li>
-            <li><strong>Operating System:</strong> Windows 11 on ARM64 (Build 22631 or higher).</li>
-            <li><strong>Python Environment:</strong> Python 3.11+ (Native ARM64 build recommended).</li>
-            <li><strong>Package Manager:</strong> <code>uv</code> (Astral) for ultra-fast, reproducible dependency management.</li>
-        </ul>
+        <h1>Act XV: Developer Operational Runbook & Command Matrix</h1>
+        <h2>1. Complete CLI Command Reference & Scenarios</h2>
+        <table style="font-size: 7.2pt; margin-top: 1mm;">
+            <tr><th>Command / Flag</th><th>Primary Function</th><th>Real-World Scenario</th></tr>
+            <tr><td><code>faraday [path]</code></td><td>Scan directory or file</td><td>Ad-hoc developer code audit.</td></tr>
+            <tr><td><code>faraday --ui</code></td><td>Visual Web Dashboard</td><td>Browser review at <code>localhost:8000</code>.</td></tr>
+            <tr><td><code>faraday --setup-all</code></td><td>1-Click Enterprise Setup</td><td>Onboards policy, hook, and GitHub CI.</td></tr>
+            <tr><td><code>faraday --staged</code></td><td>Scan Git staged files</td><td>Sub-second (0.02s) pre-commit hook check.</td></tr>
+            <tr><td><code>faraday --diff main</code></td><td>Pull Request branch diff</td><td>Audits only PR changes against main.</td></tr>
+            <tr><td><code>faraday --sarif [path]</code></td><td>OASIS SARIF v2.1.0</td><td>Uploads to GitHub Code Scanning tab.</td></tr>
+            <tr><td><code>faraday --fail-on HIGH</code></td><td>CI Quality Gate</td><td>Fails build if critical flaws exist.</td></tr>
+            <tr><td><code>faraday --tune</code></td><td>On-Device LoRA Training</td><td>Trains adapter on internal code conventions.</td></tr>
+            <tr><td><code>faraday --adapter &lt;dir&gt;</code></td><td>Load Custom Adapter</td><td>Applies corporate style standards.</td></tr>
+        </table>
 
-        <h2>2. Step-by-Step Installation Runbook</h2>
-        <pre><code># 1. Clone repository
-git clone https://github.com/Monishwaran45/Faraday.git
-cd Faraday
+        <h2>2. Rapid Execution Quickstart</h2>
+        <pre style="font-size: 7.2pt;"><code># 1. Sync dependencies and run full 29-test suite
+uv sync && uv run pytest -v
 
-# 2. Install dependencies with uv
-uv sync
+# 2. Launch interactive visual web dashboard
+uv run faraday --ui
 
-# 3. Run full automated test suite (29 tests)
-uv run pytest
-
-# 4. Execute audit on demo project
-uv run faraday demo/sample_project</code></pre>
+# 3. Configure 1-click governance & pre-commit hook
+uv run faraday --setup-all</code></pre>
     """)
 
     # ---------------- PAGE 49 ----------------
