@@ -149,12 +149,12 @@ uv run python -m backend.web_server
 ```
 
 **Key Dashboard Capabilities:**
-- 🛡️ **Repository Health Score & Donut Gauge:** Instant visual breakdown of High, Medium, and Low findings with health status rating.
-- 📁 **Interactive File Inspection:** Project tree sidebar with dynamic status pills (`Clean` vs `X finding(s)`), syntax-highlighted source code, and inline issue cards mapped to exact line numbers.
-- 📝 **Docstring Synthesis (PEP-257):** On-device neural generation for functions and classes with 1-click clipboard copy.
-- 📑 **Contextual README Synthesis:** Auto-synthesized project architecture specifications with 1-click Markdown copy.
-- 📥 **OASIS SARIF 2.1.0 Export:** 1-click download of standardized security findings for GitHub Security / SonarQube.
-- ⚡ **100% Air-Gapped Qualcomm Snapdragon NPU Badge:** Live hardware offload and zero-egress verification.
+-  **Repository Health Score & Donut Gauge:** Instant visual breakdown of High, Medium, and Low findings with health status rating.
+-  **Interactive File Inspection:** Project tree sidebar with dynamic status pills (`Clean` vs `X finding(s)`), syntax-highlighted source code, and inline issue cards mapped to exact line numbers.
+-  **Docstring Synthesis (PEP-257):** On-device neural generation for functions and classes with 1-click clipboard copy.
+-  **Contextual README Synthesis:** Auto-synthesized project architecture specifications with 1-click Markdown copy.
+-  **OASIS SARIF 2.1.0 Export:** 1-click download of standardized security findings for GitHub Security / SonarQube.
+-  **100% Air-Gapped Qualcomm Snapdragon NPU Badge:** Live hardware offload and zero-egress verification.
 
 ### 4. Interactive Multi-Project Review Mode
 
@@ -271,7 +271,7 @@ uv run faraday demo/sample_project --adapter adapters/enterprise_lora
 
 ---
 
-## 🛠️ Complete CLI Command Reference & Real-World Scenarios
+##  Complete CLI Command Reference & Real-World Scenarios
 
 Faraday offers a unified command-line interface designed to seamlessly integrate into every stage of the developer lifecycle—from local coding and git hooks to CI/CD pipelines and visual dashboards.
 
@@ -378,7 +378,7 @@ uv run faraday . --adapter adapters/internal_style
 
 ---
 
-## 📁 Where to Find Output Reports
+##  Where to Find Output Reports
 
 All artifacts are generated in the `--output` directory (default: `./review_output`):
 
@@ -389,7 +389,7 @@ All artifacts are generated in the `--output` directory (default: `./review_outp
 
 ---
 
-## 🏗️ Production Project Layout
+##  Production Project Layout
 
 ```
 Qualcomm Snapdragon/
@@ -437,7 +437,7 @@ Qualcomm Snapdragon/
 
 ---
 
-## 🧪 Comprehensive Automated Test Suite (29 Tests — 100% Passing)
+##  Comprehensive Automated Test Suite (29 Tests — 100% Passing)
 
 Faraday includes an exhaustive test suite verifying every component from AST parsing and Shannon entropy secret detection to on-device LoRA fine-tuning and SARIF schema compliance.
 
@@ -499,7 +499,7 @@ uv run pytest -v
 
 ---
 
-## 👤 Author & Project Metadata
+##  Author & Project Metadata
 
 - **Author:** Monishwaran K
 - **Project:** Faraday — Air-Gapped Code Review Copilot for Qualcomm Snapdragon Hexagon NPU
