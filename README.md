@@ -262,58 +262,50 @@ All artifacts are generated in the `--output` directory (default: `./review_outp
 
 ---
 
-## Real-World Project Integration
+## 🚀 Automated 1-Click Setup & Enterprise Governance
 
-### Initialize Configuration in Your Repo
-Generate a customized `.faraday.yml` configuration:
+Configuring security policies, SARIF reporting, and CI/CD pipelines manually is tedious and error-prone. Faraday automates the entire onboarding workflow with single-command setup flags:
+
+### 1. Complete 1-Click Setup (`--setup-all`)
+Run this single command in any repository root to configure the complete enterprise stack:
 ```bash
-uv run faraday --init
+uv run faraday --setup-all
 ```
+This automatically executes:
+- ✅ **[1/3] Policy Configuration:** Scaffolds `.faraday.yml` with rule thresholds and exclusion defaults.
+- ✅ **[2/3] Local Git Pre-Commit Hook:** Injects `.git/hooks/pre-commit` to prevent committing secrets or high-severity flaws.
+- ✅ **[3/3] GitHub Actions CI/CD Pipeline:** Creates `.github/workflows/faraday.yml` with cross-platform automated SARIF upload to the GitHub Security tab and pull request quality gate enforcement.
 
-### Automatic Git Pre-Commit Hook Installation
-Install Faraday to run automatically before every git commit:
-```bash
-uv run faraday --install-hook
-```
+---
 
-Or add to your existing `.pre-commit-config.yaml`:
-```yaml
-repos:
-  - repo: https://github.com/faraday-ai/faraday
-    rev: v1.0.0
-    hooks:
-      - id: faraday
-        args: ["--staged", "--fail-on", "HIGH"]
-```
+### 2. Modular Automated Setup Commands
 
-### Pull Request Branch Diff Scan
-In CI or local feature branches, review only files modified against `main`:
+If you prefer to configure components individually:
+
+- **Automated GitHub Actions Setup:**
+  ```bash
+  uv run faraday --setup-ci
+  ```
+  Generates `.github/workflows/faraday.yml` with cross-platform Linux/Windows CI support, automated SARIF security reporting, and gate enforcement.
+
+- **Automated Pre-Commit Hook Installation:**
+  ```bash
+  uv run faraday --install-hook
+  ```
+  Installs a sub-second pre-commit security check (`faraday --staged --fail-on HIGH`) that intercepts local commits without external network dependencies.
+
+- **Automated Policy Scaffolding:**
+  ```bash
+  uv run faraday --init
+  ```
+  Creates a starter `.faraday.yml` in your project root with customizable rule thresholds.
+
+---
+
+### 3. Pull Request Branch Diff Scan
+In CI pipelines or local feature branches, review only files modified against `main`:
 ```bash
 uv run faraday --diff main --fail-on HIGH --sarif results.sarif
-```
-
-### GitHub Actions CI/CD Workflow
-Drop `.github/workflows/faraday.yml` into your repository:
-```yaml
-name: Faraday Security Gate
-on: [push, pull_request]
-
-jobs:
-  faraday-scan:
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - run: pip install uv && uv pip install --system -e .
-      - run: faraday . --fail-on HIGH --sarif results.sarif
-      - uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with:
-          sarif_file: results.sarif
 ```
 
 ---

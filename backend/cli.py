@@ -6,16 +6,16 @@ Air-Gapped, On-Device AI Code Review & Security Assurance Engine
 Targeting Qualcomm Snapdragon(R) X Elite (Hexagon NPU).
 
 Usage:
-    codeguard                               # Scan current repository (with interactive prompt)
-    codeguard /path/to/project              # Scan specific path
-    codeguard --staged                      # Scan only git staged files (pre-commit)
-    codeguard --diff main                   # Scan files changed against main branch (PR)
-    codeguard --fail-on HIGH                # CI gate: fail if HIGH severity found
-    codeguard --sarif results.sarif         # Export OASIS SARIF v2.1.0 for GitHub Security
-    codeguard --skip-ai                     # Sub-second static security scan only
-    codeguard --install-hook                # Automatically configure git pre-commit hook
-    codeguard --init                        # Create standard .codeguard.yml in project
-    codeguard --once                        # Run once without asking for another project
+    Faraday                               # Scan current repository (with interactive prompt)
+    Faraday /path/to/project              # Scan specific path
+    Faraday --staged                      # Scan only git staged files (pre-commit)
+    Faraday --diff main                   # Scan files changed against main branch (PR)
+    Faraday --fail-on HIGH                # CI gate: fail if HIGH severity found
+    Faraday --sarif results.sarif         # Export OASIS SARIF v2.1.0 for GitHub Security
+    Faraday --skip-ai                     # Sub-second static security scan only
+    Faraday --install-hook                # Automatically configure git pre-commit hook
+    Faraday --init                        # Create standard .faraday.yml in project
+    Faraday --once                        # Run once without asking for another project
 """
 
 import argparse
@@ -34,7 +34,7 @@ from rich.text import Text
 from rich.prompt import Prompt
 from rich import box
 
-from backend.core.config import load_project_config, init_project_config
+from backend.core.config import load_project_config, init_project_config, setup_github_ci_workflow
 from backend.core.file_scanner import scan_project
 from backend.core.git_utils import (
     find_git_root,
@@ -470,6 +470,8 @@ def main():
     parser.add_argument("--skip-ai", action="store_true", help="Skip LLM code review; run ultra-fast static security scanner only")
     parser.add_argument("--install-hook", action="store_true", help="Install Faraday as git pre-commit hook in repository")
     parser.add_argument("--init", action="store_true", help="Initialize starter .faraday.yml configuration in target project")
+    parser.add_argument("--setup-ci", action="store_true", help="Automatically generate and configure .github/workflows/faraday.yml for GitHub Actions")
+    parser.add_argument("--setup-all", action="store_true", help="1-Click complete setup: scaffold .faraday.yml, install pre-commit hook, and configure GitHub CI")
     parser.add_argument("--once", action="store_true", help="Run scan once and exit without interactive terminal prompt")
     parser.add_argument("--interactive", "-i", action="store_true", help="Force interactive terminal mode to continuously review projects")
 
@@ -482,6 +484,45 @@ def main():
 
     args = parser.parse_args()
     target_path = Path(args.project_path).resolve()
+
+    # Feature: --setup-all (1-Click Complete Enterprise Automation)
+    if args.setup_all:
+        console.print()
+        console.print("[bold cyan]════════════════════════════════════════════════════════════════════════[/]")
+        console.print("[bold white] 🚀 Faraday Automated 1-Click Setup & Governance Integration[/]")
+        console.print("[bold cyan]════════════════════════════════════════════════════════════════════════[/]")
+        root_dir = target_path if target_path.is_dir() else target_path.parent
+
+        # 1. Scaffolding .faraday.yml
+        cfg_file = init_project_config(root_dir)
+        console.print(f"  [bold green][1/3][/] Created Faraday policy config:[/] [cyan]{cfg_file}[/]")
+
+        # 2. Pre-commit hook
+        repo_root = find_git_root(root_dir)
+        if repo_root:
+            try:
+                hook_file = install_pre_commit_hook(repo_root)
+                console.print(f"  [bold green][2/3][/] Installed Git pre-commit hook:[/] [cyan]{hook_file}[/]")
+            except Exception as e:
+                console.print(f"  [bold yellow][2/3][/] Skipped hook installation: {e}")
+        else:
+            console.print("  [bold dim][2/3][/] Skipped hook (not inside a git repository).")
+
+        # 3. GitHub Actions CI
+        ci_file = setup_github_ci_workflow(root_dir)
+        console.print(f"  [bold green][3/3][/] Configured GitHub Actions CI/CD:[/] [cyan]{ci_file}[/]")
+        console.print()
+        console.print("[bold green][✓] Complete Faraday automation configured successfully![/]")
+        console.print("  [dim]Pre-commit and GitHub Actions will now automatically audit code and enforce security gates.[/]\n")
+        return
+
+    # Feature: --setup-ci
+    if args.setup_ci:
+        root_dir = target_path if target_path.is_dir() else target_path.parent
+        ci_file = setup_github_ci_workflow(root_dir)
+        console.print(f"[bold green][+] Successfully generated GitHub Actions workflow at:[/] [cyan]{ci_file}[/]")
+        console.print("  [dim]Push to GitHub to automatically trigger the Faraday Security Gate & SARIF upload.[/]")
+        return
 
     # Feature: --tune (On-Device LoRA Fine-Tuning)
     if args.tune:

@@ -103,7 +103,7 @@ def build_full_document():
             <tr><td><strong>Act X: Enterprise Git & CI/CD</strong></td><td>Sub-Second Staged Scans (0.02s), Branch Diffs, 1-Click Pre-Commit Hooks</td><td>41 – 43</td></tr>
             <tr><td><strong>Act XI: Autonomous Terminal CLI</strong></td><td>Rich Interactive Multi-Project Loop, Re-Scan Workflow, Zero Daemon Footprint</td><td>44</td></tr>
             <tr><td><strong>Act XII: Configuration Engine</strong></td><td>Hierarchical Policies (.faraday.yml, pyproject.toml), Scaffolding Engine</td><td>45</td></tr>
-            <tr><td><strong>Act XIII: Verification Rig</strong></td><td>28/28 Unit Test Suite Breakdown, Edge Cases, LoRA Assertions & Certification</td><td>46</td></tr>
+            <tr><td><strong>Act XIII: Verification Rig</strong></td><td>29/29 Unit Test Suite Breakdown, Edge Cases, LoRA Assertions & Certification</td><td>46</td></tr>
             <tr><td><strong>Act XIV: Annotated Source Blueprint</strong></td><td>Core Module Architecture, Implementation Walkthrough & Code Schematics</td><td>47</td></tr>
             <tr><td><strong>Act XV: Deployment Runbook</strong></td><td>Hardware Requirements, Windows on ARM Setup, Operational Instructions</td><td>48</td></tr>
             <tr><td><strong>Act XVI: Threat Model & Air-Gap</strong></td><td>STRIDE Analysis, Zero Egress Proof, Wi-Fi Disabled Validation Protocol</td><td>49</td></tr>
@@ -1423,15 +1423,15 @@ exclude_dirs:
     # ---------------- PAGE 46 ----------------
     p(46, "ACT XIII: COMPREHENSIVE VERIFICATION RIG", """
         <div class="pillar-tag">Pillar IV: Presentation & Documentation</div>
-        <h1>Act XIII: Comprehensive Verification Rig & 28/28 Test Suite</h1>
+        <h1>Act XIII: Comprehensive Verification Rig & 29/29 Test Suite</h1>
         <h2>1. Pytest Unit & Integration Test Architecture</h2>
         <p>
-            Faraday is safeguarded by an exhaustive test suite covering all core and enterprise modules. In automated testing via <code>pytest</code>, Faraday achieves <strong>28/28 passing tests (100% pass rate)</strong> across all subsystems:
+            Faraday is safeguarded by an exhaustive test suite covering all core and enterprise modules. In automated testing via <code>pytest</code>, Faraday achieves <strong>29/29 passing tests (100% pass rate)</strong> across all subsystems:
         </p>
 
         <table style="font-size: 7.6pt;">
             <tr><th>Test Module</th><th>Tests</th><th>Verified Subsystems</th><th>Result</th></tr>
-            <tr><td><code>tests/test_config.py</code></td><td>3</td><td>YAML, JSON, and pyproject.toml policy loading & scaffolding</td><td><strong style="color:#22c55e;">PASSED</strong></td></tr>
+            <tr><td><code>tests/test_config.py</code></td><td>4</td><td>YAML, JSON, pyproject.toml, and GitHub CI workflow scaffolding</td><td><strong style="color:#22c55e;">PASSED</strong></td></tr>
             <tr><td><code>tests/test_file_scanner.py</code></td><td>4</td><td>Python AST parsing, JS/TS brace matching, cyclomatic complexity</td><td><strong style="color:#22c55e;">PASSED</strong></td></tr>
             <tr><td><code>tests/test_git_utils.py</code></td><td>2</td><td>Git staged detection, branch diffs, pre-commit hook installer</td><td><strong style="color:#22c55e;">PASSED</strong></td></tr>
             <tr><td><code>tests/test_lora_trainer.py</code></td><td>5</td><td>LoRA config defaults, parameter freezing, AdamW loop, serialization</td><td><strong style="color:#22c55e;">PASSED</strong></td></tr>
@@ -1441,9 +1441,9 @@ exclude_dirs:
             <tr><td><code>tests/test_secret_scanner.py</code></td><td>5</td><td>Shannon entropy calculation, AWS/OpenAI keys, SQLi, DOM XSS, eval()</td><td><strong style="color:#22c55e;">PASSED</strong></td></tr>
             <tr style="background:#e0f2fe; font-weight:700;">
                 <td><strong>TOTAL VERIFICATION</strong></td>
-                <td><strong>28</strong></td>
+                <td><strong>29</strong></td>
                 <td><strong>100% Unit & Integration Test Pass Rate</strong></td>
-                <td><strong>28/28 PASSED</strong></td>
+                <td><strong>29/29 PASSED</strong></td>
             </tr>
         </table>
     """)
@@ -1473,7 +1473,7 @@ exclude_dirs:
 │       └── model_backend.py    # Snapdragon Hexagon NPU QNN backend & mock fallback
 ├── demo/                       # Sample enterprise codebase for auditing
 ├── models/qwen2-7b-qnn/        # Compiled Snapdragon X Elite QNN context binaries (5.05 GB)
-└── tests/                      # Full 28-test unit & integration test suite</code></pre>
+└── tests/                      # Full 29-test unit & integration test suite</code></pre>
     """)
 
     # ---------------- PAGE 48 ----------------
@@ -1496,7 +1496,7 @@ cd Faraday
 # 2. Install dependencies with uv
 uv sync
 
-# 3. Run full automated test suite (28 tests)
+# 3. Run full automated test suite (29 tests)
 uv run pytest
 
 # 4. Execute audit on demo project

@@ -150,3 +150,74 @@ def init_project_config(project_path: Path) -> Path:
     target_file = project_path / ".faraday.yml"
     target_file.write_text(SAMPLE_CONFIG_YAML, encoding="utf-8")
     return target_file
+
+
+def setup_github_ci_workflow(project_path: Path) -> Path:
+    """
+    Automatically creates production-ready .github/workflows/faraday.yml in the target repository.
+    Configures cross-platform automated SARIF security reporting and CI gate enforcement.
+    """
+    workflow_dir = project_path / ".github" / "workflows"
+    workflow_dir.mkdir(parents=True, exist_ok=True)
+    workflow_file = workflow_dir / "faraday.yml"
+
+    workflow_content = """name: Faraday Security & Code Review Gate
+
+on:
+  push:
+    branches: [ "main", "master", "develop" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  faraday-scan:
+    name: Faraday On-Device & Offline Scan
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+      actions: read
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install Dependencies & Faraday
+        run: |
+          uv pip install --system -e .
+
+      - name: Run Faraday Security & Assurance Scan
+        id: scan
+        continue-on-error: true
+        run: |
+          python -m backend.cli . --fail-on HIGH --sarif results.sarif --once
+
+      - name: Upload SARIF to GitHub Security Tab
+        if: always() && hashFiles('results.sarif') != ''
+        continue-on-error: true
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: results.sarif
+          category: faraday
+
+      - name: Enforce CI Quality Gate
+        if: steps.scan.outcome == 'failure'
+        run: |
+          echo "::error::Faraday Gate Failed: High severity security issues were detected. Inspect the generated SARIF report in GitHub Security tab."
+          exit 1
+"""
+    workflow_file.write_text(workflow_content, encoding="utf-8")
+    return workflow_file

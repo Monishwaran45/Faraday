@@ -1,5 +1,10 @@
 from pathlib import Path
-from backend.core.config import load_project_config, init_project_config, DEFAULT_CONFIG
+from backend.core.config import (
+    load_project_config,
+    init_project_config,
+    setup_github_ci_workflow,
+    DEFAULT_CONFIG,
+)
 
 
 def test_load_default_config(tmp_path):
@@ -26,3 +31,15 @@ def test_load_json_config(tmp_path):
     loaded = load_project_config(tmp_path)
     assert loaded["fail_on"] == "LOW"
     assert loaded["skip_ai"] is True
+
+
+def test_setup_github_ci_workflow(tmp_path):
+    wf_file = setup_github_ci_workflow(tmp_path)
+    assert wf_file.exists()
+    assert wf_file.name == "faraday.yml"
+    assert ".github" in str(wf_file.parent.parent)
+
+    content = wf_file.read_text(encoding="utf-8")
+    assert "Faraday Security & Code Review Gate" in content
+    assert "upload-sarif" in content
+    assert "Enforce CI Quality Gate" in content
