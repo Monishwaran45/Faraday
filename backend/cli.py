@@ -474,6 +474,7 @@ def main():
     parser.add_argument("--setup-all", action="store_true", help="1-Click complete setup: scaffold .faraday.yml, install pre-commit hook, and configure GitHub CI")
     parser.add_argument("--once", action="store_true", help="Run scan once and exit without interactive terminal prompt")
     parser.add_argument("--interactive", "-i", action="store_true", help="Force interactive terminal mode to continuously review projects")
+    parser.add_argument("--ui", "--web", "--dashboard", action="store_true", dest="ui", help="Launch interactive visual web dashboard at http://localhost:8000")
 
     # On-Device LoRA Fine-Tuning CLI Flags
     parser.add_argument("--tune", "--train-lora", action="store_true", dest="tune", help="Fine-tune compact LoRA adapter on local repository coding standards (Hexagon HTP / Air-Gapped)")
@@ -527,6 +528,12 @@ def main():
     # Feature: --tune (On-Device LoRA Fine-Tuning)
     if args.tune:
         sys.exit(run_lora_tuning(target_path, args))
+
+    # Feature: --ui / --web / --dashboard (Launch Interactive Visual Code Review & Docs Dashboard)
+    if getattr(args, "ui", False):
+        from backend.web_server import launch_web_dashboard
+        launch_web_dashboard(target_path, port=8000, auto_open=True)
+        return
 
     # Feature: --init configuration
     if args.init:

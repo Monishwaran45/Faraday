@@ -136,7 +136,27 @@ uv run python main.py demo/sample_project
 
 *(Note: `codeguard` remains registered as a backwards-compatible alias).*
 
-### 3. Interactive Multi-Project Review Mode
+### 3. Interactive Visual Web Dashboard (`faraday --ui`)
+
+Faraday provides a local, air-gapped web dashboard featuring real-time health score donut charts, an interactive file explorer with line-mapped findings, and automated docstring & README synthesis:
+
+```bash
+# Launch dashboard and automatically open browser at http://localhost:8000:
+uv run faraday --ui
+
+# Or start the web server module directly:
+uv run python -m backend.web_server
+```
+
+**Key Dashboard Capabilities:**
+- 🛡️ **Repository Health Score & Donut Gauge:** Instant visual breakdown of High, Medium, and Low findings with health status rating.
+- 📁 **Interactive File Inspection:** Project tree sidebar with dynamic status pills (`Clean` vs `X finding(s)`), syntax-highlighted source code, and inline issue cards mapped to exact line numbers.
+- 📝 **Docstring Synthesis (PEP-257):** On-device neural generation for functions and classes with 1-click clipboard copy.
+- 📑 **Contextual README Synthesis:** Auto-synthesized project architecture specifications with 1-click Markdown copy.
+- 📥 **OASIS SARIF 2.1.0 Export:** 1-click download of standardized security findings for GitHub Security / SonarQube.
+- ⚡ **100% Air-Gapped Qualcomm Snapdragon NPU Badge:** Live hardware offload and zero-egress verification.
+
+### 4. Interactive Multi-Project Review Mode
 
 Faraday features an interactive continuous review workflow. When you finish scanning one project, the Rich terminal prompts you for the next location:
 
@@ -152,7 +172,7 @@ After the report is presented:
 - **Type `r`**: Re-scans the current project (instantly verifies your bug fixes).
 - **Type `q` (or press Enter)**: Exits Faraday cleanly.
 
-### 4. Scanning Any External Real-World Project
+### 5. Scanning Any External Real-World Project
 
 You can point Faraday at any folder or external repository:
 
@@ -160,7 +180,7 @@ You can point Faraday at any folder or external repository:
 uv run faraday "C:\Users\Asus-2025\Downloads\ETA"
 ```
 
-### 5. Running in Non-Interactive / CI Mode (`--once`)
+### 6. Running in Non-Interactive / CI Mode (`--once`)
 
 If you want Faraday to run a single scan and exit immediately without prompting:
 
@@ -168,7 +188,7 @@ If you want Faraday to run a single scan and exit immediately without prompting:
 uv run faraday . --once
 ```
 
-### 6. Sub-Second Git Staged Scanning (Pre-Commit Mode)
+### 7. Sub-Second Git Staged Scanning (Pre-Commit Mode)
 
 To scan only the files you have staged in git:
 
@@ -176,7 +196,7 @@ To scan only the files you have staged in git:
 uv run faraday --staged --fail-on HIGH
 ```
 
-### 7. Exporting Industry-Standard SARIF for GitHub Security
+### 8. Exporting Industry-Standard SARIF for GitHub Security
 
 Export OASIS SARIF v2.1.0 to upload to GitHub Code Scanning or view in VS Code:
 
@@ -184,13 +204,13 @@ Export OASIS SARIF v2.1.0 to upload to GitHub Code Scanning or view in VS Code:
 uv run faraday demo/sample_project --sarif review_output/results.sarif
 ```
 
-### 8. Machine-Readable JSON Output (CI/CD Pipelines)
+### 9. Machine-Readable JSON Output (CI/CD Pipelines)
 
 ```bash
 uv run faraday demo/sample_project --json
 ```
 
-### 9. Benchmarking Model Backend & Inference Latency
+### 10. Benchmarking Model Backend & Inference Latency
 
 To inspect the active NPU execution provider and measure single-inference latency:
 
@@ -198,7 +218,7 @@ To inspect the active NPU execution provider and measure single-inference latenc
 uv run python backend/models/model_backend.py
 ```
 
-### 10. Qualcomm AI Hub Cloud Hardware Verification (Snapdragon X Elite NPU)
+### 11. Qualcomm AI Hub Cloud Hardware Verification (Snapdragon X Elite NPU)
 
 Faraday's neural model has been verified and benchmarked on physical **Qualcomm Snapdragon X Elite CRD (Compute Reference Device)** hardware via the [Qualcomm AI Hub](https://aihub.qualcomm.com) cloud infrastructure:
 
@@ -325,6 +345,7 @@ Qualcomm Snapdragon/
 │   │   └── report_builder.py   # Synthesis of security & review markdown reports
 │   ├── models/
 │   │   └── model_backend.py    # Snapdragon Hexagon NPU QNN backend & mock fallback
+│   ├── web_server.py           # Air-gapped interactive visual dashboard (http://localhost:8000)
 │   └── cli.py                  # Autonomous Rich interactive terminal UI
 ├── demo/
 │   ├── sample_project/         # Multi-file test codebase
