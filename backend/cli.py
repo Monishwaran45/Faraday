@@ -506,22 +506,22 @@ def main():
 
         # 1. Scaffolding .faraday.yml
         cfg_file = init_project_config(root_dir)
-        console.print(f"  [bold green][1/3][/] Created Faraday policy config:[/] [cyan]{cfg_file}[/]")
+        console.print(f"  [bold green][1/3] Created Faraday policy config:[/] [cyan]{cfg_file}[/]")
 
         # 2. Pre-commit hook
         repo_root = find_git_root(root_dir)
         if repo_root:
             try:
                 hook_file = install_pre_commit_hook(repo_root)
-                console.print(f"  [bold green][2/3][/] Installed Git pre-commit hook:[/] [cyan]{hook_file}[/]")
+                console.print(f"  [bold green][2/3] Installed Git pre-commit hook:[/] [cyan]{hook_file}[/]")
             except Exception as e:
-                console.print(f"  [bold yellow][2/3][/] Skipped hook installation: {e}")
+                console.print(f"  [bold yellow][2/3] Skipped hook installation:[/] {e}")
         else:
-            console.print("  [bold dim][2/3][/] Skipped hook (not inside a git repository).")
+            console.print("  [bold dim][2/3] Skipped hook (not inside a git repository).[/]")
 
         # 3. GitHub Actions CI
         ci_file = setup_github_ci_workflow(root_dir)
-        console.print(f"  [bold green][3/3][/] Configured GitHub Actions CI/CD:[/] [cyan]{ci_file}[/]")
+        console.print(f"  [bold green][3/3] Configured GitHub Actions CI/CD:[/] [cyan]{ci_file}[/]")
         console.print()
         console.print("[bold green][✓] Complete Faraday automation configured successfully![/]")
         console.print("  [dim]Pre-commit and GitHub Actions will now automatically audit code and enforce security gates.[/]\n")
