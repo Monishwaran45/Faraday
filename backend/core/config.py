@@ -1,8 +1,8 @@
 """
 config.py
 
-Loads and manages CodeGuard project configuration from .codeguard.yml,
-.codeguard.yaml, .codeguard.json, or pyproject.toml [tool.codeguard].
+Loads and manages Faraday project configuration from .faraday.yml,
+.faraday.yaml, .faraday.json, or pyproject.toml [tool.faraday] (with legacy fallback).
 
 Enables enterprise teams to establish uniform code assurance, security rules,
 and CI/CD gate policies across real-world repositories without repeating CLI flags.

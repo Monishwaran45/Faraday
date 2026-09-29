@@ -707,7 +707,6 @@ Qualcomm Snapdragon/
 │   ├── test_sarif_builder.py   # OASIS SARIF v2.1.0 output & CWE mapping tests
 │   └── test_secret_scanner.py  # Static vulnerability & Shannon entropy tests
 ├── .github/workflows/
-│   ├── codeguard.yml           # CI/CD GitHub Actions workflow template
 │   └── faraday.yml             # Automated Faraday security scanning & SARIF upload workflow
 ├── .pre-commit-hooks.yaml      # Standard pre-commit framework manifest
 ├── pyproject.toml              # Build config, dependencies, faraday & codeguard CLI scripts
