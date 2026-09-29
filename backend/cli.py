@@ -1,7 +1,7 @@
 """
 cli.py
 
-Production-ready entry point for CodeGuard.
+Production-ready entry point for Faraday.
 Air-Gapped, On-Device AI Code Review & Security Assurance Engine
 Targeting Qualcomm Snapdragon(R) X Elite (Hexagon NPU).
 
@@ -209,7 +209,7 @@ def render_summary_dashboard(metrics, paths, sarif_path: Path = None):
 
 def execute_pipeline(target_path: Path, args, backend, is_interactive: bool = False) -> tuple[bool, int]:
     """
-    Executes a single CodeGuard scan and review pass on target_path.
+    Executes a single Faraday scan and review pass on target_path.
     Returns (gate_failed: bool, exit_code: int).
     """
     cfg = load_project_config(target_path)
@@ -329,7 +329,7 @@ def execute_pipeline(target_path: Path, args, backend, is_interactive: bool = Fa
     sarif_file_path = None
     if args.sarif:
         sarif_target = (
-            Path(output_dir) / "codeguard.sarif"
+            Path(output_dir) / "faraday.sarif"
             if args.sarif == "AUTO"
             else Path(args.sarif).resolve()
         )
