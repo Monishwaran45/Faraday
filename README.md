@@ -39,6 +39,11 @@ uv pip install git+https://github.com/Monishwaran45/Faraday.git
 # Option C: Or clone and install locally
 git clone https://github.com/Monishwaran45/Faraday.git
 cd Faraday && pip install -e .
+
+# 🔄 Upgrade / Reinstall to the latest version anytime:
+py -3.11 -m pip install --upgrade --force-reinstall git+https://github.com/Monishwaran45/Faraday.git
+# Or using uv:
+uv pip install --upgrade git+https://github.com/Monishwaran45/Faraday.git
 ```
 
 > [!TIP]
