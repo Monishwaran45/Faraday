@@ -40,14 +40,14 @@ uv pip install git+https://github.com/Monishwaran45/Faraday.git
 git clone https://github.com/Monishwaran45/Faraday.git
 cd Faraday && pip install -e .
 
-# 🔄 Upgrade / Reinstall to the latest version anytime:
+#  Upgrade / Reinstall to the latest version anytime:
 py -3.11 -m pip install --upgrade --force-reinstall git+https://github.com/Monishwaran45/Faraday.git
 # Or using uv:
 uv pip install --upgrade git+https://github.com/Monishwaran45/Faraday.git
 ```
 
 > [!TIP]
-> ### 💡 Using the `faraday` Command in Your Terminal / CMD
+> ###  Using the `faraday` Command in Your Terminal / CMD
 > Once installed, you can use the `faraday` command from any folder on your computer.
 > 
 > **If Windows says `'faraday' is not recognized as an internal or external command`:**
