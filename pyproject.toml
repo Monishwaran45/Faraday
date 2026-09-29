@@ -13,12 +13,15 @@ dependencies = [
     "rich>=13.7.0",
     "onnx>=1.14.0",
     "onnxruntime>=1.14.0",
-    "torch>=2.0.0",
+    "numpy>=1.21.0",
     "wmi>=1.5.1; sys_platform == 'win32'",
     "pywin32>=300; sys_platform == 'win32'",
 ]
 
 [project.optional-dependencies]
+tune = [
+    "torch>=1.10.0",
+]
 qnn = [
     "qai-hub>=0.55.0",
     "qai-hub-models>=0.63.0",
