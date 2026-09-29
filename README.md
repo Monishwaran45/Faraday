@@ -146,7 +146,7 @@ qai-hub submit-compile-and-profile-jobs \
 ```
 
 > [!IMPORTANT]
-> **🏆 Verified Physical Qualcomm AI Hub Silicon Benchmark Proof:**  
+> ** Verified Physical Qualcomm AI Hub Silicon Benchmark Proof:**  
 > - **Hardware Target:** Physical `Snapdragon X Elite CRD` (`sc8380xp`, Windows 11, Qualcomm Hexagon v73 HTP)
 > - **Live AI Hub Compile Job (Status: SUCCESS):** [https://workbench.aihub.qualcomm.com/jobs/jgddk12kg/](https://workbench.aihub.qualcomm.com/jobs/jgddk12kg/)
 > - **Live AI Hub Hardware Profile Job (Status: SUCCESS):** [https://workbench.aihub.qualcomm.com/jobs/jpxlqoxjp/](https://workbench.aihub.qualcomm.com/jobs/jpxlqoxjp/)
