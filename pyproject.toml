@@ -14,7 +14,8 @@ dependencies = [
     "pyyaml>=6.0",
     "onnx>=1.14.0",
     "onnxruntime>=1.14.0",
-    "numpy>=1.21.0",
+    "numpy>=1.21.0,<2.3.0",
+    "protobuf>=3.20.2,<6.34",
     "wmi>=1.5.1; sys_platform == 'win32'",
     "pywin32>=300; sys_platform == 'win32'",
 ]
