@@ -110,7 +110,11 @@ class QNNBackend(ModelBackend):
                 if candidates:
                     return candidates[0]
 
+        pkg_root = Path(__file__).resolve().parent.parent.parent
         candidates = [
+            pkg_root / "models" / "onnx" / "faraday_code_assurance.onnx",
+            pkg_root / "models" / "qwen2-7b-qnn" / "faraday_code_assurance.onnx",
+            pkg_root / "models" / "qwen2-7b-qnn" / "qwen2_7b_instruct-qnn_context_binary-w4a16-qualcomm_snapdragon_x_elite",
             Path("./models/onnx/faraday_code_assurance.onnx"),
             Path("./models/qwen2-7b-qnn/faraday_code_assurance.onnx"),
             Path("./models/qwen2-7b-qnn/qwen2_7b_instruct-qnn_context_binary-w4a16-qualcomm_snapdragon_x_elite"),
@@ -119,7 +123,7 @@ class QNNBackend(ModelBackend):
         for c in candidates:
             if c.exists():
                 return c
-        return Path("./models/onnx/faraday_code_assurance.onnx")
+        return candidates[0]
 
     def __init__(self):
         from pathlib import Path
