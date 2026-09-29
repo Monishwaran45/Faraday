@@ -22,12 +22,21 @@ A **Faraday cage** blocks external electromagnetic fields, creating an impenetra
 
 You do **not** need to copy Faraday into your project! Think of Faraday like ESLint, Prettier, or Ruff: you install it once as a tool on your computer, and run it against **any repository** (Python, JavaScript, TypeScript, React, etc.) on your machine.
 
-### 1. Install Faraday
+### 1. Install Faraday (Python 3.11+)
+
+> **Prerequisite:** Python 3.11 or higher (Python 3.11, 3.12, or 3.13).
+
 ```bash
 # Option A: Install directly from GitHub (Fastest — 3 seconds)
 pip install git+https://github.com/Monishwaran45/Faraday.git
 
-# Option B: Or clone and install locally
+# On Windows (if multiple Python versions are installed):
+py -3.11 -m pip install git+https://github.com/Monishwaran45/Faraday.git
+
+# Option B: Using uv (Instant — 2 seconds)
+uv pip install git+https://github.com/Monishwaran45/Faraday.git
+
+# Option C: Or clone and install locally
 git clone https://github.com/Monishwaran45/Faraday.git
 cd Faraday && pip install -e .
 ```
