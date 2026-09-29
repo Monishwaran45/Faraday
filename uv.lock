@@ -785,15 +785,24 @@ version = "1.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "click" },
+    { name = "numpy" },
     { name = "onnx" },
-    { name = "onnxruntime-genai" },
+    { name = "onnxruntime" },
     { name = "pywin32", marker = "sys_platform == 'win32'" },
+    { name = "pyyaml" },
+    { name = "rich" },
+    { name = "wmi", marker = "sys_platform == 'win32'" },
+]
+
+[package.optional-dependencies]
+qnn = [
+    { name = "onnxruntime-genai" },
     { name = "qai-hub" },
     { name = "qai-hub-models" },
-    { name = "rich" },
-    { name = "torch" },
     { name = "transformers" },
-    { name = "wmi", marker = "sys_platform == 'win32'" },
+]
+tune = [
+    { name = "torch" },
 ]
 
 [package.dev-dependencies]
@@ -804,16 +813,20 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "click", specifier = ">=8.1.0" },
-    { name = "onnx", specifier = ">=1.18.0" },
-    { name = "onnxruntime-genai", specifier = ">=0.9.2" },
-    { name = "pywin32", marker = "sys_platform == 'win32'", specifier = ">=306" },
-    { name = "qai-hub", specifier = ">=0.55.0" },
-    { name = "qai-hub-models", specifier = ">=0.63.0" },
+    { name = "numpy", specifier = ">=1.21.0" },
+    { name = "onnx", specifier = ">=1.14.0" },
+    { name = "onnxruntime", specifier = ">=1.14.0" },
+    { name = "onnxruntime-genai", marker = "extra == 'qnn'", specifier = ">=0.9.2" },
+    { name = "pywin32", marker = "sys_platform == 'win32'", specifier = ">=300" },
+    { name = "pyyaml", specifier = ">=6.0" },
+    { name = "qai-hub", marker = "extra == 'qnn'", specifier = ">=0.55.0" },
+    { name = "qai-hub-models", marker = "extra == 'qnn'", specifier = ">=0.63.0" },
     { name = "rich", specifier = ">=13.7.0" },
-    { name = "torch", specifier = ">=2.2.0" },
-    { name = "transformers", specifier = ">=4.40.0" },
+    { name = "torch", marker = "extra == 'tune'", specifier = ">=1.10.0" },
+    { name = "transformers", marker = "extra == 'qnn'", specifier = ">=4.40.0" },
     { name = "wmi", marker = "sys_platform == 'win32'", specifier = ">=1.5.1" },
 ]
+provides-extras = ["tune", "qnn"]
 
 [package.metadata.requires-dev]
 dev = [{ name = "pytest", specifier = ">=9.1.1" }]

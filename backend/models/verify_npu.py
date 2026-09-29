@@ -37,7 +37,22 @@ if sys.platform == "win32":
 
 console = Console(legacy_windows=False)
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-ONNX_MODEL_PATH = BASE_DIR / "models" / "onnx" / "faraday_code_assurance.onnx"
+
+
+def _resolve_model_path() -> Path:
+    candidates = [
+        Path(__file__).resolve().parent / "onnx" / "faraday_code_assurance.onnx",
+        BASE_DIR / "models" / "onnx" / "faraday_code_assurance.onnx",
+        Path.cwd() / "models" / "onnx" / "faraday_code_assurance.onnx",
+        Path.cwd() / "faraday_code_assurance.onnx",
+    ]
+    for c in candidates:
+        if c.exists():
+            return c
+    return candidates[0]
+
+
+ONNX_MODEL_PATH = _resolve_model_path()
 
 
 def probe_hardware_environment() -> Dict[str, Any]:
@@ -108,15 +123,26 @@ def verify_npu_and_benchmark(onnx_path: Path = None, iterations: int = 10) -> Di
     genuine neural tensor inference.
     """
     if onnx_path is None:
-        onnx_path = ONNX_MODEL_PATH
+        onnx_path = _resolve_model_path()
 
     hw = probe_hardware_environment()
     ep = probe_onnx_execution_providers()
 
     if not onnx_path.exists():
-        # Export model if not yet created
-        from scripts.export_qnn_model import export_to_onnx
-        export_to_onnx(onnx_path.parent)
+        # Export model if not yet created and export script is available
+        try:
+            from scripts.export_qnn_model import export_to_onnx
+            exported = export_to_onnx(onnx_path.parent)
+            if exported and Path(exported).exists():
+                onnx_path = Path(exported)
+        except Exception:
+            pass
+
+    if not onnx_path.exists():
+        raise FileNotFoundError(
+            f"Faraday neural model graph not found at '{onnx_path}'. "
+            "Please ensure the bundled model 'faraday_code_assurance.onnx' is present."
+        )
 
     # Provider prioritization: QNN -> DirectML -> CPU
     priority_providers = ["QNNExecutionProvider", "DmlExecutionProvider", "CPUExecutionProvider"]
@@ -178,9 +204,14 @@ def verify_npu_and_benchmark(onnx_path: Path = None, iterations: int = 10) -> Di
     severity_labels = ["Clean", "Low", "Medium", "High"]
     predicted_severity = severity_labels[int(np.argmax(severity_logits))]
 
+    try:
+        model_artifact_str = str(onnx_path.relative_to(BASE_DIR))
+    except Exception:
+        model_artifact_str = onnx_path.name
+
     proof_certificate = {
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "model_artifact": str(onnx_path.relative_to(BASE_DIR) if onnx_path.is_relative_to(BASE_DIR) else onnx_path),
+        "model_artifact": model_artifact_str,
         "model_file_size_bytes": onnx_path.stat().st_size,
         "hardware": hw,
         "execution_providers": {
