@@ -41,6 +41,11 @@ git clone https://github.com/Monishwaran45/Faraday.git
 cd Faraday && pip install -e .
 ```
 
+> [!NOTE]
+> **Windows PATH Note:** If you want to run `faraday` directly as a standalone CLI command instead of `py -3.11 -m backend.cli`, make sure your Python Scripts directory is added to your Windows `PATH` environment variable:
+> - `C:\Users\Asus-2025\AppData\Local\Programs\Python\Python311\Scripts` (or `%LOCALAPPDATA%\Programs\Python\Python311\Scripts`)
+> - You can also always run Faraday directly via: `py -3.11 -m backend.cli <args>`
+
 > **⚡ What is included out-of-the-box:**  
 > The repository is ultra-lightweight (**<10 MB**) and comes bundled with the **5.6 MB `FaradayCodeAssuranceNeuralNet` ONNX model**. It runs instant sub-millisecond AST classification, continuous risk scores (0.0 to 1.0), and 8 CWE heads on both Qualcomm Hexagon NPU and CPU fallback with **zero extra downloads required**!
 
@@ -51,11 +56,25 @@ cd /path/to/my-project
 
 # 1. Instant security & code assurance audit:
 faraday .
+# Or via Python module:
+py -3.11 -m backend.cli .
 
-# 2. Or launch the 100% air-gapped visual web dashboard:
+# 2. Silicon hardware prover & empirical NPU benchmark:
+faraday --prove
+# Or via Python module:
+py -3.11 -m backend.cli --prove
+
+# 3. System & Silicon Doctor:
+faraday doctor --npu
+# Or via Python module:
+py -3.11 -m backend.cli doctor --npu
+
+# 4. Launch the 100% air-gapped visual web dashboard:
 faraday --ui
+# Or via Python module:
+py -3.11 -m backend.cli --ui
 
-# 3. Or setup automatic pre-commit protection & GitHub CI/CD in 1 click:
+# 5. Setup automatic pre-commit protection & GitHub CI/CD in 1 click:
 faraday --setup-all
 ```
 
@@ -173,13 +192,16 @@ Faraday provides 100% architectural transparency. At no point does Faraday spoof
 **Run empirical silicon diagnostics anytime:**
 ```bash
 # Full environment & silicon doctor
-uv run faraday doctor --npu
+faraday doctor --npu
+# Or on Windows: py -3.11 -m backend.cli doctor --npu
 
-# Silicon hardware prover certificate
-uv run faraday --prove
+# Silicon hardware prover certificate (sub-millisecond latency & EP verification)
+faraday --prove
+# Or on Windows: py -3.11 -m backend.cli --prove
 
 # Statistical percentile latency benchmark (P50, P90, P95, P99)
-uv run faraday benchmark
+faraday benchmark
+# Or on Windows: py -3.11 -m backend.cli benchmark
 ```
 
 ---
