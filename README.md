@@ -41,10 +41,21 @@ git clone https://github.com/Monishwaran45/Faraday.git
 cd Faraday && pip install -e .
 ```
 
-> [!NOTE]
-> **Windows PATH Note:** If you want to run `faraday` directly as a standalone CLI command instead of `py -3.11 -m backend.cli`, make sure your Python Scripts directory is added to your Windows `PATH` environment variable:
-> - `C:\Users\Asus-2025\AppData\Local\Programs\Python\Python311\Scripts` (or `%LOCALAPPDATA%\Programs\Python\Python311\Scripts`)
-> - You can also always run Faraday directly via: `py -3.11 -m backend.cli <args>`
+> [!TIP]
+> ### 💡 Using the `faraday` Command in Your Terminal / CMD
+> Once installed, you can use the `faraday` command from any folder on your computer.
+> 
+> **If Windows says `'faraday' is not recognized as an internal or external command`:**
+> 1. **Reopen your terminal:** Close and open a new Command Prompt or PowerShell window so Windows picks up the new Python `Scripts` path.
+> 2. **Or use it immediately in your current CMD window:**
+>    ```cmd
+>    set PATH=%LOCALAPPDATA%\Programs\Python\Python311\Scripts;%PATH%
+>    ```
+> 3. **Or run directly via Python without touching PATH:**
+>    ```cmd
+>    py -3.11 -m backend.cli <command>
+>    ```
+> *(The alias `codeguard` is also available and works identically).*
 
 > **⚡ What is included out-of-the-box:**  
 > The repository is ultra-lightweight (**<10 MB**) and comes bundled with the **5.6 MB `FaradayCodeAssuranceNeuralNet` ONNX model**. It runs instant sub-millisecond AST classification, continuous risk scores (0.0 to 1.0), and 8 CWE heads on both Qualcomm Hexagon NPU and CPU fallback with **zero extra downloads required**!
