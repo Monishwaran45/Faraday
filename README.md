@@ -18,7 +18,50 @@ A **Faraday cage** blocks external electromagnetic fields, creating an impenetra
 
 ---
 
-##  Qualcomm AI Hub Compilation & Silicon Profiling Evidence
+## 🚀 Quickstart: Install & Use in Any Project (30 Seconds)
+
+You do **not** need to copy Faraday into your project! Think of Faraday like ESLint, Prettier, or Ruff: you install it once as a tool on your computer, and run it against **any repository** (Python, JavaScript, TypeScript, React, etc.) on your machine.
+
+### 1. Install Faraday
+```bash
+# Option A: Install directly from GitHub (Fastest — 3 seconds)
+pip install git+https://github.com/Monishwaran45/Faraday.git
+
+# Option B: Or clone and install locally
+git clone https://github.com/Monishwaran45/Faraday.git
+cd Faraday && pip install -e .
+```
+
+> **⚡ What is included out-of-the-box:**  
+> The repository is ultra-lightweight (**<10 MB**) and comes bundled with the **5.6 MB `FaradayCodeAssuranceNeuralNet` ONNX model**. It runs instant sub-millisecond AST classification, continuous risk scores (0.0 to 1.0), and 8 CWE heads on both Qualcomm Hexagon NPU and CPU fallback with **zero extra downloads required**!
+
+### 2. Run It on Any Project!
+Open your terminal in any of your own projects:
+```bash
+cd /path/to/my-project
+
+# 1. Instant security & code assurance audit:
+faraday .
+
+# 2. Or launch the 100% air-gapped visual web dashboard:
+faraday --ui
+
+# 3. Or setup automatic pre-commit protection & GitHub CI/CD in 1 click:
+faraday --setup-all
+```
+
+### 3. (Optional) Export the 5 GB 7B Generative Model
+If you are on a **Snapdragon® X Elite** device and want the deep 7B generative reasoning engine (`Qwen2-7B-Instruct` w4a16) for automated remediation and docstrings, generate the 5.05 GB QNN context binaries locally:
+```bash
+python -m qai_hub_models.models.qwen2_7b_instruct_quantized.export \
+    --device "Snapdragon X Elite CRD" \
+    --output-dir ./models/qwen2-7b-qnn
+```
+*(Keeping the 5 GB binaries out of the Git tree ensures the GitHub repository remains lightning-fast to clone and install in seconds!)*
+
+---
+
+## Qualcomm AI Hub Compilation & Silicon Profiling Evidence
 
 Faraday is built from the ground up for the **Qualcomm Snapdragon® X Elite (sc8380xp)** and executes on the physical **Hexagon™ v73 HTP (Hexagon Tensor Processor)**. To achieve both sub-millisecond AST classification and deep generative code reasoning, Faraday deploys a **Dual-Model Silicon Architecture**:
 
