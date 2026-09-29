@@ -41,10 +41,6 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["backend"]
 
-[tool.hatch.build.targets.wheel.force-include]
-"backend/models/onnx" = "backend/models/onnx"
-"models/onnx" = "models/onnx"
-
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
