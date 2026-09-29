@@ -464,6 +464,7 @@ def main():
         prog="faraday",
         description="Faraday - 100% Air-gapped on-device AI code review & security copilot for real-world projects."
     )
+    parser.add_argument("--version", "-v", action="version", version="%(prog)s 1.0.0")
     parser.add_argument("project_path", nargs="?", default=".", help="Path to project or single file to review (default: current directory)")
     parser.add_argument("--output", "-o", default=None, help="Where to write markdown reports (default: from config or ./review_output)")
     parser.add_argument("--exclude", "-e", default=None, help="Comma-separated patterns to ignore (e.g. 'tests/*,docs/*')")
