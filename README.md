@@ -18,7 +18,7 @@ A **Faraday cage** blocks external electromagnetic fields, creating an impenetra
 
 ---
 
-## ⚡ Qualcomm AI Hub Compilation & Silicon Profiling Evidence
+##  Qualcomm AI Hub Compilation & Silicon Profiling Evidence
 
 Faraday is built from the ground up for the **Qualcomm Snapdragon® X Elite (sc8380xp)** and executes on the physical **Hexagon™ v73 HTP (Hexagon Tensor Processor)**. To achieve both sub-millisecond AST classification and deep generative code reasoning, Faraday deploys a **Dual-Model Silicon Architecture**:
 
