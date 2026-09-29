@@ -4,7 +4,7 @@ This directory contains the models, ONNX computational graphs, and Qualcomm AI H
 
 ---
 
-## ⚡ Dual-Model Silicon Architecture
+## Dual-Model Silicon Architecture
 
 Faraday employs a two-tier neural architecture to deliver both **instantaneous static AST classification** and **deep generative code reasoning** on Snapdragon X Elite hardware without thermal throttling:
 
@@ -15,7 +15,7 @@ Faraday employs a two-tier neural architecture to deliver both **instantaneous s
 
 ---
 
-## 🚀 Qualcomm AI Hub Compilation Evidence
+##  Qualcomm AI Hub Compilation Evidence
 
 ### 1. Compiling `FaradayCodeAssuranceNeuralNet` (ONNX → QNN Context Binary)
 
@@ -70,7 +70,7 @@ models/qwen2-7b-qnn/
 
 ---
 
-## 🔍 Technically Precise NPU Verification Hierarchy
+##  Technically Precise NPU Verification Hierarchy
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -114,7 +114,7 @@ models/qwen2-7b-qnn/
 
 ---
 
-## 🛠️ Diagnostics & Prover Commands
+##  Diagnostics & Prover Commands
 
 ```bash
 # 1. Complete system & silicon doctor
