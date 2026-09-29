@@ -111,7 +111,9 @@ class QNNBackend(ModelBackend):
                     return candidates[0]
 
         pkg_root = Path(__file__).resolve().parent.parent.parent
+        pkg_models = Path(__file__).resolve().parent
         candidates = [
+            pkg_models / "onnx" / "faraday_code_assurance.onnx",
             pkg_root / "models" / "onnx" / "faraday_code_assurance.onnx",
             pkg_root / "models" / "qwen2-7b-qnn" / "faraday_code_assurance.onnx",
             pkg_root / "models" / "qwen2-7b-qnn" / "qwen2_7b_instruct-qnn_context_binary-w4a16-qualcomm_snapdragon_x_elite",

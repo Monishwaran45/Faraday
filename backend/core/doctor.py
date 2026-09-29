@@ -99,8 +99,18 @@ def check_npu_silicon() -> Dict[str, Any]:
     hw = probe_hardware_environment()
     ort_info = probe_onnx_execution_providers()
 
-    model_path = BASE_DIR / "models" / "onnx" / "faraday_code_assurance.onnx"
-    manifest_path = BASE_DIR / "models" / "onnx" / "qnn_compile_manifest.json"
+    model_candidates = [
+        Path(__file__).resolve().parent.parent / "models" / "onnx" / "faraday_code_assurance.onnx",
+        BASE_DIR / "models" / "onnx" / "faraday_code_assurance.onnx",
+        Path.cwd() / "models" / "onnx" / "faraday_code_assurance.onnx",
+    ]
+    manifest_candidates = [
+        Path(__file__).resolve().parent.parent / "models" / "onnx" / "qnn_compile_manifest.json",
+        BASE_DIR / "models" / "onnx" / "qnn_compile_manifest.json",
+        Path.cwd() / "models" / "onnx" / "qnn_compile_manifest.json",
+    ]
+    model_path = next((p for p in model_candidates if p.exists()), model_candidates[0])
+    manifest_path = next((p for p in manifest_candidates if p.exists()), manifest_candidates[0])
 
     model_present = model_path.exists()
     model_size = model_path.stat().st_size if model_present else 0
