@@ -18,7 +18,7 @@ A **Faraday cage** blocks external electromagnetic fields, creating an impenetra
 
 ---
 
-## 🚀 Quickstart: Install & Use in Any Project (30 Seconds)
+## Quickstart: Install & Use in Any Project (30 Seconds)
 
 You do **not** need to copy Faraday into your project! Think of Faraday like ESLint, Prettier, or Ruff: you install it once as a tool on your computer, and run it against **any repository** (Python, JavaScript, TypeScript, React, etc.) on your machine.
 
@@ -57,7 +57,7 @@ cd Faraday && pip install -e .
 >    ```
 > *(The alias `codeguard` is also available and works identically).*
 
-> **⚡ What is included out-of-the-box:**  
+> ** What is included out-of-the-box:**  
 > The repository is ultra-lightweight (**<10 MB**) and comes bundled with the **5.6 MB `FaradayCodeAssuranceNeuralNet` ONNX model**. It runs instant sub-millisecond AST classification, continuous risk scores (0.0 to 1.0), and 8 CWE heads on both Qualcomm Hexagon NPU and CPU fallback with **zero extra downloads required**!
 
 ### 2. Run It on Any Project!
