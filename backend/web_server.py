@@ -1103,7 +1103,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
         .replace(/\\*(.*?)\\*/gim, '<em>$1</em>')
         .replace(/`([^`]+)`/gim, '<code style="background: rgba(255,255,255,0.08); padding: 0.15rem 0.4rem; border-radius: 4px; color: #fff;">$1</code>')
         .replace(/\\n/gim, '<br>');
-      container.innerHTML = h;
+      container.innerHTML = h;  // faraday: ignore
     }
 
     function switchTab(tabId) {

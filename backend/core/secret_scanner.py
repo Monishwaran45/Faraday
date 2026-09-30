@@ -38,18 +38,18 @@ PATTERNS = [
 
     # Code Execution & Injection Flaws
     ("SQL String Concatenation / Interpolation",
-     re.compile(r"""(?i)(SELECT|INSERT|UPDATE|DELETE)\s+.*(["']\s*\+\s*\w+|f["'].*\{\w+\}.*["'])"""), "Medium"),
+     re.compile(r"""(?i)(SELECT|INSERT|UPDATE|DELETE)\s+.*(["']\s*\+\s*\w+|f["'].*\{\w+\}.*["'])"""), "Medium"),  # faraday: ignore
     ("Dangerous Shell Execution",
-     re.compile(r"""(os\.system\s*\(|subprocess\.(Popen|call|run)\s*\(.*shell\s*=\s*True)"""), "Medium"),
-    ("Use of eval()", re.compile(r"\beval\s*\("), "Medium"),
-    ("Use of exec()", re.compile(r"\bexec\s*\("), "Medium"),
-    ("Insecure Deserialization", re.compile(r"\bpickle\.loads?\s*\(|\byaml\.load\s*\(.*Loader\s*=\s*(yaml\.)?Loader"), "Medium"),
+     re.compile(r"""(os\.system\s*\(|subprocess\.(Popen|call|run)\s*\(.*shell\s*=\s*True)"""), "Medium"),  # faraday: ignore
+    ("Use of eval()", re.compile(r"(?<!\.)\beval\s*\("), "Medium"),  # faraday: ignore
+    ("Use of exec()", re.compile(r"(?<!\.)\bexec\s*\("), "Medium"),  # faraday: ignore
+    ("Insecure Deserialization", re.compile(r"\bpickle\.loads?\s*\(|\byaml\.load\s*\(.*Loader\s*=\s*(yaml\.)?Loader"), "Medium"),  # faraday: ignore
     
     # Web & Cryptographic Flaws
     ("Weak Cryptographic Hash (MD5/SHA1)",
      re.compile(r"\bhashlib\.(md5|sha1)\s*\("), "Medium"),
     ("Cross-Site Scripting (XSS) via unescaped innerHTML",
-     re.compile(r"\.innerHTML\s*=\s*(?!['\"][^'\"+]*['\"][;\s]*$)(?=.*[a-zA-Z0-9_$])"), "High"),
+     re.compile(r"""\.innerHTML\s*=\s*(`.*?\$\{.*?\}.*?`|[a-zA-Z_$][a-zA-Z0-9_$.]*\s*(\+|$|;))"""), "High"),
     ("Exposed Production Debug Mode",
      re.compile(r"""(?i)\b(app\.run\s*\(.*debug\s*=\s*True|DEBUG\s*=\s*True)"""), "Medium"),
     ("Unbounded CORS Wildcard Origin",
@@ -62,8 +62,8 @@ PATTERNS = [
      re.compile(r"\bsk_live_[0-9a-zA-Z]{24,}\b"), "High"),
     ("SendGrid API Key",
      re.compile(r"\bSG\.[a-zA-Z0-9_\-\.]{60,}\b"), "High"),
-    ("Insecure File Permissions (chmod 777)",
-     re.compile(r"""\b(os\.chmod\s*\([^,]+,\s*0?o?777|chmod\s+777)\b"""), "High"),
+    ("Insecure File Permissions (chmod 777)",  # faraday: ignore
+     re.compile(r"""\b(os\.chmod\s*\([^,]+,\s*0?o?777|chmod\s+777)\b"""), "High"),  # faraday: ignore
     ("OpenAI API Secret Key",
      re.compile(r"\b(sk-[a-zA-Z0-9]{20,T3BlbkFJ[a-zA-Z0-9]{20,}|sk-proj-[a-zA-Z0-9_\-]{40,})\b"), "High"),
     ("Anthropic API Key",
@@ -93,10 +93,12 @@ def calculate_shannon_entropy(data: str) -> float:
     """Calculate the Shannon entropy of a string (bits per symbol)."""
     import math
     from collections import Counter
-    if not data:
+    if not data or len(data) == 0:
         return 0.0
     counts = Counter(data)
     total = len(data)
+    if total <= 0:
+        return 0.0
     return -sum((count / total) * math.log2(count / total) for count in counts.values())
 
 

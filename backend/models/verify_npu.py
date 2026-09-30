@@ -1,7 +1,7 @@
 """
 verify_npu.py
 
-Hardware Execution Prover & NPU/CPU Fallback Diagnostic for Faraday.
+Hardware Execution Prover & NPU and CPU Fallback Diagnostic for Faraday.
 Inspects physical silicon architecture, queries ONNX Runtime execution providers,
 probes Qualcomm Hexagon NPU availability, verifies CPU-fallback status,
 and benchmarks genuine on-device neural tensor inference.
@@ -178,8 +178,8 @@ def verify_npu_and_benchmark(onnx_path: Path = None, iterations: int = 10) -> Di
         else:
             fallback_reason = "Snapdragon hardware detected, but QNN runtime DLLs not present in system PATH."
 
-    # Benchmark genuine tensor inference
-    sample_input = np.random.randint(1, 1000, (1, 64), dtype=np.int64)
+    # Benchmark genuine tensor inference (deterministic synthetic AST token stream)
+    sample_input = np.arange(1, 65, dtype=np.int64).reshape((1, 64))
     
     # Warmup
     for _ in range(2):

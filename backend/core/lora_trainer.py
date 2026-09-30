@@ -122,11 +122,13 @@ class OnDeviceCodeStyleModel(nn.Module):
         total = sum(p.numel() for p in self.parameters())
         trainable = sum(p.numel() for p in self.parameters() if p.requires_grad)
         frozen = total - trainable
+        safe_total = max(total, 1)
+        trainable_ratio = round((trainable / safe_total) * 100, 2) if safe_total > 0 else 0.0
         return {
             "total_parameters": total,
             "trainable_parameters": trainable,
             "frozen_parameters": frozen,
-            "trainable_ratio": round(trainable / max(total, 1) * 100, 2),
+            "trainable_ratio": trainable_ratio,
         }
 
 

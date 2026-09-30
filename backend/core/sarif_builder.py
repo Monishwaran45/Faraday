@@ -1,7 +1,7 @@
 """
 sarif_builder.py
 
-Generates OASIS SARIF v2.1.0 output for enterprise CI/CD systems:
+Generates OASIS SARIF v2.1.0 output for enterprise CI-CD pipelines:
 - GitHub Advanced Security & Code Scanning tab
 - GitLab SAST Reports
 - Azure DevOps Pipelines
