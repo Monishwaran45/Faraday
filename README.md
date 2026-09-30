@@ -94,6 +94,11 @@ py -3.11 -m backend.cli --ui
 
 # 5. Setup automatic pre-commit protection & GitHub CI/CD in 1 click:
 faraday --setup-all
+
+# 6. Display comprehensive info about Faraday and its creator:
+faraday --about
+# Or via Python module:
+py -3.11 -m backend.cli --about
 ```
 
 ### 3. (Optional) Export the 5 GB 7B Generative Model
@@ -509,6 +514,7 @@ Faraday offers a unified command-line interface designed to seamlessly integrate
 | `faraday --adapter <path>` | Loads fine-tuned LoRA adapter | Reviews code using custom corporate coding style and naming conventions. |
 | `faraday --prove` (or `--npu-status`) | Silicon NPU vs CPU hardware prover | Empirically audits host processor, active ONNX execution provider, and benchmarks live tensor latency with zero fake claims. |
 | `faraday --export-model` | Reproducible neural model exporter | Exports 1.41M parameter PyTorch neural network to ONNX v17 and generates Qualcomm AI Hub compilation manifest. |
+| `faraday --about` | Project overview & creator details | Display complete architectural overview, air-gapped security guarantees, and author information (Monishwaran K). |
 | `faraday doctor --npu` | System & Silicon NPU Doctor | Audits Python runtime, dependencies, git hooks, ONNX providers, QNN dynamic libraries, and live tensor latency. |
 | `faraday benchmark` | Statistical latency & throughput benchmark | Evaluates NPU/CPU tensor performance across sequence lengths (16-128) with percentiles (P50-P99) and token throughput. |
 

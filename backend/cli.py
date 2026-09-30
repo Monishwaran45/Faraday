@@ -8,6 +8,7 @@ Targeting Qualcomm Snapdragon(R) X Elite (Hexagon NPU).
 Usage:
     Faraday                               # Scan current repository (with interactive prompt)
     Faraday /path/to/project              # Scan specific path
+    Faraday --about                       # About Faraday, architecture, and author/creator
     Faraday --staged                      # Scan only git staged files (pre-commit)
     Faraday --diff main                   # Scan files changed against main branch (PR)
     Faraday --fail-on HIGH                # CI gate: fail if HIGH severity found
@@ -204,6 +205,58 @@ def render_summary_dashboard(metrics, paths, sarif_path: Path = None):
     artifacts_text.append("\n  [+] 100% AIR-GAPPED VERIFIED: Zero telemetry, zero network calls.", style="bold green")
 
     console.print(Panel(artifacts_text, title="[ARTIFACTS] Generated Reports", title_align="left", box=box.ROUNDED, border_style="cyan", expand=False))
+    console.print()
+
+
+def show_about_faraday(console: Console):
+    """Render comprehensive details about Faraday, architecture, and its creator/author."""
+    content = Text()
+    content.append(" ABOUT FARADAY\n", style="bold cyan")
+    content.append(
+        "Faraday is an offline, air-gapped on-device AI code assurance engine designed\n"
+        "specifically for Qualcomm Snapdragon® X Elite Hexagon NPUs. Named after the\n"
+        "Faraday cage—the universal symbol for complete physical and data isolation—it ensures\n"
+        "that source code, proprietary algorithms, and sensitive enterprise intellectual\n"
+        "property never leave your local silicon.\n\n"
+    )
+
+    content.append(" CORE CAPABILITIES\n", style="bold green")
+    content.append("  • Sub-second AST chunking & static credential scanner (14+ high-risk patterns)\n")
+    content.append("  • On-device Neural Code Review targeting Qualcomm Hexagon NPU (QNN/DirectML/CPU)\n")
+    content.append("  • Automatic Docstring Synthesis & Architectural README generation\n")
+    content.append("  • OASIS SARIF v2.1.0 output for GitHub Advanced Security & GitLab integration\n")
+    content.append("  • On-Device LoRA Fine-Tuning on internal coding standards with 0.00 KB network egress\n")
+    content.append("  • Interactive visual dashboard (`faraday --ui`) for live security audits\n")
+    content.append("  • Complete enterprise automation (`faraday --setup-all`): .faraday.yml, pre-commit hook, & GitHub CI\n\n")
+
+    content.append(" BUILT & DEVELOPED BY\n", style="bold yellow")
+    content.append("  • Creator & Lead Engineer: ", style="bold white")
+    content.append("Monishwaran K\n", style="bold cyan")
+    content.append("  • GitHub:                  ", style="bold white")
+    content.append("https://github.com/Monishwaran45\n", style="cyan underline")
+    content.append("  • Repository:              ", style="bold white")
+    content.append("https://github.com/Monishwaran45/Faraday\n", style="cyan underline")
+    content.append("  • Hardware Target:         ", style="bold white")
+    content.append("Qualcomm Snapdragon® X Elite & Snapdragon PC Platform\n")
+    content.append("  • License:                 ", style="bold white")
+    content.append("MIT Open Source License\n\n")
+
+    content.append(" AIR-GAPPED PRIVACY GUARANTEE\n", style="bold magenta")
+    content.append(
+        "  100% Offline execution with zero outbound telemetry, zero cloud calls, and zero external\n"
+        "  network dependencies. Engineered for defense, healthcare, and high-compliance enterprise teams."
+    )
+
+    panel = Panel(
+        content,
+        title="[bold white]  About Faraday[/]",
+        subtitle="[dim]https://github.com/Monishwaran45/Faraday[/dim]",
+        border_style="cyan",
+        box=box.ROUNDED,
+        padding=(1, 2),
+    )
+    console.print()
+    console.print(panel)
     console.print()
 
 
@@ -491,6 +544,7 @@ def main():
     parser.add_argument("--ui", "--web", "--dashboard", action="store_true", dest="ui", help="Launch interactive visual web dashboard at http://localhost:8000")
     parser.add_argument("--prove", "--npu-status", action="store_true", dest="prove", help="Run empirical hardware verification and benchmark of Qualcomm NPU vs CPU fallback")
     parser.add_argument("--export-model", action="store_true", dest="export_model", help="Run reproducible neural model exporter to generate ONNX model & Qualcomm AI Hub compilation manifest")
+    parser.add_argument("--about", action="store_true", help="Display details about Faraday, architecture, and who built it")
     parser.add_argument("--doctor", action="store_true", help="Run Faraday health check & environment doctor")
     parser.add_argument("--npu", action="store_true", help="Perform deep Qualcomm Hexagon NPU diagnostics in doctor mode")
     parser.add_argument("--benchmark", action="store_true", help="Run statistical latency and throughput benchmark on Qualcomm NPU / active provider")
@@ -503,6 +557,13 @@ def main():
     parser.add_argument("--lora-rank", type=int, default=8, help="Rank r for LoRA decomposition (default: 8)")
 
     args = parser.parse_args()
+
+    # Feature: faraday about or faraday --about
+    is_about_cmd = args.project_path in ("about", "--about") or getattr(args, "about", False)
+    if is_about_cmd:
+        show_about_faraday(console)
+        return
+
     target_path = Path(args.project_path).resolve()
 
     # Feature: --setup-all (1-Click Complete Enterprise Automation)

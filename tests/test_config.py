@@ -43,3 +43,19 @@ def test_setup_github_ci_workflow(tmp_path):
     assert "Faraday Security & Code Review Gate" in content
     assert "upload-sarif" in content
     assert "--fail-on NONE" in content
+
+
+def test_show_about_faraday():
+    from io import StringIO
+    from rich.console import Console
+    from backend.cli import show_about_faraday
+
+    buf = StringIO()
+    test_console = Console(file=buf, force_terminal=False, width=100)
+    show_about_faraday(test_console)
+    output = buf.getvalue()
+
+    assert "Monishwaran K" in output
+    assert "Snapdragon" in output
+    assert "https://github.com/Monishwaran45/Faraday" in output
+    assert "AIR-GAPPED PRIVACY GUARANTEE" in output
