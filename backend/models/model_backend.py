@@ -577,25 +577,45 @@ def generate_heuristic_response(prompt: str, max_tokens: int = 512) -> str:
             suggested_fixes.append("Use 'secrets' module in Python ('secrets.token_hex', 'secrets.choice') or 'crypto.getRandomValues()' in JavaScript.")
             severity = "High"
 
-    # Rule 7: Division by Zero (robust against paths, URLs, comments, and language guards)
+    # Rule 7: Division by Zero (robust against paths, URLs, comments, pathlib operators, and language guards)
+    snippet_no_blocks = re.sub(r'("""[\s\S]*?"""|\'\'\'[\s\S]*?\'\'\'|/\*[\s\S]*?\*/)', '', code_snippet)
     clean_code_lines = []
-    for line in code_snippet.splitlines():
+    for line in snippet_no_blocks.splitlines():
         stripped = line.strip()
         # Ignore comments
         if stripped.startswith("#") or stripped.startswith("//") or stripped.startswith("/*") or stripped.startswith("*"):
             continue
         # Strip string literals (including backtick template strings) and trailing comments
-        no_strings = re.sub(r'("""[\s\S]*?"""|\'\'\'[\s\S]*?\'\'\'|`[^`\\]*(?:\\.[^`\\]*)*`|"[^"\\]*(?:\\.[^"\\]*)*"|\'[^\'\\]*(?:\\.[^\'\\]*)*\')', "''", line)
+        no_strings = re.sub(r'(`[^`\\]*(?:\\.[^`\\]*)*`|"[^"\\]*(?:\\.[^"\\]*)*"|\'[^\'\\]*(?:\\.[^\'\\]*)*\')', "''", line)
         no_comments = re.sub(r'(#|//).*$', '', no_strings)
         clean_code_lines.append(no_comments)
 
     cleaned_code = "\n".join(clean_code_lines)
     div_match = re.search(r'(?<![/:\w])([a-zA-Z_]\w*)\s*/\s*([a-zA-Z_]\w*)(?![/\w])', cleaned_code)
-    non_variables = {"click", "refresh", "retry", "http", "https", "file", "path", "api", "v1", "v2", "true", "false", "null", "undefined", "none", "nan"}
+    non_variables = {
+        "click", "refresh", "retry", "http", "https", "file", "path", "api",
+        "v1", "v2", "v3", "v4", "true", "false", "null", "undefined", "none", "nan",
+        "ci", "cd", "rf", "faraday", "checkout", "actions", "git", "main", "master",
+        "dir", "root", "repo", "folder"
+    }
+    path_identifiers = {"path", "root", "dir", "folder", "repo", "parent", "cwd", "file", "rf", "dest", "src", "base"}
     if div_match:
         denominator = div_match.group(2)
         numerator = div_match.group(1)
-        if denominator.lower() not in non_variables and numerator.lower() not in non_variables:
+        den_lower = denominator.lower()
+        num_lower = numerator.lower()
+
+        # Check if this is a pathlib.Path '/' operation or non-variable token
+        is_path_like = (
+            den_lower in non_variables or num_lower in non_variables or
+            any(k in num_lower for k in path_identifiers) or
+            any(k in den_lower for k in path_identifiers) or
+            num_lower.endswith(("_path", "_dir", "_root", "_file", "_folder", "_repo")) or
+            den_lower.endswith(("_path", "_dir", "_root", "_file", "_folder", "_repo")) or
+            ("path" in cleaned_code.lower() and any(p_fn in cleaned_code for p_fn in ("exists", "resolve", "is_file", "is_dir", "read_text", "write_text", "glob")))
+        )
+
+        if not is_path_like:
             has_guard = (
                 denominator in ["1", "2", "3", "4", "5", "10", "100"] or
                 f"{denominator} != 0" in code_snippet or
