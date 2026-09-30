@@ -501,7 +501,7 @@ def main():
     if args.setup_all:
         console.print()
         console.print("[bold cyan]════════════════════════════════════════════════════════════════════════[/]")
-        console.print("[bold white] 🚀 Faraday Automated 1-Click Setup & Governance Integration[/]")
+        console.print("[bold white]  Faraday Automated 1-Click Setup & Governance Integration[/]")
         console.print("[bold cyan]════════════════════════════════════════════════════════════════════════[/]")
         root_dir = target_path if target_path.is_dir() else target_path.parent
 
