@@ -190,18 +190,22 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-
-      - name: Install Dependencies & Faraday
+      - name: Install Faraday
         run: |
-          uv pip install --system -e .
+          python -m pip install --upgrade pip
+          if [ -f "pyproject.toml" ] && grep -q 'name = "faraday"' pyproject.toml 2>/dev/null; then
+            pip install .
+          else
+            pip install git+https://github.com/Monishwaran45/Faraday.git
+          fi
 
       - name: Run Faraday Security & Assurance Scan
         run: |
-          python -m backend.cli . --fail-on NONE --sarif results.sarif --once
+          if command -v faraday >/dev/null 2>&1; then
+            faraday . --fail-on NONE --sarif results.sarif --once
+          else
+            python -m backend.cli . --fail-on NONE --sarif results.sarif --once
+          fi
 
       - name: Upload SARIF to GitHub Security Tab
         if: always() && hashFiles('results.sarif') != ''

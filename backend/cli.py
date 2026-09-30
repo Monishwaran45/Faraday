@@ -277,6 +277,14 @@ def execute_pipeline(target_path: Path, args, backend, is_interactive: bool = Fa
     scan_time = t1 - t0
 
     if not scan_result.chunks:
+        if args.sarif:
+            sarif_target = (
+                Path(output_dir) / "faraday.sarif"
+                if args.sarif == "AUTO"
+                else Path(args.sarif).resolve()
+            )
+            sarif_doc = generate_sarif_report([], [], repo_root)
+            write_sarif_file(sarif_doc, sarif_target)
         if args.json:
             print(json.dumps({"error": "No supported source files found", "files": 0, "findings": []}))
         else:
