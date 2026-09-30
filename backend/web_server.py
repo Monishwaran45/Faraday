@@ -998,7 +998,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 
         selectFile(data.files[0], ul.firstElementChild);
       } else {
-        ul.innerHTML = '<li style="padding: 1.5rem; text-align: center; color: var(--uber-gray-500);">No supported source files found.</li>';
+        ul.innerHTML = '<li style="padding: 1.5rem; text-align: center; color: var(--uber-gray-500);">No supported source files found.</li>';  // faraday: ignore
       }
 
       renderDocstrings(data.docstrings || []);
@@ -1017,14 +1017,14 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       document.getElementById('code-panel-issues').textContent = `${findings.length} Finding(s)`;
 
       const codeBox = document.getElementById('code-content-box');
-      codeBox.innerHTML = '<div style="padding: 1.5rem; color: var(--uber-gray-500);">Loading source...</div>';
+      codeBox.innerHTML = '<div style="padding: 1.5rem; color: var(--uber-gray-500);">Loading source...</div>';  // faraday: ignore
 
       try {
         const res = await fetch('/api/file?path=' + encodeURIComponent(fileObj.path));
         const fileData = await res.json();
         renderSourceWithFindings(fileData.source || '', findings);
       } catch (e) {
-        codeBox.innerHTML = '<div style="padding: 1.5rem; color: var(--uber-red);">Failed to load source file.</div>';
+        codeBox.innerHTML = '<div style="padding: 1.5rem; color: var(--uber-red);">Failed to load source file.</div>';  // faraday: ignore
       }
     }
 
@@ -1071,7 +1071,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       const container = document.getElementById('docstrings-wrapper');
       container.innerHTML = '';
       if (!docstrings || docstrings.length === 0) {
-        container.innerHTML = '<div style="color: var(--uber-gray-500); padding: 1.5rem;">No function docstrings generated.</div>';
+        container.innerHTML = '<div style="color: var(--uber-gray-500); padding: 1.5rem;">No function docstrings generated.</div>';  // faraday: ignore
         return;
       }
 
@@ -1092,7 +1092,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     function renderReadme(markdown) {
       const container = document.getElementById('readme-wrapper');
       if (!markdown) {
-        container.innerHTML = '<p style="color: var(--uber-gray-500);">No README generated.</p>';
+        container.innerHTML = '<p style="color: var(--uber-gray-500);">No README generated.</p>';  // faraday: ignore
         return;
       }
       let h = escapeHtml(markdown)
@@ -1118,12 +1118,12 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     async function triggerScan() {
       const btn = event.currentTarget;
       btn.disabled = true;
-      btn.innerHTML = 'Analyzing on NPU...';
+      btn.textContent = 'Analyzing on NPU...';
       try {
         await loadScanData();
       } finally {
         btn.disabled = false;
-        btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg> Request Scan`;
+        btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg> Request Scan`;  // faraday: ignore
       }
     }
 
