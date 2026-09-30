@@ -1,6 +1,6 @@
 [project]
 name = "faraday"
-version = "1.0.0"
+version = "1.0.1"
 description = "Faraday: 100% Air-gapped on-device AI code review & assurance copilot for Qualcomm Snapdragon Hexagon NPU"
 readme = "README.md"
 requires-python = ">=3.11"

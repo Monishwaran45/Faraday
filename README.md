@@ -40,10 +40,10 @@ uv pip install git+https://github.com/Monishwaran45/Faraday.git
 git clone https://github.com/Monishwaran45/Faraday.git
 cd Faraday && pip install -e .
 
-# Upgrade Faraday to the latest version anytime:
-py -3.11 -m pip install --upgrade git+https://github.com/Monishwaran45/Faraday.git
-# Or fast upgrade (only updates Faraday without touching other packages):
-py -3.11 -m pip install --upgrade --no-deps git+https://github.com/Monishwaran45/Faraday.git
+# 🔄 Upgrade Faraday to the latest version anytime:
+py -3.11 -m pip install --upgrade --no-cache-dir git+https://github.com/Monishwaran45/Faraday.git
+# Or instant force-upgrade (bypasses cache without touching other packages):
+py -3.11 -m pip install --upgrade --no-deps --force-reinstall git+https://github.com/Monishwaran45/Faraday.git
 # Or using uv:
 uv pip install --upgrade git+https://github.com/Monishwaran45/Faraday.git
 ```
