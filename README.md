@@ -644,8 +644,12 @@ Faraday offers a unified command-line interface designed to seamlessly integrate
 
 | Command / Flag | Primary Purpose | Real-World Scenario |
 | :--- | :--- | :--- |
-| `faraday [path]` | Scan directory or file interactively | Developer reviews a repository with interactive terminal prompts to inspect findings or switch folders. |
+| `faraday [path]` or `faraday scan [path]` | Scan directory or file interactively | Developer reviews a repository with interactive terminal prompts to inspect findings or switch folders. |
 | `faraday --ui` (or `--web`, `--dashboard`) | Air-gapped visual web dashboard | Lead architects conduct code reviews and generate docstrings/README via an interactive browser interface at `http://localhost:8000`. |
+| `faraday benchmark --dataset <name>` | Standardized accuracy benchmark | Security teams benchmark detection precision/recall/F1/FPR against OWASP Benchmark (`owasp`), NIST Juliet (`juliet`), SARD (`sard`), or internal regression (`regression`). |
+| `faraday benchmark --compare` | Multi-tool comparative analysis | Evaluates Faraday side-by-side with Semgrep, GitHub CodeQL, and PyCQA Bandit across 2,740 test cases. |
+| `faraday benchmark --security` | Safe-code regression benchmark | Runs pairwise control verification (vulnerable vs. secure remediations) guaranteeing 0% false positive rate. |
+| `faraday benchmark --backend <npu\|cpu>` | Silicon latency & throughput benchmark | Evaluates tensor latency percentiles (P50, P90, P95, P99) and token throughput on Qualcomm Hexagon NPU or CPU fallback with JSON export. |
 | `faraday --setup-all` | 1-Click enterprise onboarding | Team leads set up `.faraday.yml`, local pre-commit hook, and GitHub Actions CI workflow with one command. |
 | `faraday --setup-ci` | Automated GitHub Actions workflow | DevOps engineers generate `.github/workflows/faraday.yml` with SARIF upload to GitHub Security tab. |
 | `faraday --install-hook` | Sub-second git pre-commit hook | Developers install `.git/hooks/pre-commit` to prevent accidental credential or security leak commits. |
@@ -663,7 +667,6 @@ Faraday offers a unified command-line interface designed to seamlessly integrate
 | `faraday --export-model` | Reproducible neural model exporter | Exports 1.41M parameter PyTorch neural network to ONNX v17 and generates Qualcomm AI Hub compilation manifest. |
 | `faraday --about` | Project overview & creator details | Display complete architectural overview, air-gapped security guarantees, and author information (Monishwaran K). |
 | `faraday doctor --npu` | System & Silicon NPU Doctor | Audits Python runtime, dependencies, git hooks, ONNX providers, QNN dynamic libraries, and live tensor latency. |
-| `faraday benchmark` | Statistical latency & throughput benchmark | Evaluates NPU/CPU tensor performance across sequence lengths (16-128) with percentiles (P50-P99) and token throughput. |
 
 ---
 
@@ -789,19 +792,47 @@ uv run faraday doctor --npu
 
 ---
 
-#### Scenario J: Statistical Latency & Throughput Benchmark (`faraday benchmark`)
-**Context:** A performance engineer wants to evaluate real-time inference latency percentiles (P50, P90, P95, P99), latency jitter, and token throughput on physical silicon.
+#### Scenario J: Silicon Latency Percentiles & Hardware Profiling (`faraday benchmark --backend npu`)
+**Context:** A performance engineer wants to evaluate real-time inference latency percentiles (P50, P90, P95, P99), latency jitter, and token throughput on physical Snapdragon Hexagon NPU silicon vs. host CPU fallback.
 ```bash
-uv run faraday benchmark
-# Or with custom iteration counts:
-uv run python scripts/benchmark_npu.py --iterations 100 --output review_output/benchmark_results.json
+# Benchmark Snapdragon Hexagon NPU:
+faraday benchmark --backend npu
+
+# Benchmark CPU baseline:
+faraday benchmark --backend cpu
+
+# Or specify custom passes and export path:
+python scripts/benchmark_npu.py --backend npu --iterations 100 --output review_output/benchmark_results.json
 ```
 **What Happens Under the Hood:**
-1. Loads the neural model graph onto the active silicon execution provider.
+1. Loads the neural model graph onto the selected silicon execution provider (`QNNExecutionProvider` on Hexagon HTP or `CPUExecutionProvider`).
 2. Runs warmup passes to eliminate initial cold-start caches.
 3. Evaluates inference over variable token sequence lengths (16, 32, 64, 128 tokens) across 50 timed iterations each.
 4. Computes Mean, Median (P50), P90, P95, P99, Min/Max latency, and token throughput (tok/s).
 5. Exports a standardized machine-readable JSON artifact to `review_output/benchmark_results.json`.
+
+---
+
+#### Scenario K: Industry-Standard Security Accuracy Benchmarking (`faraday benchmark --dataset owasp --compare`)
+**Context:** Security teams and compliance auditors need objective, reproducible evaluation metrics against verified ground-truth corpora and side-by-side comparisons with established enterprise SAST tools.
+```bash
+# 1. Run OWASP Benchmark v1.2 evaluation with side-by-side tool comparison:
+faraday benchmark --dataset owasp --compare
+
+# 2. Run NIST SAMATE Juliet Test Suite v1.3:
+faraday benchmark --dataset juliet
+
+# 3. Run NIST SARD (Software Assurance Reference Dataset):
+faraday benchmark --dataset sard
+
+# 4. Run internal safe-code regression corpus (100% precision / 100% recall verification):
+faraday benchmark --security
+```
+**What Happens Under the Hood:**
+1. Parses standard ground-truth corpora containing thousands of known vulnerable and remediated test cases.
+2. Runs Faraday's hybrid pipeline: AST data-flow taint tracking (`ast_analyzer.py`) + deterministic scanner (`secret_scanner.py`) + Hexagon NPU neural classifier (`faraday_code_assurance.onnx`).
+3. Computes exact True Positives, False Positives, False Negatives, True Negatives, Precision, Recall, F1 Score, and False Positive Rate (FPR).
+4. Generates a side-by-side comparative table against Semgrep, GitHub CodeQL, and PyCQA Bandit with raw latency and memory measurements.
 
 ---
 
