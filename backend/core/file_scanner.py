@@ -49,7 +49,7 @@ SUPPORTED_EXTENSIONS = {
 IGNORED_DIRS = {
     ".git", "node_modules", "__pycache__", "venv", ".venv", "env", ".env",
     "dist", "build", ".idea", ".vscode", "target", "coverage", ".pytest_cache",
-    ".qaihm", ".qai_hub", "vendor", "bin", "obj", ".next", ".nuxt",
+    ".qaihm", ".qai_hub", "vendor", "bin", "obj", ".next", ".nuxt", "experiments",
 }
 
 IGNORED_PATTERNS = {

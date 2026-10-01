@@ -1,0 +1,62 @@
+[
+  {
+    "cve_id": "CVE-2022-21699",
+    "cwe": "CWE-78",
+    "rule_id": "SEC-CMD01",
+    "package": "IPython",
+    "description": "IPython command execution via improper neutralization of special elements in temporary file paths",
+    "vuln_code": "import os\ndef execute_ipython_cmd(cmd_input):\n    temp_path = '/tmp/' + cmd_input\n    os.system('cat ' + temp_path)",
+    "safe_code": "import subprocess\ndef execute_ipython_cmd(cmd_input):\n    temp_path = os.path.basename(cmd_input)\n    subprocess.run(['cat', os.path.join('/tmp', temp_path)], shell=False, check=True)",
+    "lang": "python"
+  },
+  {
+    "cve_id": "CVE-2022-34265",
+    "cwe": "CWE-89",
+    "rule_id": "SEC-SQL01",
+    "package": "Django Trunc/Extract",
+    "description": "SQL Injection in Trunc() and Extract() database functions",
+    "vuln_code": "def custom_db_query(user_field, request):\n    val = request.args.get('val')\n    sql = f\"SELECT {user_field} FROM records WHERE status = '{val}'\"\n    cursor.execute(sql)",
+    "safe_code": "def custom_db_query(user_field, request):\n    val = request.args.get('val')\n    sql = \"SELECT col FROM records WHERE status = %s\"\n    cursor.execute(sql, (val,))",
+    "lang": "python"
+  },
+  {
+    "cve_id": "CVE-2021-29469",
+    "cwe": "CWE-502",
+    "rule_id": "SEC-DESER01",
+    "package": "Redis-py session storage",
+    "description": "Insecure Deserialization in cached session payload loader",
+    "vuln_code": "import pickle\ndef unpack_cached_session(raw_bytes):\n    return pickle.loads(raw_bytes)",
+    "safe_code": "import json\ndef unpack_cached_session(raw_bytes):\n    return json.loads(raw_bytes.decode('utf-8'))",
+    "lang": "python"
+  },
+  {
+    "cve_id": "CVE-2020-7699",
+    "cwe": "CWE-22",
+    "rule_id": "SEC-PATH01",
+    "package": "Express FileUpload",
+    "description": "Path Traversal vulnerability via unsanitized file upload destination parameter",
+    "vuln_code": "const fs = require('fs');\nfunction saveUpload(req, res) {\n    const dest = '/var/uploads/' + req.query.filename;\n    fs.writeFileSync(dest, req.body);\n}",
+    "safe_code": "const path = require('path');\nconst fs = require('fs');\nfunction saveUpload(req, res) {\n    const safeName = path.basename(req.query.filename);\n    const dest = path.join('/var/uploads', safeName);\n    fs.writeFileSync(dest, req.body);\n}",
+    "lang": "javascript"
+  },
+  {
+    "cve_id": "CVE-2023-30861",
+    "cwe": "CWE-79",
+    "rule_id": "SEC-XSS01",
+    "package": "Flask-Admin",
+    "description": "Cross-site scripting (XSS) via unescaped model representation in admin dashboard views",
+    "vuln_code": "function renderAdminView(model) {\n    document.getElementById('display').innerHTML = '<div class=\"admin\">' + model.name + '</div>';\n}",
+    "safe_code": "function renderAdminView(model) {\n    const div = document.createElement('div');\n    div.className = 'admin';\n    div.textContent = model.name;\n    document.getElementById('display').appendChild(div);\n}",
+    "lang": "javascript"
+  },
+  {
+    "cve_id": "CVE-2021-41773",
+    "cwe": "CWE-22",
+    "rule_id": "SEC-PATH01",
+    "package": "Apache Path Traversal Pattern",
+    "description": "Path Traversal mapping flaw allowing access to files outside root directory",
+    "vuln_code": "def serve_asset(user_path):\n    with open('/var/www/html/' + user_path, 'r') as f:\n        return f.read()",
+    "safe_code": "import os\ndef serve_asset(user_path):\n    base_dir = '/var/www/html'\n    resolved = os.path.realpath(os.path.join(base_dir, user_path))\n    if not resolved.startswith(base_dir):\n        raise PermissionError('Path traversal detected')\n    with open(resolved, 'r') as f:\n        return f.read()",
+    "lang": "python"
+  }
+]

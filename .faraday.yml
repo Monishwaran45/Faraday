@@ -5,6 +5,7 @@
 exclude:
   - "tests/**"
   - "demo/**"
+  - "experiments/**"
   - "scripts/**"
   - "vendor/**"
   - "node_modules/**"

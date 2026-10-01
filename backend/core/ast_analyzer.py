@@ -79,6 +79,10 @@ class TaintVisitor(ast.NodeVisitor):
             call_name = self._get_call_name(node).lower()
             if call_name in ("input", "os.getenv"):
                 return call_name
+            if isinstance(node.func, ast.Attribute):
+                sub_src = self._is_source(node.func.value)
+                if sub_src:
+                    return sub_src
         elif isinstance(node, ast.Attribute):
             attr_name = ""
             if isinstance(node.value, ast.Name):
@@ -210,6 +214,24 @@ class TaintVisitor(ast.NodeVisitor):
                         evidence=snippet
                     )
                 )
+
+            # 5. Path Traversal Sink (CWE-22)
+            if call_lower in ("open", "io.open", "os.open") and "SEC-PATH01" not in self.suppressed_rules:
+                if node.args:
+                    arg0 = node.args[0]
+                    is_concat = isinstance(arg0, (ast.BinOp, ast.JoinedStr))
+                    tainted, src_name = self._is_tainted(arg0)
+                    if is_concat or tainted:
+                        self.findings.append(
+                            SecurityFinding.from_ast_taint(
+                                rule_id="SEC-PATH01",
+                                file_path=self.file_path,
+                                line_number=line_no,
+                                source_name=src_name or "dynamic path concatenation",
+                                sink_name=call_name,
+                                evidence=snippet
+                            )
+                        )
 
         self.generic_visit(node)
 

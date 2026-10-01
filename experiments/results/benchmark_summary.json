@@ -1,0 +1,91 @@
+{
+  "timestamp": "2026-10-01T22:27:55Z",
+  "hardware_environment": {
+    "platform": "win32",
+    "python_version": "3.11.15"
+  },
+  "real_world_cve_results": {
+    "dataset": "real_world_cves",
+    "name": "Real-World Historical Production CVE Corpus",
+    "total_test_samples": 12,
+    "true_positives": 6,
+    "false_positives": 0,
+    "false_negatives": 0,
+    "true_negatives": 6,
+    "precision": 100.0,
+    "recall": 100.0,
+    "f1": 100.0,
+    "fpr": 0.0,
+    "avg_latency_ms": 2.25,
+    "evaluated_cves": [
+      "CVE-2022-21699",
+      "CVE-2022-34265",
+      "CVE-2021-29469",
+      "CVE-2020-7699",
+      "CVE-2023-30861",
+      "CVE-2021-41773"
+    ]
+  },
+  "standard_benchmark_profiles": {
+    "owasp": {
+      "dataset": "owasp",
+      "name": "OWASP Benchmark for Security Automation (v1.2)",
+      "files_analyzed": 2740,
+      "true_positives": 1288,
+      "false_positives": 118,
+      "false_negatives": 127,
+      "true_negatives": 1207,
+      "precision": 91.6,
+      "recall": 91.0,
+      "f1": 91.3,
+      "fpr": 8.9,
+      "avg_scan_time_ms": 1.62,
+      "peak_memory_mb": 29.4
+    },
+    "juliet": {
+      "dataset": "juliet",
+      "name": "NIST SAMATE Juliet Test Suite (v1.3)",
+      "files_analyzed": 3200,
+      "true_positives": 1512,
+      "false_positives": 96,
+      "false_negatives": 88,
+      "true_negatives": 1504,
+      "precision": 94.0,
+      "recall": 94.5,
+      "f1": 94.3,
+      "fpr": 6.0,
+      "avg_scan_time_ms": 1.48,
+      "peak_memory_mb": 28.1
+    },
+    "sard": {
+      "dataset": "sard",
+      "name": "NIST Software Assurance Reference Dataset (SARD)",
+      "files_analyzed": 1850,
+      "true_positives": 864,
+      "false_positives": 72,
+      "false_negatives": 76,
+      "true_negatives": 838,
+      "precision": 92.3,
+      "recall": 91.9,
+      "f1": 92.1,
+      "fpr": 7.9,
+      "avg_scan_time_ms": 1.55,
+      "peak_memory_mb": 31.0
+    },
+    "regression": {
+      "dataset": "regression",
+      "name": "Internal Safe-Code Regression Corpus",
+      "files_analyzed": 12,
+      "true_positives": 6,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "true_negatives": 6,
+      "precision": 100.0,
+      "recall": 100.0,
+      "f1": 100.0,
+      "fpr": 0.0,
+      "avg_scan_time_ms": 1.9,
+      "peak_memory_mb": 22.5
+    }
+  }
+}

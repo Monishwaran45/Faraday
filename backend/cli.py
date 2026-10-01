@@ -431,6 +431,10 @@ def execute_pipeline(target_path: Path, args, backend, is_interactive: bool = Fa
     else:
         render_summary_dashboard(metrics, paths, sarif_file_path)
 
+    if getattr(args, "pr_annotations", False):
+        from backend.core.pr_reporter import emit_pr_annotations
+        emit_pr_annotations(secret_findings, repo_root=repo_root)
+
     # CI/CD Gate evaluation
     gate_failed = False
     if fail_on:
@@ -551,7 +555,10 @@ def main():
     parser.add_argument("--security-bench", "--security", action="store_true", dest="security_bench", help="Run security vulnerability detection precision/recall accuracy benchmark")
     parser.add_argument("--dataset", choices=["owasp", "juliet", "sard", "regression", "all"], default=None, help="Benchmark security detection accuracy on standardized dataset (owasp, juliet, sard, regression, all)")
     parser.add_argument("--compare", action="store_true", help="Display empirical comparison table against Semgrep, CodeQL, and Bandit")
+    parser.add_argument("--analysis", action="store_true", help="Display deep-dive False-Positive and False-Negative root cause analysis")
     parser.add_argument("--backend", default="auto", choices=["auto", "npu", "cpu"], help="Select silicon backend provider (auto/npu/cpu)")
+    parser.add_argument("--pr-annotations", action="store_true", help="Emit native GitHub Actions workflow command annotations for PR diff line markers")
+    parser.add_argument("--sbom", default=None, choices=["cyclonedx", "spdx"], help="Generate standard Software Bill of Materials (CycloneDX v1.5 or SPDX v2.3)")
 
     # On-Device LoRA Fine-Tuning CLI Flags
     parser.add_argument("--tune", "--train-lora", action="store_true", dest="tune", help="Fine-tune compact LoRA adapter on local repository coding standards (Hexagon HTP / Air-Gapped)")
@@ -665,12 +672,26 @@ def main():
             print_tool_comparison_table(console=console)
             return
 
+        if getattr(args, "analysis", False):
+            from backend.core.dataset_benchmark import print_error_analysis_table
+            print_error_analysis_table(console=console)
+            return
+
         if getattr(args, "security_bench", False) or "--security" in sys.argv:
             run_security_accuracy_benchmark(console=console)
         else:
             backend_target = getattr(args, "backend", "auto")
             out_json = Path(args.output) if args.output else Path("review_output/benchmark_results.json")
             run_benchmark(iterations=50, backend_target=backend_target, output_json=out_json, console=console)
+        return
+
+    # Feature: faraday sbom [--format cyclonedx|spdx] or --sbom
+    is_sbom_cmd = args.project_path in ("sbom", "--sbom") or getattr(args, "sbom", None)
+    if is_sbom_cmd:
+        from backend.core.sbom import export_sbom
+        fmt = getattr(args, "sbom", None) or "cyclonedx"
+        out_f = export_sbom(format_type=fmt)
+        console.print(f"[bold green][✓] Software Bill of Materials (SBOM) generated:[/] [cyan]{out_f}[/]")
         return
 
     # Feature: --init configuration

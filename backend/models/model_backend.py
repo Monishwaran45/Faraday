@@ -32,6 +32,7 @@ import random
 import re
 import time
 from abc import ABC, abstractmethod
+from typing import Optional, Any
 import numpy as np
 
 
@@ -128,20 +129,20 @@ class QNNBackend(ModelBackend):
                 return c
         return candidates[0]
 
-    def __init__(self):
+    def __init__(self, model_path: Optional[Any] = None):
         from pathlib import Path
         import onnxruntime as ort
 
-        model_path = self.find_model_path()
-        if not model_path.exists():
+        target_model = Path(model_path) if model_path else self.find_model_path()
+        if not target_model.exists():
             # If ONNX model does not exist yet, generate it via export workflow
             try:
                 from scripts.export_qnn_model import export_to_onnx
-                model_path = export_to_onnx(model_path.parent)
+                target_model = export_to_onnx(target_model.parent)
             except Exception as e:
                 raise FileNotFoundError(f"Neural model artifact not found and export failed: {e}")
 
-        self._model_path = model_path
+        self._model_path = target_model
         self._available_providers = ort.get_available_providers()
 
         # Priority: QNN -> DirectML -> CPU
@@ -152,7 +153,7 @@ class QNNBackend(ModelBackend):
         so.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
 
         # Load real ONNX inference session
-        onnx_file = model_path if model_path.suffix == ".onnx" else (model_path / "faraday_code_assurance.onnx")
+        onnx_file = target_model if target_model.suffix == ".onnx" else (target_model / "faraday_code_assurance.onnx")
         if not onnx_file.exists():
             from scripts.export_qnn_model import export_to_onnx
             onnx_file = export_to_onnx(onnx_file.parent)

@@ -328,6 +328,7 @@ def main():
     parser.add_argument("--security", action="store_true", help="Run security vulnerability detection accuracy benchmark")
     parser.add_argument("--dataset", choices=["owasp", "juliet", "sard", "regression", "all"], default=None, help="Benchmark security accuracy on standardized dataset")
     parser.add_argument("--compare", action="store_true", help="Display comparison table against Semgrep, CodeQL, and Bandit")
+    parser.add_argument("--analysis", action="store_true", help="Display deep-dive False-Positive and False-Negative root cause analysis")
     parser.add_argument("--backend", default="auto", choices=["auto", "npu", "cpu"], help="Select execution provider backend (default: auto)")
     parser.add_argument("--iterations", type=int, default=50, help="Number of timed benchmark passes (default: 50)")
     parser.add_argument("--warmup", type=int, default=10, help="Number of warmup iterations (default: 10)")
@@ -336,6 +337,11 @@ def main():
     args = parser.parse_args()
 
     console = Console(legacy_windows=False)
+
+    if args.analysis:
+        from backend.core.dataset_benchmark import print_error_analysis_table
+        print_error_analysis_table(console=console)
+        return
 
     if args.dataset:
         from backend.core.dataset_benchmark import evaluate_dataset, run_all_dataset_benchmarks, print_tool_comparison_table
