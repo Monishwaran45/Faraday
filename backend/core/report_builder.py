@@ -33,15 +33,23 @@ def build_report(secret_findings, chunk_reviews, readme_text: str, output_dir: s
     )
     report_lines.append(dashboard)
 
-    report_lines.append("## 🔒 Static Security Scan (deterministic, no model)\n")
+    report_lines.append("## 🔒 Deterministic Security Scan (Static & AST Taint Analysis)\n")
     if not secret_findings:
         report_lines.append("No hardcoded secrets or unsafe patterns detected.\n")
     else:
         for f in secret_findings:
-            report_lines.append(
-                f"- **[{f.severity}] {f.label}** — `{f.file_path}:{f.line_number}`\n"
-                f"  ```\n  {f.snippet}\n  ```"
-            )
+            source_tag = getattr(f, "source", "STATIC")
+            cwe_tag = getattr(f, "cwe", "")
+            owasp_tag = getattr(f, "owasp", "")
+            conf = getattr(f, "confidence", 0.95)
+            badge = f"[{source_tag}] [{f.severity}]"
+            meta = f" `{f.file_path}:{f.line_number}` | **Confidence:** `{conf*100:.0f}%`"
+            if cwe_tag:
+                meta += f" | **CWE:** `{cwe_tag}` | **OWASP:** `{owasp_tag}`"
+            report_lines.append(f"- **{badge} {f.label}** — {meta}\n  ```\n  {f.snippet}\n  ```")
+            remediation = getattr(f, "remediation", "")
+            if remediation:
+                report_lines.append(f"  *Suggested Remediation:* {remediation}\n")
 
     report_lines.append("\n## 🧠 AI Code Review (on-device LLM)\n")
     for cr in chunk_reviews:

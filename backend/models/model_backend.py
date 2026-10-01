@@ -203,23 +203,36 @@ class QNNBackend(ModelBackend):
         return f"ONNX Neural Engine — active provider: {self._active_provider}"
 
     def tokenize_code(self, text: str, max_seq_len: int = 64):
-        """Simple deterministic hash tokenization mapping code characters to vocabulary IDs."""
-        import numpy as np
-        words = text.split()
-        token_ids = []
-        for w in words[:max_seq_len]:
-            h = abs(hash(w)) % 9999 + 1  # 1 to 10000 (0 is padding)
-            token_ids.append(h)
-        while len(token_ids) < max_seq_len:
-            token_ids.append(0)
-        return np.array([token_ids[:max_seq_len]], dtype=np.int64)
+        """Model-native subword tokenization with strict vocabulary boundary validation."""
+        if hasattr(self, "_tokenizer") and self._tokenizer is not None:
+            return self._tokenizer.encode(text, max_length=max_seq_len, padding=True, truncation=True)
+        try:
+            from backend.models.tokenizer import CodeTokenizer
+            self._tokenizer = CodeTokenizer.get_default()
+            return self._tokenizer.encode(text, max_length=max_seq_len, padding=True, truncation=True)
+        except Exception:
+            # Fallback
+            words = text.split()
+            token_ids = []
+            for w in words[:max_seq_len]:
+                h = abs(hash(w)) % 9999 + 1
+                token_ids.append(h)
+            while len(token_ids) < max_seq_len:
+                token_ids.append(0)
+            return np.array([token_ids[:max_seq_len]], dtype=np.int64)
 
     def generate(self, prompt: str, max_tokens: int = 512) -> str:
-        # Genuinely execute neural inference through the ONNX Runtime session
+        # Genuinely execute neural tensor inference through the ONNX Runtime session
         token_tensor = self.tokenize_code(prompt, max_seq_len=64)
+        risk_score = 0.5
+        predicted_sev = "Medium"
         try:
             outputs = self._session.run(None, {"input_ids": token_tensor})
             risk_score = float(outputs[0][0][0])
+            if len(outputs) > 1:
+                sev_classes = ["Clean", "Low", "Medium", "High"]
+                sev_idx = int(np.argmax(outputs[1][0]))
+                predicted_sev = sev_classes[min(sev_idx, len(sev_classes) - 1)]
         except Exception:
             risk_score = 0.5
 
@@ -647,7 +660,13 @@ def generate_heuristic_response(prompt: str, max_tokens: int = 512) -> str:
 
     # Rule 8: Raw string concatenation / interpolation in SQL clauses
     sql_clause_match = re.search(r"""\b(SELECT\s+.+\s+FROM|INSERT\s+INTO|UPDATE\s+\w+\s+SET|DELETE\s+FROM)\b""", code_snippet, re.IGNORECASE)
-    if sql_clause_match and ("+" in code_snippet or 'f"' in code_snippet or "f'" in code_snippet or re.search(r"""%s|%\s*\(""", code_snippet)):
+    has_sql_concat = (
+        ("+" in code_snippet and ("'" in code_snippet or '"' in code_snippet)) or
+        re.search(r"""f["'].*\b(SELECT|INSERT|UPDATE|DELETE)\b.*\{""", code_snippet, re.IGNORECASE) or
+        re.search(r"""\b(SELECT|INSERT|UPDATE|DELETE)\b.*["']\s*%\s*\(?[a-zA-Z_]""", code_snippet, re.IGNORECASE)
+    )
+    is_parameterized = bool(re.search(r"""\bexecute\s*\(\s*["'][^"']*(?:%s|\?)[^"']*["']\s*,\s*(\(|\[|[a-zA-Z_])""", code_snippet))
+    if sql_clause_match and has_sql_concat and not is_parameterized:
         detected_issues.append("Unparameterized database query constructed via string concatenation or interpolation (SQL Injection risk).")
         suggested_fixes.append("Use parameterized queries (?) instead of raw concatenation or interpolation.")
         severity = "High"

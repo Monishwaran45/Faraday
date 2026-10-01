@@ -102,21 +102,20 @@ def calculate_shannon_entropy(data: str) -> float:
     return -sum((count / total) * math.log2(count / total) for count in counts.values())
 
 
-@dataclass
-class SecretFinding:
-    file_path: str
-    line_number: int
-    label: str
-    severity: str
-    snippet: str
+from backend.core.finding import SecurityFinding
+from backend.core.ast_analyzer import analyze_python_ast
+
+# Backwards compatibility alias
+SecretFinding = SecurityFinding
 
 
 def scan_chunk(chunk, suppressed_rules: list = None) -> list:
-    """Scan a single CodeChunk for secret/unsafe patterns, respecting inline and project suppression."""
+    """Scan a single CodeChunk for secret/unsafe patterns and AST taint flows, respecting inline and project suppression."""
     findings = []
     lines = chunk.code.splitlines()
     suppressed = set(suppressed_rules or [])
 
+    # 1. Regex & Shannon entropy static scan
     for i, line in enumerate(lines):
         # Allow developers to suppress intentional test strings or false positives
         if any(marker in line for marker in SUPPRESSION_MARKERS):
@@ -134,11 +133,11 @@ def scan_chunk(chunk, suppressed_rules: list = None) -> list:
                 if any(ph in line_lower for ph in PLACEHOLDER_SUBSTRINGS) and "dummy_token" not in line and "dummy_secret" not in line:
                     continue
 
-                findings.append(SecretFinding(
-                    file_path=chunk.file_path,
-                    line_number=chunk.start_line + i,
+                findings.append(SecurityFinding.from_static(
                     label=label,
                     severity=severity,
+                    file_path=chunk.file_path,
+                    line_number=chunk.start_line + i,
                     snippet=line.strip()[:120],
                 ))
                 matched_any = True
@@ -154,14 +153,32 @@ def scan_chunk(chunk, suppressed_rules: list = None) -> list:
                 is_hex = all(c in "0123456789abcdefABCDEF-_" for c in token_val)
                 threshold = 3.3 if is_hex else 4.2
                 if entropy >= threshold:
-                    findings.append(SecretFinding(
-                        file_path=chunk.file_path,
-                        line_number=chunk.start_line + i,
+                    findings.append(SecurityFinding.from_static(
                         label=f"High-Entropy Secret Token (Entropy: {entropy:.2f})",
                         severity="High",
+                        file_path=chunk.file_path,
+                        line_number=chunk.start_line + i,
                         snippet=line.strip()[:120],
+                        confidence=0.92,
                     ))
                     break
+
+    # 2. AST Data-Flow Taint Analysis for Python chunks
+    is_python = getattr(chunk, "language", "").lower() == "python" or chunk.file_path.endswith(".py")
+    if is_python:
+        try:
+            ast_findings = analyze_python_ast(chunk.code, chunk.file_path, suppressed_rules=suppressed)
+            # Re-offset line numbers relative to file chunk
+            seen_lines_and_rules = {(f.line_number, f.rule_id) for f in findings}
+            for af in ast_findings:
+                actual_line = chunk.start_line + af.line_number - 1
+                if (actual_line, af.rule_id) not in seen_lines_and_rules:
+                    af.line_number = actual_line
+                    findings.append(af)
+                    seen_lines_and_rules.add((actual_line, af.rule_id))
+        except Exception:
+            pass
+
     return findings
 
 

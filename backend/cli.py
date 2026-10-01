@@ -548,6 +548,10 @@ def main():
     parser.add_argument("--doctor", action="store_true", help="Run Faraday health check & environment doctor")
     parser.add_argument("--npu", action="store_true", help="Perform deep Qualcomm Hexagon NPU diagnostics in doctor mode")
     parser.add_argument("--benchmark", action="store_true", help="Run statistical latency and throughput benchmark on Qualcomm NPU / active provider")
+    parser.add_argument("--security-bench", "--security", action="store_true", dest="security_bench", help="Run security vulnerability detection precision/recall accuracy benchmark")
+    parser.add_argument("--dataset", choices=["owasp", "juliet", "sard", "regression", "all"], default=None, help="Benchmark security detection accuracy on standardized dataset (owasp, juliet, sard, regression, all)")
+    parser.add_argument("--compare", action="store_true", help="Display empirical comparison table against Semgrep, CodeQL, and Bandit")
+    parser.add_argument("--backend", default="auto", choices=["auto", "npu", "cpu"], help="Select silicon backend provider (auto/npu/cpu)")
 
     # On-Device LoRA Fine-Tuning CLI Flags
     parser.add_argument("--tune", "--train-lora", action="store_true", dest="tune", help="Fine-tune compact LoRA adapter on local repository coding standards (Hexagon HTP / Air-Gapped)")
@@ -555,6 +559,10 @@ def main():
     parser.add_argument("--adapter", default=None, help="Path to trained LoRA adapter directory to load during code review")
     parser.add_argument("--epochs", type=int, default=3, help="Training epochs for on-device LoRA fine-tuning (default: 3)")
     parser.add_argument("--lora-rank", type=int, default=8, help="Rank r for LoRA decomposition (default: 8)")
+
+    # Support 'faraday scan [path]' subcommand syntax seamlessly
+    if len(sys.argv) > 1 and sys.argv[1] == "scan":
+        sys.argv.pop(1)
 
     args = parser.parse_args()
 
@@ -641,8 +649,28 @@ def main():
     # Feature: faraday benchmark or faraday --benchmark
     is_bench_cmd = args.project_path in ("benchmark", "--benchmark") or getattr(args, "benchmark", False)
     if is_bench_cmd:
-        from scripts.benchmark_npu import run_benchmark
-        run_benchmark(iterations=50, output_json=Path("review_output/benchmark_results.json"), console=console)
+        from scripts.benchmark_npu import run_benchmark, run_security_accuracy_benchmark
+        if getattr(args, "dataset", None):
+            from backend.core.dataset_benchmark import evaluate_dataset, run_all_dataset_benchmarks, print_tool_comparison_table
+            if args.dataset == "all":
+                run_all_dataset_benchmarks(console=console)
+            else:
+                evaluate_dataset(args.dataset, console=console)
+                if getattr(args, "compare", False):
+                    print_tool_comparison_table(console=console)
+            return
+
+        if getattr(args, "compare", False):
+            from backend.core.dataset_benchmark import print_tool_comparison_table
+            print_tool_comparison_table(console=console)
+            return
+
+        if getattr(args, "security_bench", False) or "--security" in sys.argv:
+            run_security_accuracy_benchmark(console=console)
+        else:
+            backend_target = getattr(args, "backend", "auto")
+            out_json = Path(args.output) if args.output else Path("review_output/benchmark_results.json")
+            run_benchmark(iterations=50, backend_target=backend_target, output_json=out_json, console=console)
         return
 
     # Feature: --init configuration
