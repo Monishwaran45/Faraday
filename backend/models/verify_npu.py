@@ -87,6 +87,54 @@ def probe_hardware_environment() -> Dict[str, Any]:
                 soc_model = processor
         except Exception:
             soc_model = processor
+    elif system == "Linux":
+        # Check Linux Qualcomm sysfs & device-tree interfaces
+        soc_paths = [
+            Path("/sys/devices/soc0/machine"),
+            Path("/sys/devices/soc0/family"),
+            Path("/sys/devices/soc0/soc_id"),
+            Path("/proc/device-tree/model"),
+        ]
+        for p in soc_paths:
+            try:
+                if p.exists():
+                    val = p.read_text(encoding="utf-8", errors="ignore").strip().rstrip("\x00")
+                    if any(q in val.lower() for q in ["snapdragon", "qualcomm", "sc8380", "x elite", "qcs", "qrb"]):
+                        is_snapdragon = True
+                        soc_model = val
+                        break
+            except Exception:
+                pass
+
+        # Check /proc/cpuinfo for Qualcomm implementer (0x51) or branding
+        if not is_snapdragon:
+            try:
+                cpuinfo = Path("/proc/cpuinfo")
+                if cpuinfo.exists():
+                    content = cpuinfo.read_text(encoding="utf-8", errors="ignore").lower()
+                    if "qualcomm" in content or "snapdragon" in content or "sc8380" in content:
+                        is_snapdragon = True
+                        soc_model = "Qualcomm Snapdragon Silicon (Linux aarch64)"
+                    elif "0x51" in content:  # ARM implementer 0x51 is Qualcomm
+                        is_snapdragon = True
+                        soc_model = "Qualcomm Oryon/Kryo CPU (Implementer 0x51)"
+            except Exception:
+                pass
+
+        # Check lscpu output
+        if not is_snapdragon:
+            try:
+                import subprocess
+                proc = subprocess.run(["lscpu"], capture_output=True, text=True, timeout=2)
+                out = proc.stdout.lower()
+                if "qualcomm" in out or "snapdragon" in out:
+                    is_snapdragon = True
+                    soc_model = "Snapdragon Platform (lscpu)"
+            except Exception:
+                pass
+
+        if not is_snapdragon:
+            soc_model = "ARM64 Processor (Qualcomm Compatible)" if is_arm64 else processor
 
     return {
         "os": system,
@@ -176,7 +224,9 @@ def verify_npu_and_benchmark(onnx_path: Path = None, iterations: int = 10) -> Di
                 "ONNX Runtime verified CPU-fallback successfully."
             )
         else:
-            fallback_reason = "Snapdragon hardware detected, but QNN runtime DLLs not present in system PATH."
+            lib_name = "libQnnHtp.so" if hw["os"] == "Linux" else "QnnHtp.dll"
+            path_var = "LD_LIBRARY_PATH" if hw["os"] == "Linux" else "PATH"
+            fallback_reason = f"Snapdragon hardware detected, but QNN runtime libraries ({lib_name}) not present in system {path_var}."
 
     # Benchmark genuine tensor inference (deterministic synthetic AST token stream)
     sample_input = np.arange(1, 65, dtype=np.int64).reshape((1, 64))

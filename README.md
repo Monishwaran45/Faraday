@@ -112,6 +112,56 @@ python -m qai_hub_models.models.qwen2_7b_instruct_quantized.export \
 
 ---
 
+## 🐧 Linux Installation & Snapdragon Linux Support
+
+Faraday provides 100% native Linux support across **Ubuntu, Debian, Fedora, Arch Linux, WSL2, and Snapdragon Linux (aarch64)**.
+
+### 1. Automated 1-Click Linux Installer
+```bash
+git clone https://github.com/Monishwaran45/Faraday.git
+cd Faraday
+chmod +x scripts/install_linux.sh
+./scripts/install_linux.sh
+```
+
+### 2. Manual Linux Package Installation
+```bash
+# Using uv (Recommended for Linux):
+uv pip install git+https://github.com/Monishwaran45/Faraday.git
+
+# Or via standard pip:
+python3 -m pip install --upgrade pip
+python3 -m pip install git+https://github.com/Monishwaran45/Faraday.git
+```
+
+### 3. Qualcomm Snapdragon Linux & Hexagon NPU Configuration
+On **Snapdragon® X Elite Linux laptops**, **Qualcomm Linux (RB5/IQ-9075)**, or **Ubuntu ARM64**:
+- Faraday automatically queries `/sys/devices/soc0/machine` and `/proc/cpuinfo` to detect Qualcomm Oryon™ and Kryo™ silicon.
+- For physical Hexagon NPU acceleration via `QNNExecutionProvider`, add the QNN dynamic libraries to `LD_LIBRARY_PATH`:
+  ```bash
+  export LD_LIBRARY_PATH=/opt/qcom/qnn/lib/aarch64-linux-gnu:$LD_LIBRARY_PATH
+  ```
+- Verify the active execution provider:
+  ```bash
+  faraday --prove
+  faraday doctor --npu
+  ```
+
+### 4. Containerized Linux Execution (Docker)
+Faraday includes a production multi-arch Linux Dockerfile for seamless, zero-dependency scanning in containerized environments:
+```bash
+# 1. Build the lightweight container
+docker build -t faraday .
+
+# 2. Scan any local repository offline
+docker run --rm -v $(pwd):/workspace faraday scan /workspace --once
+
+# 3. Export SARIF report from container
+docker run --rm -v $(pwd):/workspace faraday scan /workspace --sarif /workspace/results.sarif --once
+```
+
+---
+
 ## Qualcomm AI Hub Compilation & Silicon Profiling Evidence
 
 Faraday is built from the ground up for the **Qualcomm Snapdragon® X Elite (sc8380xp)** and executes on the physical **Hexagon™ v73 HTP (Hexagon Tensor Processor)**. To achieve both sub-millisecond AST classification and deep generative code reasoning, Faraday deploys a **Dual-Model Silicon Architecture**:

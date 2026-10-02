@@ -116,17 +116,35 @@ def check_npu_silicon() -> Dict[str, Any]:
     model_size = model_path.stat().st_size if model_present else 0
     manifest_present = manifest_path.exists()
 
-    # Search for QNN runtime dynamic libraries in system PATH and standard Qualcomm SDK dirs
-    qnn_libs = ["QnnHtp.dll", "libQnnHtp.so", "QnnSystem.dll", "libQnnSystem.so"]
+    # Search for QNN runtime dynamic libraries in system PATH, LD_LIBRARY_PATH, and standard Qualcomm SDK dirs
+    qnn_libs = ["QnnHtp.dll", "libQnnHtp.so", "libQnnHtpV73Skel.so", "QnnSystem.dll", "libQnnSystem.so"]
     found_qnn_libs = []
-    path_dirs = os.environ.get("PATH", "").split(os.pathsep)
-    for p in path_dirs:
+    
+    search_paths = os.environ.get("PATH", "").split(os.pathsep)
+    if "LD_LIBRARY_PATH" in os.environ:
+        search_paths.extend(os.environ["LD_LIBRARY_PATH"].split(os.pathsep))
+    
+    # Standard Linux & Qualcomm SDK paths
+    search_paths.extend([
+        "/opt/qcom/qnn/lib/aarch64-linux-gnu",
+        "/opt/qcom/qnn/lib/x86_64-linux-gnu",
+        "/usr/lib/aarch64-linux-gnu",
+        "/usr/local/lib",
+        "/usr/lib",
+    ])
+    
+    seen_paths = set()
+    for p in search_paths:
+        if not p or p in seen_paths:
+            continue
+        seen_paths.add(p)
         try:
             p_dir = Path(p)
             if p_dir.is_dir():
                 for lib in qnn_libs:
-                    if (p_dir / lib).exists():
-                        found_qnn_libs.append(str(p_dir / lib))
+                    lib_path = p_dir / lib
+                    if lib_path.exists():
+                        found_qnn_libs.append(str(lib_path))
         except Exception:
             continue
 
