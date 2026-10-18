@@ -1249,5 +1249,5 @@ uv run pytest -v
 
 - **Author:** Monishwaran K
 - **Project:** Faraday — Air-Gapped Code Review Copilot for Qualcomm Snapdragon Hexagon NPU
-- **Competition Category:** Qualcomm Snapdragon On-Device AI Innovation
+
 

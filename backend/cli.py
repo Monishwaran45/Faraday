@@ -567,6 +567,7 @@ def main():
     parser.add_argument("--card", action="store_true", help="Generate and display verifiable Shareable Scan Card")
     parser.add_argument("--proof", action="store_true", help="Run Proof-of-Fix 2.0 with Attack Replay and evidence report generation")
     parser.add_argument("--replacement-file", default=None, help="Replacement content file for Proof-of-Fix 2.0")
+    parser.add_argument("-y", "--yes", action="store_true", help="Automatically approve prompts (e.g. Proof-of-Fix patch approval)")
 
     # On-Device LoRA Fine-Tuning CLI Flags
     parser.add_argument("--tune", "--train-lora", action="store_true", dest="tune", help="Fine-tune compact LoRA adapter on local repository coding standards (Hexagon HTP / Air-Gapped)")
@@ -797,21 +798,46 @@ def main():
         return
 
     # Feature: faraday proof <file> --replacement-file <path> (Proof-of-Fix 2.0)
-    is_proof_cmd = args.project_path in ("proof", "fix") or getattr(args, "proof", False)
+    is_proof_cmd = getattr(args, "proof", False) or args.project_path in ("proof", "fix")
     if is_proof_cmd:
         from backend.core.proof_engine import run_proof_of_fix_2
         from rich.prompt import Confirm
-        rel_f = sys.argv[2] if len(sys.argv) > 2 and not sys.argv[2].startswith("-") else None
-        if not rel_f or not getattr(args, "replacement_file", None):
+
+        candidate = args.project_path if args.project_path not in ("proof", "fix", ".") else None
+        if not candidate:
+            for a in sys.argv[1:]:
+                if not a.startswith("-") and a not in ("proof", "fix", "scan"):
+                    candidate = a
+                    break
+
+        if not candidate or not getattr(args, "replacement_file", None):
             console.print("[bold red][!] Usage: faraday proof <file> --replacement-file <path>[/]")
             sys.exit(1)
-        rep_text = Path(args.replacement_file).resolve().read_text(encoding="utf-8")
-        root_dir = target_path if target_path.is_dir() else target_path.parent
+
+        target_file_path = Path(candidate).resolve()
+        if not target_file_path.exists():
+            console.print(f"[bold red][!] Target file does not exist: {target_file_path}[/]")
+            sys.exit(1)
+
+        rep_path = Path(args.replacement_file).resolve()
+        if not rep_path.exists():
+            console.print(f"[bold red][!] Replacement file does not exist: {rep_path}[/]")
+            sys.exit(1)
+
+        rep_text = rep_path.read_text(encoding="utf-8")
+        root_dir = Path.cwd().resolve()
+        try:
+            rel_f = str(target_file_path.relative_to(root_dir))
+        except ValueError:
+            rel_f = target_file_path.name
+            root_dir = target_file_path.parent
+
+        auto_yes = getattr(args, "yes", False) or getattr(args, "once", False)
         code, evidence = run_proof_of_fix_2(
             root_dir,
             rel_f,
             rep_text,
-            approve=lambda: Confirm.ask("Apply this patch to the target file?", default=False),
+            approve=(lambda: True) if auto_yes else (lambda: Confirm.ask("Apply this patch to the target file?", default=False)),
             console=console,
         )
         sys.exit(code)
