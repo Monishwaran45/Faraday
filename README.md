@@ -5,7 +5,6 @@
 [![Test Suite](https://img.shields.io/badge/tests-81%2F81%20passing-brightgreen.svg)](tests/)
 [![Silicon](https://img.shields.io/badge/silicon-Snapdragon%20X%20Elite%20Hexagon%20NPU-purple.svg)](https://aihub.qualcomm.com)
 [![Privacy](https://img.shields.io/badge/egress-0.00%20KB%20Air--Gapped-blue.svg)](#silicon-passport)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 *Named after the Faraday cage — which completely blocks external electromagnetic radiation — Faraday is an air-gapped code security engine that reviews source code, detects credentials and vulnerabilities, traces bug origins, and generates verifiable proof-of-fix patches entirely on your physical silicon (Qualcomm Snapdragon® X Elite Hexagon NPU or CPU).*
 
