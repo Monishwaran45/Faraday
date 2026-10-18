@@ -18,8 +18,9 @@ def test_declining_preview_does_not_modify_target(tmp_path: Path):
 
     assert code == 1
     assert target.read_text(encoding="utf-8") == VULNERABLE
-    assert "Proposed patch" in console.export_text()
-    assert "declined" in console.export_text()
+    output = console.export_text()
+    assert "Proposed patch" in output
+    assert "declined" in output
 
 
 def test_approval_applies_patch_and_rescans(tmp_path: Path):
