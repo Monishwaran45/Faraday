@@ -1,40 +1,50 @@
 # Faraday Proof-of-Fix demo
 
-This demo illustrates a narrow, testable building block for the scan → review → approve → rescan workflow. It does not claim to generate secure fixes automatically: a caller supplies replacement text, and a human reviews the diff before approving it.
+Proof-of-Fix now has an interactive scan → review → approve → rescan command. It scans the selected file with Faraday's existing static security scanner, displays findings and a unified diff, and only writes after an explicit confirmation. It does not invent replacement code or claim that a successful write proves a secure fix.
 
-## Run the tests
+## Install / update the command
+
+From the Faraday repository:
 
 ```bash
-python -m pytest tests/test_proof_of_fix.py -q
+python -m pip install -e .
 ```
 
-## Example
+## Run the end-to-end workflow
 
-```python
-from pathlib import Path
-from backend.core.proof_of_fix import propose_patch, apply_patch
+Create a UTF-8 text file containing the **complete proposed contents** of the file you want to fix, then run:
 
-project = Path(".")
-proposal = propose_patch(
-    project,
-    "demo/sample_project/database.py",
-    Path("demo/sample_project/database.py").read_text(encoding="utf-8")
-        .replace(
-            'query = "SELECT * FROM users WHERE id = " + user_id',
-            'query = "SELECT * FROM users WHERE id = ?"\n    cursor.execute(query, (user_id,))',
-        ),
-)
-print(proposal.diff)  # Show this diff to the user for review.
-# Only after explicit user approval:
-# apply_patch(project, proposal, approved=True)
+```bash
+faraday-fix . path/to/vulnerable_file.py --replacement-file path/to/proposed_file.py
 ```
 
-Review the proposed diff before applying it. The apply operation rejects path traversal, symlinked targets, missing files, and stale proposals when the target changed after preview. The caller must still validate that the proposed code is semantically correct and run relevant tests after applying it.
+On Windows, if the script is not on PATH, run:
 
-## Current scope and limitations
+```powershell
+python -m backend.proof_of_fix_cli . path\to\vulnerable_file.py --replacement-file path\to\proposed_file.py
+```
+
+The command:
+1. Scans the selected target file with Faraday's current static scanner.
+2. Stops without changing anything if no findings are detected.
+3. Prints the findings and proposed unified diff.
+4. Asks for confirmation (default is **No**).
+5. Applies the replacement only after approval and only if the original file has not changed since preview.
+6. Re-scans the target and reports whether the original finding signatures are still detected.
+
+The replacement file is a proposal supplied by the developer; Faraday does not generate it. Review the diff carefully, run the relevant test suite, and independently verify the fix. A clean rescan is evidence that those scanner signatures were not reproduced, not proof that the code is secure.
+
+## Run tests
+
+```bash
+python -m pytest tests/test_proof_of_fix.py tests/test_proof_of_fix_workflow.py -v
+python -m pytest -v
+```
+
+## Security notes
 
 - UTF-8 text files only; binary files are rejected.
 - One existing file per proposal.
-- Approval is a boolean supplied by the calling application; the UI must obtain it from an explicit user action.
-- This module does not scan code, synthesize patches, execute code, or independently prove a vulnerability is fixed.
-- A successful write is not proof of a secure fix. Rescan and test the result.
+- Empty paths, traversal, symlinked paths, missing targets, and stale proposals are rejected.
+- Declining approval leaves the target unchanged.
+- Never use an unreviewed replacement. Run project tests and a fresh scan after applying.
