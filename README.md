@@ -5,29 +5,28 @@
 [![Test Suite](https://img.shields.io/badge/tests-81%2F81%20passing-brightgreen.svg)](tests/)
 [![Silicon](https://img.shields.io/badge/silicon-Snapdragon%20X%20Elite%20Hexagon%20NPU-purple.svg)](https://aihub.qualcomm.com)
 [![Privacy](https://img.shields.io/badge/egress-0.00%20KB%20Air--Gapped-blue.svg)](#silicon-passport)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 *Named after the Faraday cage — which completely blocks external electromagnetic radiation — Faraday is an air-gapped code security engine that reviews source code, detects credentials and vulnerabilities, traces bug origins, and generates verifiable proof-of-fix patches entirely on your physical silicon (Qualcomm Snapdragon® X Elite Hexagon NPU or CPU).*
 
 ---
 
-## 💡 What is Faraday in 30 Seconds?
+##  What is Faraday in 30 Seconds?
 
 Faraday is like **ESLint + Git Blame + Pen-Testing + AI Code Review** combined into a single, lightning-fast offline tool:
 
 | Feature | The Problem It Solves | How Faraday Solves It |
 | :--- | :--- | :--- |
-| **🛡️ 100% Air-Gapped** | Cloud AI tools (Copilot, ChatGPT) upload proprietary source code to external servers, violating compliance in defense, banking, and healthcare. | Runs **entirely offline** on your local machine with **0.00 KB network egress**. Works with WiFi disabled! |
-| **🕒 Faraday Time Machine** | When a security scanner flags a bug, developers waste hours figuring out who wrote it, in what commit, and why. | Runs `faraday time-machine <file>`. Traces Git ancestry, identifies the introducing commit & author, explains why it happened, and maps the complete lifecycle: `Introduced ➔ Detected ➔ Reproduced ➔ Fixed ➔ Verified`. |
-| **🔬 Proof-of-Fix 2.0** | AI code fixers often hallucinate fixes or introduce new bugs, and developers don't know whether to trust them. | Runs `faraday proof <file>`. Synthesizes an **attack replay test** (e.g. `' OR '1'='1`), proves the exploit works on old code, applies the patch, proves the attack fails on new code, and seals it with a cryptographic proof certificate! |
-| **🌐 Codebase Digital Twin** | Fixing or changing a shared function might accidentally break 5 API routes and 10 unit tests across the repo. | Runs `faraday twin <function>`. Inverts your repository AST to show the **blast radius**: direct callers, upstream chains, affected web routes (FastAPI, Flask, Express), and unit tests. |
-| **📜 Silicon Passport** | Security officers and compliance auditors ask: *"Did your AI actually run locally, or did it call a cloud API?"* | Runs `faraday passport`. Emits a signed, tamper-evident cryptographic attestation verifying model SHA-256, latency percentiles (P50/P90/P99), and **0-byte egress guarantee**. |
-| **📇 Shareable Scan Card** | Team leads and PR reviewers want a quick, beautiful summary card they can paste into GitHub PRs or Slack. | Runs `faraday card`. Generates an instant rich terminal report, Markdown card, and dark-themed SVG badge for your repository. |
-| **🖥️ Visual Web Dashboard** | Developers who prefer a visual browser experience want interactive charts and 1-click documentation. | Runs `faraday --ui`. Launches a 100% air-gapped web dashboard with donut charts, line-by-line file inspector, docstring generator, and SARIF export. |
+| ** 100% Air-Gapped** | Cloud AI tools (Copilot, ChatGPT) upload proprietary source code to external servers, violating compliance in defense, banking, and healthcare. | Runs **entirely offline** on your local machine with **0.00 KB network egress**. Works with WiFi disabled! |
+| ** Faraday Time Machine** | When a security scanner flags a bug, developers waste hours figuring out who wrote it, in what commit, and why. | Runs `faraday time-machine <file>`. Traces Git ancestry, identifies the introducing commit & author, explains why it happened, and maps the complete lifecycle: `Introduced ➔ Detected ➔ Reproduced ➔ Fixed ➔ Verified`. |
+| ** Proof-of-Fix 2.0** | AI code fixers often hallucinate fixes or introduce new bugs, and developers don't know whether to trust them. | Runs `faraday proof <file>`. Synthesizes an **attack replay test** (e.g. `' OR '1'='1`), proves the exploit works on old code, applies the patch, proves the attack fails on new code, and seals it with a cryptographic proof certificate! |
+| ** Codebase Digital Twin** | Fixing or changing a shared function might accidentally break 5 API routes and 10 unit tests across the repo. | Runs `faraday twin <function>`. Inverts your repository AST to show the **blast radius**: direct callers, upstream chains, affected web routes (FastAPI, Flask, Express), and unit tests. |
+| ** Silicon Passport** | Security officers and compliance auditors ask: *"Did your AI actually run locally, or did it call a cloud API?"* | Runs `faraday passport`. Emits a signed, tamper-evident cryptographic attestation verifying model SHA-256, latency percentiles (P50/P90/P99), and **0-byte egress guarantee**. |
+| ** Shareable Scan Card** | Team leads and PR reviewers want a quick, beautiful summary card they can paste into GitHub PRs or Slack. | Runs `faraday card`. Generates an instant rich terminal report, Markdown card, and dark-themed SVG badge for your repository. |
+| ** Visual Web Dashboard** | Developers who prefer a visual browser experience want interactive charts and 1-click documentation. | Runs `faraday --ui`. Launches a 100% air-gapped web dashboard with donut charts, line-by-line file inspector, docstring generator, and SARIF export. |
 
 ---
 
-## ⚡ Quickstart: Run in 3 Easy Steps
+##  Quickstart: Run in 3 Easy Steps
 
 You do **not** need to copy Faraday into your project! Think of Faraday like `git`, `ruff`, or `prettier`: you install it once on your machine, and run it on **any folder or repo** (Python, JavaScript, TypeScript, React, Go, C/C++).
 
@@ -195,7 +194,7 @@ faraday --ui
 
 ---
 
-## 🐧 Linux Installation & Snapdragon Linux Support
+##  Linux Installation & Snapdragon Linux Support
 
 Faraday provides 100% native Linux support across **Ubuntu, Debian, Fedora, Arch Linux, WSL2, and Snapdragon Linux (aarch64)**.
 
@@ -1190,7 +1189,7 @@ Qualcomm Snapdragon/
 
 ---
 
-## 🧪 Comprehensive Automated Test Suite (81 Tests — 100% Passing)
+##  Comprehensive Automated Test Suite (81 Tests — 100% Passing)
 
 Faraday includes an exhaustive test suite verifying every component from AST parsing, attack replay test generation, and Git porcelain time-travel to Qualcomm Hexagon NPU execution and tamper-evident cryptographic evidence sealing.
 
