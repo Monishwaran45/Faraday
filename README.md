@@ -1,5 +1,6 @@
 # Faraday — Air-Gapped AI Code Assurance & Security Copilot
 
+> **Find the bug. Trace its origin. Prove the fix. Keep your code local.**
 
 *Named after the Faraday cage—symbolizing 100% physical and data isolation—Faraday provides enterprise teams with complete code privacy, offline neural intelligence, and zero data egress.*
 
@@ -77,28 +78,36 @@ faraday .
 # Or via Python module:
 py -3.11 -m backend.cli .
 
-# 2. Silicon hardware prover & empirical NPU benchmark:
+# 2. Faraday Time Machine — Trace vulnerability origin & 5-stage timeline:
+faraday time-machine backend/core/secret_scanner.py
+# Displays: introduced (author, commit) -> detected -> reproduced -> fixed -> verified
+
+# 3. Codebase Digital Twin — Query blast-radius, impacted routes & tests:
+faraday twin scan_chunk
+# Or alias: faraday impact <function_or_class>
+
+# 4. Silicon Passport — Cryptographic attestation of on-device neural inference:
+faraday passport
+# Generates signed review_output/silicon_passport.json with latency percentiles
+
+# 5. Shareable Scan Card — Verifiable terminal, Markdown & SVG badges:
+faraday card
+# Generates review_output/faraday_scan_card.svg
+
+# 6. Proof-of-Fix 2.0 — Attack replay test, approval gate, and rescan verification:
+faraday proof backend/db.py --replacement-file patched_db.py
+
+# 7. Silicon hardware prover & empirical NPU benchmark:
 faraday --prove
-# Or via Python module:
-py -3.11 -m backend.cli --prove
 
-# 3. System & Silicon Doctor:
+# 8. System & Silicon Doctor:
 faraday doctor --npu
-# Or via Python module:
-py -3.11 -m backend.cli doctor --npu
 
-# 4. Launch the 100% air-gapped visual web dashboard:
+# 9. Launch the 100% air-gapped visual web dashboard:
 faraday --ui
-# Or via Python module:
-py -3.11 -m backend.cli --ui
 
-# 5. Setup automatic pre-commit protection & GitHub CI/CD in 1 click:
+# 10. Setup automatic pre-commit protection & GitHub CI/CD in 1 click:
 faraday --setup-all
-
-# 6. Display comprehensive info about Faraday and its creator:
-faraday --about
-# Or via Python module:
-py -3.11 -m backend.cli --about
 ```
 
 ### 3. (Optional) Export the 5 GB 7B Generative Model
@@ -964,6 +973,81 @@ faraday benchmark --security
 2. Runs Faraday's hybrid pipeline: AST data-flow taint tracking (`ast_analyzer.py`) + deterministic scanner (`secret_scanner.py`) + Hexagon NPU neural classifier (`faraday_code_assurance.onnx`).
 3. Computes exact True Positives, False Positives, False Negatives, True Negatives, Precision, Recall, F1 Score, and False Positive Rate (FPR).
 4. Generates a side-by-side comparative table against Semgrep, GitHub CodeQL, and PyCQA Bandit with raw latency and memory measurements.
+
+---
+
+#### Scenario L: Faraday Time Machine — Tracing Vulnerability Origins
+**Context:** A vulnerability is discovered in production code. A developer wants to know: *When did this enter the codebase, who authored it, why was it introduced, and what is the minimal safe fix?*
+```bash
+faraday time-machine backend/core/secret_scanner.py
+# Or pinpoint a specific line & rule:
+faraday time-machine backend/db.py --line 42 --rule SEC-SQL01
+```
+**What Happens Under the Hood:**
+1. Faraday inspects Git ancestry using `git blame --porcelain` and `git log`.
+2. Identifies the introducing commit SHA, author, date, and commit message.
+3. Produces an engineering root-cause explanation (e.g., dynamic string concatenation instead of parameter binding).
+4. Emits a 5-stage chronological lifecycle timeline:
+   `1. INTRODUCED` → `2. DETECTED` → `3. REPRODUCED` → `4. FIXED` → `5. VERIFIED`.
+
+---
+
+#### Scenario M: Codebase Digital Twin & Change Impact Map (`faraday twin <symbol>`)
+**Context:** Before modifying or refactoring an authentication or database function, a developer wants an evidence-backed answer to: *"Which callers, downstream API routes, and unit tests will break if I change this?"*
+```bash
+faraday twin scan_chunk
+# Or alias:
+faraday impact authenticate_user
+```
+**What Happens Under the Hood:**
+1. Traverses the repository AST to index all functions, methods, classes, and decorators.
+2. Constructs the reverse call graph (`callee -> callers`).
+3. Discovers all direct callers and upstream transitive callers with exact line spans.
+4. Identifies public HTTP API routes (Flask `@app.route`, FastAPI `@app.get/post`, Express) whose endpoints depend on the function.
+5. Surfaces all unit/integration tests in `tests/` that cover the symbol.
+6. Overlays any active security findings on the symbol's span.
+
+---
+
+#### Scenario N: Proof Engine 2.0 & Attack Replay (`faraday proof <file>`)
+**Context:** Instead of trusting a black-box AI patch, an engineer wants proof: *Does an isolated attack test fail on the current code, pass on the patched code, and clear the static scanner?*
+```bash
+faraday proof backend/db.py --replacement-file patched_db.py
+```
+**What Happens Under the Hood:**
+1. **Attack Replay Synthesis:** Synthesizes an isolated, safe test demonstrating the untrusted input reachability (e.g. `' OR '1'='1` for SQLi, `; whoami` for command injection).
+2. **Pre-Patch Test:** Executes against current code and confirms vulnerability reproduction.
+3. **Interactive Approval Gate:** Displays unified diff and prompts for explicit developer approval.
+4. **Atomic Conflict-Safe Patch:** Verifies SHA-256 conflict detection before writing.
+5. **Post-Patch Test:** Executes against patched code and verifies payload neutralization.
+6. **AST Rescan:** Confirms the original finding signature is eliminated.
+7. **Tamper-Evident Report:** Exports `review_output/proof_of_fix_evidence_<rule>.json` with a canonical SHA-256 digest.
+
+---
+
+#### Scenario O: Silicon Passport — Cryptographic Hardware Attestation (`faraday passport`)
+**Context:** In high-compliance environments (defense, banking, healthcare), auditors require verifiable proof that code review ran 100% on local silicon with zero cloud telemetry.
+```bash
+faraday passport
+```
+**What Happens Under the Hood:**
+1. Probes host processor, physical SoC (Qualcomm Oryon™ / Kryo™), and active ONNX execution provider (`QNNExecutionProvider` vs `CPUExecutionProvider`).
+2. Computes the SHA-256 cryptographic digest of the bundled neural weights file.
+3. Benchmarks live inference latency percentiles (**P50, P90, P95, P99**) and peak memory.
+4. Certifies 0-byte network egress.
+5. Generates `review_output/silicon_passport.json` signed with a tamper-evident HMAC / SHA-256 digital attestation.
+
+---
+
+#### Scenario P: Shareable Scan Card (`faraday card`)
+**Context:** A developer wants to share a verified, reproducible summary card of a security scan in a GitHub PR comment, release note, or team chat.
+```bash
+faraday card
+```
+**What Happens Under the Hood:**
+1. Compiles verified metrics: findings resolved, attack replay tests verified, execution provider, and repository revision.
+2. Emits a rich unicode terminal report card.
+3. Generates a standalone, dark-themed SVG badge at `review_output/faraday_scan_card.svg` suitable for embedding directly in GitHub READMEs.
 
 ---
 

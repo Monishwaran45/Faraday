@@ -575,9 +575,34 @@ def main():
     parser.add_argument("--epochs", type=int, default=3, help="Training epochs for on-device LoRA fine-tuning (default: 3)")
     parser.add_argument("--lora-rank", type=int, default=8, help="Rank r for LoRA decomposition (default: 8)")
 
-    # Support 'faraday scan [path]' subcommand syntax seamlessly
-    if len(sys.argv) > 1 and sys.argv[1] == "scan":
-        sys.argv.pop(1)
+    # Support subcommands seamlessly (e.g. 'faraday twin <symbol>', 'faraday time-machine <file>', etc.)
+    if len(sys.argv) > 1:
+        cmd = sys.argv[1].lower()
+        if cmd == "scan":
+            sys.argv.pop(1)
+        elif cmd in ("twin", "impact"):
+            sys.argv.pop(1)
+            if len(sys.argv) > 1 and not sys.argv[1].startswith("-"):
+                sym = sys.argv.pop(1)
+                sys.argv.extend(["--twin", sym])
+            else:
+                sys.argv.extend(["--twin", "main"])
+        elif cmd == "time-machine":
+            sys.argv.pop(1)
+            if len(sys.argv) > 1 and not sys.argv[1].startswith("-"):
+                target_f = sys.argv.pop(1)
+                sys.argv.extend(["--time-machine", target_f])
+            else:
+                sys.argv.append("--time-machine")
+        elif cmd == "passport":
+            sys.argv.pop(1)
+            sys.argv.append("--passport")
+        elif cmd == "card":
+            sys.argv.pop(1)
+            sys.argv.append("--card")
+        elif cmd in ("proof", "fix"):
+            sys.argv.pop(1)
+            sys.argv.append("--proof")
 
     args = parser.parse_args()
 
