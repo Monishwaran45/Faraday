@@ -32,6 +32,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e .
 
+      - name: Run Proof-of-Fix and regression tests
+        run: |
+          python -m pip install pytest
+          python -m pytest tests/test_proof_of_fix.py -q
+
       - name: Run Faraday PR Security Scan with Annotations & SARIF
         id: faraday_scan
         run: |
