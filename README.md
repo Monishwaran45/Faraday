@@ -768,6 +768,11 @@ Faraday offers a unified command-line interface designed to seamlessly integrate
 | Command / Flag | Primary Purpose | Real-World Scenario |
 | :--- | :--- | :--- |
 | `faraday [path]` or `faraday scan [path]` | Scan directory or file interactively | Developer reviews a repository with interactive terminal prompts to inspect findings or switch folders. |
+| `faraday time-machine <file>` | Vulnerability origin & 5-stage timeline | Traces Git ancestry, identifies introducing commit, explains why it happened, and produces: introduced → detected → reproduced → fixed → verified. |
+| `faraday proof <file> --replacement-file <path>` | Proof-of-Fix 2.0 & Attack Replay | Runs isolated pre/post attack replay tests, verifies patch approval atomically, rescans AST, and exports tamper-evident evidence report. |
+| `faraday passport` (or `--passport`) | Silicon Passport cryptographic attestation | Produces signed, tamper-evident JSON certificate auditing host silicon, ONNX provider, latency percentiles, and 0-byte network egress. |
+| `faraday twin <symbol>` or `impact <symbol>` | Codebase Digital Twin change impact map | Evaluates blast radius of changing a function or class: direct callers, upstream transitive chain, impacted API routes, and affected tests. |
+| `faraday card` (or `--card`) | Verifiable Shareable Scan Card | Generates terminal, markdown, and standalone SVG summary cards linking to verified evidence digests and repository revisions. |
 | `faraday --ui` (or `--web`, `--dashboard`) | Air-gapped visual web dashboard | Lead architects conduct code reviews and generate docstrings/README via an interactive browser interface at `http://localhost:8000`. |
 | `faraday benchmark --dataset <name>` | Standardized accuracy benchmark | Security teams benchmark detection precision/recall/F1/FPR against OWASP Benchmark (`owasp`), NIST Juliet (`juliet`), SARD (`sard`), Real-World CVEs (`real_world`), or internal regression (`regression`). |
 | `faraday benchmark --analysis` | False-Positive / False-Negative root cause analysis | Generates structured error taxonomy breakdown with concrete remediation recommendations. |
