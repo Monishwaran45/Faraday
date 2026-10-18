@@ -112,7 +112,7 @@ python -m qai_hub_models.models.qwen2_7b_instruct_quantized.export \
 
 ---
 
-## 🐧 Linux Installation & Snapdragon Linux Support
+##  Linux Installation & Snapdragon Linux Support
 
 Faraday provides 100% native Linux support across **Ubuntu, Debian, Fedora, Arch Linux, WSL2, and Snapdragon Linux (aarch64)**.
 
