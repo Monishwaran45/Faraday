@@ -2,7 +2,7 @@
 
 > **Find the bug. Trace who wrote it. Prove the fix with an attack test. Keep 100% of your code local.**
 
-[![Test Suite](https://img.shields.io/badge/tests-81%2F81%20passing-brightgreen.svg)](tests/)
+[![Test Suite](https://img.shields.io/badge/tests-95%2F95%20passing-brightgreen.svg)](tests/)
 [![Silicon](https://img.shields.io/badge/silicon-Snapdragon%20X%20Elite%20Hexagon%20NPU-purple.svg)](https://aihub.qualcomm.com)
 [![Privacy](https://img.shields.io/badge/egress-0.00%20KB%20Air--Gapped-blue.svg)](#silicon-passport)
 
@@ -20,6 +20,9 @@ Faraday is like **ESLint + Git Blame + Pen-Testing + AI Code Review** combined i
 | ** Faraday Time Machine** | When a security scanner flags a bug, developers waste hours figuring out who wrote it, in what commit, and why. | Runs `faraday time-machine <file>`. Traces Git ancestry, identifies the introducing commit & author, explains why it happened, and maps the complete lifecycle: `Introduced ➔ Detected ➔ Reproduced ➔ Fixed ➔ Verified`. |
 | ** Proof-of-Fix 2.0** | AI code fixers often hallucinate fixes or introduce new bugs, and developers don't know whether to trust them. | Runs `faraday proof <file>`. Synthesizes an **attack replay test** (e.g. `' OR '1'='1`), proves the exploit works on old code, applies the patch, proves the attack fails on new code, and seals it with a cryptographic proof certificate! |
 | ** Codebase Digital Twin** | Fixing or changing a shared function might accidentally break 5 API routes and 10 unit tests across the repo. | Runs `faraday twin <function>`. Inverts your repository AST to show the **blast radius**: direct callers, upstream chains, affected web routes (FastAPI, Flask, Express), and unit tests. |
+| ** AI Hallucination Detector** | AI coding assistants invent non-existent packages, phantom library methods, and write docstrings promising security controls that code omits. | Runs `faraday hallucination <path>`. AST-audits imports against stdlib catalogs, catches phantom methods (`hashlib.validate`), detects hollow docstrings, and flags vacuous test assertions. |
+| ** Multi-Tenant Auditor** | In B2B SaaS, healthcare, and banking, missing tenant filters in DB queries or route handlers cause catastrophic cross-tenant data leaks (CWE-639 / BOLA). | Runs `faraday tenant <path>`. Scans SQL and ORM queries for missing `tenant_id` scopes, unscoped mutations (`DELETE/UPDATE`), and unpartitioned cache keys. |
+| ** CI/CD & Agent Auditor** | Supply-chain attacks compromise GitHub Actions workflows and AI coding agents via `curl|bash`, unpinned actions, and broad shell execution rights. | Runs `faraday pipeline <path>`. Audits `.github/workflows`, Dockerfiles, and AI agent configs for unpinned tags, `write-all` permissions, and root execution. |
 | ** Silicon Passport** | Security officers and compliance auditors ask: *"Did your AI actually run locally, or did it call a cloud API?"* | Runs `faraday passport`. Emits a signed, tamper-evident cryptographic attestation verifying model SHA-256, latency percentiles (P50/P90/P99), and **0-byte egress guarantee**. |
 | ** Shareable Scan Card** | Team leads and PR reviewers want a quick, beautiful summary card they can paste into GitHub PRs or Slack. | Runs `faraday card`. Generates an instant rich terminal report, Markdown card, and dark-themed SVG badge for your repository. |
 | ** Visual Web Dashboard** | Developers who prefer a visual browser experience want interactive charts and 1-click documentation. | Runs `faraday --ui`. Launches a 100% air-gapped web dashboard with donut charts, line-by-line file inspector, docstring generator, and SARIF export. |
@@ -101,7 +104,28 @@ faraday card
 ```
 *Prints rich terminal card and saves dark-themed `review_output/faraday_scan_card.svg`.*
 
-#### 7. Launch Visual Web Dashboard:
+#### 7. Audit AI Code for Hallucinations & Phantom APIs:
+```bash
+faraday hallucination .
+# Or alias: faraday audit-ai .
+```
+*Detects phantom packages, nonexistent methods (`hashlib.validate`), hollow docstring security promises, and vacuous test assertions.*
+
+#### 8. Audit Multi-Tenant Data Isolation:
+```bash
+faraday tenant .
+# Or alias: faraday isolation .
+```
+*Detects cross-tenant data leakage, unscoped raw SQL mutations (`DELETE/UPDATE`), and BOLA/IDOR route flaws.*
+
+#### 9. Audit CI/CD Pipelines & AI Agent Permissions:
+```bash
+faraday pipeline .
+# Or alias: faraday audit-pipeline .
+```
+*Audits GitHub Actions workflows, Dockerfiles, and AI agent permissions for curl|sh, unpinned actions, and root execution.*
+
+#### 10. Launch Visual Web Dashboard:
 ```bash
 faraday --ui
 ```
@@ -1108,6 +1132,53 @@ faraday card
 
 ---
 
+#### Scenario Q: AI Hallucination & Phantom API Detector (`faraday hallucination`)
+**Context:** Code produced by AI assistants (Copilot, ChatGPT, Claude) often hallucinates dependencies, calls nonexistent methods, writes docstrings claiming security protections that code omits, or creates vacuous tests.
+```bash
+faraday hallucination .
+# Or audit a specific file:
+faraday hallucination backend/auth.py
+```
+**What Happens Under the Hood:**
+1. **Phantom Dependency Check:** AST-extracts imports and validates them against Python's standard library catalog and installed packages.
+2. **Phantom Method Traversal:** Identifies calls to hallucinated APIs on standard modules (e.g. `hashlib.validate()`, `os.path.secure_join()`).
+3. **Docstring Drift Analysis:** Extracts security promises from docstrings ("HMAC verification", "input sanitization", "constant-time comparison") and inspects the AST body to flag hollow claims.
+4. **Test Vacuity Audit:** Flags tests with `assert True`, `assert 1 == 1`, or missing assertions.
+
+---
+
+#### Scenario R: Multi-Tenant Data Isolation & Invariant Auditor (`faraday tenant`)
+**Context:** In B2B SaaS, healthcare, and enterprise software, missing tenant filters in database queries or route handlers allow cross-tenant record destruction or data leaks (CWE-639 / BOLA / IDOR).
+```bash
+faraday tenant .
+# Or alias:
+faraday isolation .
+```
+**What Happens Under the Hood:**
+1. **Multi-Tenant Architecture Detection:** Automatically discovers tenant context indicators (`tenant_id`, `org_id`, `workspace_id`, `account_id`).
+2. **Unscoped Mutation Interception:** Flags `DELETE` and `UPDATE` queries that operate on primary keys without `AND tenant_id = ?`.
+3. **Missing Route Scoping:** Detects web endpoints (`@app.route`, `@app.get`) accepting entity IDs without validating caller tenant ownership.
+4. **Cache Partitioning Check:** Flags unpartitioned cache keys in multi-tenant environments.
+5. **Isolation Health Score:** Computes a 0–100% isolation health score with exact line numbers and parameterized query fixes.
+
+---
+
+#### Scenario S: CI/CD Build Pipeline & AI Agent Permission Auditor (`faraday pipeline`)
+**Context:** Attackers compromise applications via software supply chains, poisoned GitHub Actions workflows, Dockerfile misconfigurations, or over-privileged AI coding agents.
+```bash
+faraday pipeline .
+# Or alias:
+faraday audit-pipeline .
+```
+**What Happens Under the Hood:**
+1. **Remote Code Execution Interception:** Catches `curl ... | bash` and `wget ... | sh` in workflow steps (`PIPE-SEC-001`).
+2. **Privilege Escalation Detection:** Flags `permissions: write-all` and dangerous `pull_request_target` triggers (`PIPE-SEC-002`, `PIPE-SEC-003`).
+3. **Supply-Chain Pinning Audit:** Detects unpinned third-party actions pinned to mutable branches (`@master`, `@main`) instead of immutable commit SHAs (`PIPE-SEC-004`).
+4. **Container Hardening:** Flags containers running as default `USER root` and hardcoded credentials in Dockerfile `ENV` directives.
+5. **AI Agent Permission Boundaries:** Audits agent configuration files for unrestricted shell execution (`AGENT-SEC-001`) and root filesystem access (`AGENT-SEC-002`).
+
+---
+
 ##  Where to Find Output Reports
 
 All artifacts are generated in the `--output` directory (default: `./review_output`):
@@ -1173,20 +1244,23 @@ Qualcomm Snapdragon/
 
 ---
 
-##  Comprehensive Automated Test Suite (81 Tests — 100% Passing)
+##  Comprehensive Automated Test Suite (95 Tests — 100% Passing)
 
 Faraday includes an exhaustive test suite verifying every component from AST parsing, attack replay test generation, and Git porcelain time-travel to Qualcomm Hexagon NPU execution and tamper-evident cryptographic evidence sealing.
 
 ```bash
 # Run the complete test suite:
 uv run pytest -v
-# Result: 80 passed, 1 skipped (Windows symlinks) in 5.98s
+# Result: 94 passed, 1 skipped (Windows symlinks) in 4.62s
 ```
 
 ### Complete Test Suite Catalog & Verification Breakdown
 
 | Test File | Target Component | Verification Logic & Simulated Scenario |
 | :--- | :--- | :--- |
+| **`test_hallucination_detector.py`** | `hallucination_detector.py` | Detects phantom library imports, nonexistent methods (`hashlib.validate`), hollow docstring promises, and vacuous AI test assertions (`assert True`). |
+| **`test_tenant_auditor.py`** | `tenant_auditor.py` | Validates multi-tenant isolation, unscoped SQL mutations (`DELETE/UPDATE`), missing route tenant context, and unpartitioned cache keys. |
+| **`test_pipeline_auditor.py`** | `pipeline_auditor.py` | Tests GitHub Actions workflow hardening (`curl\|bash`, `write-all`), Dockerfile least-privilege, and AI agent execution boundaries. |
 | **`test_time_machine.py`** | `time_machine.py` | Validates Git porcelain blame parsing, introducing commit SHA resolution, root-cause vulnerability analysis, and 5-stage lifecycle generation (`Introduced ➔ Detected ➔ Reproduced ➔ Fixed ➔ Verified`). |
 | **`test_proof_engine.py`** | `proof_engine.py` | Tests automated attack replay test generation (SQLi, command injection), pre/post patch test execution, atomic patch application, and tamper-evident SHA-256 evidence digests. |
 | **`test_silicon_passport.py`** | `silicon_passport.py` | Verifies Qualcomm Oryon/Kryo chip detection, QNN execution provider auditing, latency percentile benchmarks (P50, P90, P95, P99), 0-byte network egress guarantee, and HMAC-SHA256 digital attestation. |
