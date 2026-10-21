@@ -568,6 +568,9 @@ def main():
     parser.add_argument("--proof", action="store_true", help="Run Proof-of-Fix 2.0 with Attack Replay and evidence report generation")
     parser.add_argument("--replacement-file", default=None, help="Replacement content file for Proof-of-Fix 2.0")
     parser.add_argument("-y", "--yes", action="store_true", help="Automatically approve prompts (e.g. Proof-of-Fix patch approval)")
+    parser.add_argument("--hallucination", "--audit-ai", action="store_true", dest="hallucination", help="AI Hallucination Detector: Audit code for phantom libraries, hallucinated APIs, and vacuous assertions")
+    parser.add_argument("--tenant", "--isolation", action="store_true", dest="tenant", help="Multi-Tenant Auditor: Audit database queries and web routes for cross-tenant data leaks and BOLA/IDOR")
+    parser.add_argument("--pipeline", "--audit-pipeline", action="store_true", dest="pipeline", help="Pipeline Auditor: Audit GitHub Actions workflows, Dockerfiles, and AI agent execution permissions")
 
     # On-Device LoRA Fine-Tuning CLI Flags
     parser.add_argument("--tune", "--train-lora", action="store_true", dest="tune", help="Fine-tune compact LoRA adapter on local repository coding standards (Hexagon HTP / Air-Gapped)")
@@ -604,6 +607,15 @@ def main():
         elif cmd in ("proof", "fix"):
             sys.argv.pop(1)
             sys.argv.append("--proof")
+        elif cmd in ("hallucination", "audit-ai"):
+            sys.argv.pop(1)
+            sys.argv.append("--hallucination")
+        elif cmd in ("tenant", "isolation"):
+            sys.argv.pop(1)
+            sys.argv.append("--tenant")
+        elif cmd in ("pipeline", "audit-pipeline"):
+            sys.argv.pop(1)
+            sys.argv.append("--pipeline")
 
     args = parser.parse_args()
 
@@ -841,6 +853,33 @@ def main():
             console=console,
         )
         sys.exit(code)
+
+    # Feature: faraday hallucination or --hallucination (AI Hallucination Detector)
+    is_hallucination_cmd = getattr(args, "hallucination", False) or args.project_path in ("hallucination", "audit-ai", "--hallucination")
+    if is_hallucination_cmd:
+        from backend.core.hallucination_detector import audit_codebase_hallucinations, print_hallucination_report
+        tgt = target_path if target_path not in (Path("hallucination").resolve(), Path("audit-ai").resolve()) else Path.cwd().resolve()
+        rep = audit_codebase_hallucinations(tgt)
+        print_hallucination_report(rep, console=console)
+        sys.exit(1 if rep.high_count > 0 else 0)
+
+    # Feature: faraday tenant or --tenant (Multi-Tenant Data Isolation Auditor)
+    is_tenant_cmd = getattr(args, "tenant", False) or args.project_path in ("tenant", "isolation", "--tenant")
+    if is_tenant_cmd:
+        from backend.core.tenant_auditor import audit_codebase_multi_tenant, print_tenant_audit_report
+        tgt = target_path if target_path not in (Path("tenant").resolve(), Path("isolation").resolve()) else Path.cwd().resolve()
+        rep = audit_codebase_multi_tenant(tgt)
+        print_tenant_audit_report(rep, console=console)
+        sys.exit(1 if rep.high_count > 0 else 0)
+
+    # Feature: faraday pipeline or --pipeline (CI/CD Build Pipeline Auditor)
+    is_pipe_cmd = getattr(args, "pipeline", False) or args.project_path in ("pipeline", "audit-pipeline", "--pipeline")
+    if is_pipe_cmd:
+        from backend.core.pipeline_auditor import audit_codebase_pipelines, print_pipeline_audit_report
+        tgt = target_path if target_path not in (Path("pipeline").resolve(), Path("audit-pipeline").resolve()) else Path.cwd().resolve()
+        rep = audit_codebase_pipelines(tgt)
+        print_pipeline_audit_report(rep, console=console)
+        sys.exit(1 if rep.high_count > 0 else 0)
 
     # Feature: --init configuration
     if args.init:
