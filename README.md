@@ -264,7 +264,7 @@ Faraday is built from the ground up for the **Qualcomm Snapdragon® X Elite (sc8
 │   + Feedforward MLP + 3 Classification Heads │ │ • Quantization: 4-bit INT4 Weights, FP16 Act │
 │ • Runtime: ONNX v17 / QNN Context Binary     │ │ • Runtime: 4-Part QNN Serialized Binaries    │
 │ • File Size: 5.66 MB (models/onnx/)          │ │ • Memory Footprint: 5.05 GB (models/qwen2/)  │
-│ • Hexagon NPU Latency: 0.21 ms (<1 ms!)      │ │ • Hexagon NPU Throughput: 28.4 tokens/second │
+│ • Hexagon NPU Latency: 0.10 ms (100 µs!)     │ │ • Hexagon NPU Throughput: 28.4 tokens/second │
 │ • Role: Sub-millisecond AST triage & scoring │ │ • Role: Deep explanations, docstrings, README│
 └──────────────────────────────────────────────┘ └──────────────────────────────────────────────┘
 ```
@@ -794,8 +794,8 @@ uv run python backend/models/model_backend.py
 
 Faraday's neural model has been verified and benchmarked on physical **Qualcomm Snapdragon X Elite CRD (Compute Reference Device)** hardware via the [Qualcomm AI Hub](https://aihub.qualcomm.com) cloud infrastructure:
 
-- **Compile Job (QNN / ONNX for NPU):** [workbench.aihub.qualcomm.com/jobs/jgol7nj4g](https://workbench.aihub.qualcomm.com/jobs/jgol7nj4g/) — **Status: `SUCCESS`**
-- **Hardware Profile Job (Snapdragon X Elite CRD):** [workbench.aihub.qualcomm.com/jobs/jpvlyrj75](https://workbench.aihub.qualcomm.com/jobs/jpvlyrj75/) — **Status: `SUCCESS`**
+- **Compile Job (QNN / ONNX for NPU):** [workbench.aihub.qualcomm.com/jobs/jgddk12kg](https://workbench.aihub.qualcomm.com/jobs/jgddk12kg/) — **Status: `SUCCESS`**
+- **Hardware Profile Job (Snapdragon X Elite CRD):** [workbench.aihub.qualcomm.com/jobs/jpxlqoxjp](https://workbench.aihub.qualcomm.com/jobs/jpxlqoxjp/) — **Status: `SUCCESS`**
 
 #### Physical NPU Hardware Benchmark Results
 
@@ -803,29 +803,13 @@ Faraday's neural model has been verified and benchmarked on physical **Qualcomm 
 | :--- | :--- | :--- |
 | **Target Hardware** | **Snapdragon X Elite CRD** | Qualcomm `sc8380xp` (Hexagon v73 NPU) |
 | **Compute Acceleration Unit** | **100% NPU** | All layers executed exclusively on the Hexagon NPU |
-| **Average Inference Latency** | **32 μs (0.032 ms)** | Sub-millisecond neural classification |
-| **Total NPU Cycles** | **4,866 cycles** | High-efficiency hardware execution |
-| **Warm Load Time** | **507 ms (0.507 s)** | Rapid in-memory activation |
-| **Inference Peak Memory** | **~28 MB** | Extremely lightweight on-device footprint |
-| **Fallback Rate** | **0% (Zero CPU/GPU fallback)** | Native Hexagon NPU operator mapping |
+| **Average Inference Latency** | **0.10 ms (100 μs)** | Sub-millisecond neural classification |
+| **Peak Memory on Device** | **31.5 MB** | Extremely lightweight on-device footprint |
+| **Fallback Rate** | **0% (Zero CPU offload)** | Native Hexagon NPU operator mapping |
 
-#### NPU Layer-by-Layer Compute Offload
+### 12. On-Device LoRA Fine-Tuning (Air-Gapped Adapter Engine)
 
-```text
-Layer                  Type    Compute Unit   NPU Execution Cycles
-──────────────────────────────────────────────────────────────────
-Input               -> Input   | Unit: NPU    | Cycles: 512
-/fc1/Gemm           -> Gemm    | Unit: NPU    | Cycles: 1527
-/relu/Relu          -> Relu    | Unit: NPU    | Cycles: 1327
-/fc2/Gemm           -> Gemm    | Unit: NPU    | Cycles: 596
-Output              -> Output  | Unit: NPU    | Cycles: 904
-──────────────────────────────────────────────────────────────────
-Total NPU Cycles: 4,866 cycles (100% NPU Hardware Accelerated)
-```
-
-### 12. On-Device LoRA Fine-Tuning (Hexagon HTP Matrix Units)
-
-Enterprise organizations often enforce proprietary coding standards, internal naming conventions, and custom API wrappers that cloud LLMs have never seen. Faraday solves this by fine-tuning compact Low-Rank Adapters (LoRA) directly on-device using the Hexagon NPU's HTP matrix acceleration units:
+Enterprise organizations often enforce proprietary coding standards, internal naming conventions, and custom API wrappers that generic models have never seen. Faraday supports this by fine-tuning compact Low-Rank Adapters (LoRA) directly on-device in `backend/core/lora_trainer.py`:
 
 - **Mathematical Low-Rank Decomposition:**
   $$y = x W_0^T + \frac{\alpha}{r} (x A^T B^T)$$
