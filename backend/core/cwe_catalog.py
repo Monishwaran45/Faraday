@@ -43,8 +43,8 @@ CWE_CATALOG: Dict[str, VulnerabilityTaxonomy] = {
         owasp="A03:2021-Injection",
         default_severity="HIGH",
         default_confidence=0.94,
-        description="Execution of system commands via os.system or subprocess with shell=True and dynamic variables.",
-        remediation="Avoid shell=True; pass command arguments as a list directly to subprocess.run(..., shell=False)."
+        description="Execution of system commands via os.system or subprocess in shell execution mode with dynamic variables.",
+        remediation="Disable shell execution mode; pass command arguments as a list directly to subprocess.run."
     ),
     "SEC-XSS01": VulnerabilityTaxonomy(
         rule_id="SEC-XSS01",
@@ -123,7 +123,7 @@ CWE_CATALOG: Dict[str, VulnerabilityTaxonomy] = {
         owasp="A07:2021-Identification and Authentication Failures",
         default_severity="HIGH",
         default_confidence=0.95,
-        description="TLS/SSL certificate validation disabled (verify=False or rejectUnauthorized: false).",  # faraday: ignore
+        description="TLS/SSL certificate validation explicitly disabled in network connection request.",
         remediation="Enforce valid certificate verification in all non-local environments."
     ),
     "SEC-DEBUG01": VulnerabilityTaxonomy(

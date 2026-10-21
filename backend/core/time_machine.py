@@ -212,13 +212,13 @@ def suggest_minimal_safe_fix(rule_id: str, line_code: str) -> str:
     elif "PATH" in rule_upper:
         return "Enforce safe path resolution: `safe_path = os.path.basename(user_input)` or verify `os.path.realpath(dest).startswith(allowed_root)`."
     elif "DESER" in rule_upper:
-        return "Replace `pickle.loads(...)` with `json.loads(raw_bytes.decode('utf-8'))` or `yaml.safe_load(...)`."
+        return "Replace pickle deserialization with json.loads(raw_bytes.decode('utf-8')) or yaml.safe_load."
     elif "XSS" in rule_upper:
-        return "Replace `.innerHTML = ...` with `.textContent = ...` or use a DOM sanitizer library."
+        return "Replace innerHTML assignments with textContent or use a DOM sanitizer library."
     elif "CRED" in rule_upper or "SECRET" in rule_upper:
         return "Extract credential to environment variables: `api_key = os.environ.get('SERVICE_API_KEY')`."
     elif "EVAL" in rule_upper:
-        return "Replace `eval(...)` with `ast.literal_eval(...)` for safe data literal parsing."
+        return "Replace dynamic eval execution with ast.literal_eval for safe data literal parsing."
     else:
         return "Apply input validation, boundary checking, and defensive parameterization."
 

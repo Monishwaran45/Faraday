@@ -689,7 +689,8 @@ def generate_heuristic_response(
 
     # Rule 12: Unbounded database query without LIMIT / pagination
     upper_code = code_snippet.upper()
-    if "SELECT " in upper_code and " FROM " in upper_code:
+    has_sql_statement = bool(re.search(r'''["']\s*SELECT\s+[\*\w\s,]+?\s+FROM\s+[\w\.]+''', code_snippet, re.IGNORECASE))
+    if has_sql_statement:
         if "LIMIT " not in upper_code and "COUNT(" not in upper_code and "WHERE ID =" not in upper_code and "WHERE ID=" not in upper_code:
             detected_issues.append("Unbounded database query without 'LIMIT' or pagination clause may cause memory exhaustion (OOM).")
             suggested_fixes.append("Add a 'LIMIT' clause (e.g. 'LIMIT 100') or implement server-side pagination.")
